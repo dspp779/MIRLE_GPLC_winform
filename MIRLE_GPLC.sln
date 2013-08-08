@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIRLE_GPLC", "MIRLE_GPLC\MIRLE_GPLC.csproj", "{6B6B27B4-4EC1-4FB8-9BC6-D19C6EC7ADA2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WinForm", "WinForm", "{75157C0A-1E5A-459E-B94A-A9E6461E564A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6B6B27B4-4EC1-4FB8-9BC6-D19C6EC7ADA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B6B27B4-4EC1-4FB8-9BC6-D19C6EC7ADA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B6B27B4-4EC1-4FB8-9BC6-D19C6EC7ADA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B6B27B4-4EC1-4FB8-9BC6-D19C6EC7ADA2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6B6B27B4-4EC1-4FB8-9BC6-D19C6EC7ADA2} = {75157C0A-1E5A-459E-B94A-A9E6461E564A}
+	EndGlobalSection
+EndGlobal
