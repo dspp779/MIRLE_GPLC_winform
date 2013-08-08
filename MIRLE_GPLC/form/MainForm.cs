@@ -18,6 +18,8 @@ namespace MIRLE_GPLC
         private GMapOverlay markersOverlay;
         private bool isDragging = false;
 
+        private List<GMapMarker> hoverMarkerList = new List<GMapMarker>();
+
         public MainForm()
         {
             InitializeComponent();
@@ -31,7 +33,7 @@ namespace MIRLE_GPLC
             gMap.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
             GMap.NET.MapProviders.GMapProvider.Language = GMap.NET.LanguageType.ChineseTraditional;
             GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerOnly;
-            this.gMap.MapProvider.Copyright = "";
+            this.gMap.Position = new PointLatLng(23.8, 121);
 
 
             // intialize overlay
@@ -49,6 +51,13 @@ namespace MIRLE_GPLC
             {
                 isDragging = true;
             }
+            if (isDragging)
+            {
+                foreach (GMapMarker marker in hoverMarkerList)
+                {
+                    marker.Position = latlng;
+                }
+            }
         }
 
         private void gMap_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -63,24 +72,32 @@ namespace MIRLE_GPLC
         {
             if (!isDragging && e.Button == MouseButtons.Right)
             {
-                // click marker
+                GMarkerGoogle m = new GMarkerGoogle(gMap.FromLocalToLatLng(e.X, e.Y),
+                    GMarkerGoogleType.red_dot);
+                // add to overlay
+                markersOverlay.Markers.Add(m);
+                // allow map zooming
+                //marker.IsHitTestVisible = false;
+            }
+            if (e.Button == MouseButtons.Left)
+            {
+                hoverMarkerList.Clear();
+            }
+            isDragging = false;
+        }
+
+        private void gMap_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
                 foreach (GMapMarker marker in markersOverlay.Markers)
                 {
                     if (marker.IsMouseOver)
                     {
-                        markersOverlay.Markers.Remove(marker);
-                        return;
+                        hoverMarkerList.Add(marker);
                     }
                 }
-                markersOverlay.Markers.Clear();
-                GMarkerGoogle m = new GMarkerGoogle(gMap.FromLocalToLatLng(e.X, e.Y),
-                    GMarkerGoogleType.red_dot);
-                // allow map zooming
-                //marker.IsHitTestVisible = false;
-                // add to overlay
-                markersOverlay.Markers.Add(m);
             }
-            isDragging = false;
         }
 
         #endregion
