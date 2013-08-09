@@ -63,6 +63,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="form\InputForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="form\InputForm.Designer.cs">
+      <DependentUpon>InputForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="form\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -71,6 +77,9 @@
     </Compile>
     <Compile Include="form\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="form\InputForm.resx">
+      <DependentUpon>InputForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="form\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -103,9 +112,9 @@
     <Folder Include="src\gmarker\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SQLiteDB\SQLiteDB.csproj">
-      <Project>{adfda4b5-8ea6-4e2b-ad5e-c6563f764111}</Project>
-      <Name>SQLiteDB</Name>
+    <ProjectReference Include="..\MIRLE_GPLC.Model\MIRLE_GPLC.Model.csproj">
+      <Project>{5959daed-701a-42fb-b3ed-2257ef5693c9}</Project>
+      <Name>MIRLE_GPLC.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

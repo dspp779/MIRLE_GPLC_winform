@@ -13,7 +13,8 @@ using System.Windows.Forms;
 using Modbus;
 using Modbus.Client;
 using System.Threading;
-using SQLiteDB;
+using System.Net.Sockets;
+using MIRLE_GPLC.Model;
 
 namespace MIRLE_GPLC
 {
@@ -34,7 +35,6 @@ namespace MIRLE_GPLC
             this.gMap.DragButton = System.Windows.Forms.MouseButtons.Left;
             this.gMap.ShowCenter = false;
             dataGridView1.Rows.Add(10);
-            //SQLiteDBMS.execUpdate("CREATE TABLE test (id int primary key);");
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -50,13 +50,15 @@ namespace MIRLE_GPLC
             markersOverlay = new GMapOverlay("markers");
             gMap.Overlays.Add(markersOverlay);
 
-            // initialize modbus TCP/IP
-            ModbusClientAdpater adpater = new ModbusClientAdpater();
-            client = adpater.CreateModbusClient(EnumModbusFraming.TCP);
-            client.Connect(new TcpModbusConnectConfig() { IpAddress = "192.168.30.236", Port = 502 });
+            /* start up resident refresh 
+             * modbus tcp worker
+             */
+            //ThreadPool.QueueUserWorkItem(new WaitCallback(modbusTCPWorker));
 
-            // start
-            ThreadPool.QueueUserWorkItem(new WaitCallback(dataGridWorker));
+            foreach (ProjectData p in ModelUtil.getProjectList())
+            {
+                addMarker(p.lat, p.lng);
+            }
         }
 
         #endregion
@@ -118,10 +120,7 @@ namespace MIRLE_GPLC
             {
                 if (hoverMarkerList.Count == 0)
                 {
-                    GMapMarker marker = new GMarkerGoogle(gMap.FromLocalToLatLng(e.X, e.Y),
-                        GMarkerGoogleType.green_pushpin);
-                    markersOverlay.Markers.Add(marker);
-                    hoverMarkerList.Add(marker);
+                    hoverMarkerList.Add(addMarker(gMap.FromLocalToLatLng(e.X, e.Y)));
                 }
             }
         }
@@ -132,24 +131,40 @@ namespace MIRLE_GPLC
 
         private void gMap_OnMarkerClick(GMapMarker item, MouseEventArgs e)
         {
+            if (e.Button == MouseButtons.Left)
+            {
+                item.ToolTipMode = MarkerTooltipMode.Always;
+            }
         }
 
         #endregion
 
-        #region -- dataGridView Refresher --
+        #region -- Modbus TCP Worker --
 
-        delegate void DataGridHandler(int i, long d);
-        private void RefreshGridValue(int i, long d)
+        private void modbusTCPWorker(object o)
         {
-            int slot = i % 10;
-            dataGridView1.Rows[slot].HeaderCell.Value = i.ToString();
-            dataGridView1.Rows[slot].Cells[0].Value = d;
-            //dataGridView2.DataSource = SQLiteDBMS.execQuery("SELECT * FROM test");
-        }
+            // initialize modbus TCP/IP
+            ModbusClientAdpater adpater = new ModbusClientAdpater();
+            TcpModbusConnectConfig config = new TcpModbusConnectConfig() { IpAddress = "192.168.30.236", Port = 502 };
+            client = adpater.CreateModbusClient(EnumModbusFraming.TCP);
+            string str = string.Format("Connecting to {0}:{1}", config.IpAddress, config.Port);
 
-        private void dataGridWorker(object o)
-        {
-            while (true)
+            // modbus TCP connect
+            try
+            {
+                do
+                {
+                    Invoke(new ModbusStatusHandler(RefreshModbusLabel), new Object[] { str });
+                    SpinWait.SpinUntil(() => false, 1000);
+                } while (!client.Connect(config));
+            }
+            catch (SocketException)
+            {
+                Invoke(new ModbusStatusHandler(RefreshModbusLabel), new Object[] { "Modbus TCP/IP connect fail" });
+            }
+
+            // refresh dataGrid periodically
+            while (client.IsConnected)
             {
                 try
                 {
@@ -164,7 +179,7 @@ namespace MIRLE_GPLC
                         {
                             try
                             {
-                                Invoke(new DataGridHandler(RefreshGridValue), new Object[] { i, d });
+                                Invoke(new dataGridHandler(RefreshGridValue), new Object[] { i, d });
                             }
                             catch (Exception)
                             {
@@ -172,7 +187,6 @@ namespace MIRLE_GPLC
                         }
                         i++;
                     }
-                    //SQLiteDBMS.execUpdate("INSERT INTO test values(" + j++ + ")");
                     SpinWait.SpinUntil(() => false, 1000);
                 }
                 catch (ModbusException)
@@ -182,7 +196,7 @@ namespace MIRLE_GPLC
         }
 
         #endregion
-
+         
         private void InputButton_Click(object sender, EventArgs e)
         {
             try
@@ -194,19 +208,48 @@ namespace MIRLE_GPLC
                     throw new FormatException("Latlng value out of bound");
                 }
 
-                PointLatLng p = new PointLatLng(lat, lng);
-                GMarkerGoogle m = new GMarkerGoogle(p, GMarkerGoogleType.green_pushpin);
-                this.gMap.Position = p;
-                // add to overlay
-                markersOverlay.Markers.Add(m);
-                // allow map zooming
-                //marker.IsHitTestVisible = false;
+                addMarker(lat, lng);
             }
             catch (FormatException ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
+
+        #region -- UI delegate --
+
+        delegate void dataGridHandler(int i, long d);
+        private void RefreshGridValue(int i, long d)
+        {
+            int slot = i % 10;
+            dataGridView1.Rows[slot].HeaderCell.Value = i.ToString();
+            dataGridView1.Rows[slot].Cells[0].Value = d;
+            //dataGridView2.DataSource = SQLiteDBMS.execQuery("SELECT * FROM test");
+        }
+
+        delegate void ModbusStatusHandler(string status);
+        private void RefreshModbusLabel(string status)
+        {
+            modbusStatusLabel.Text = status;
+        }
+
+        private GMapMarker addMarker(double lat, double lng)
+        {
+            return addMarker(new PointLatLng(lat, lng));
+        }
+
+        private GMapMarker addMarker(PointLatLng p)
+        {
+            GMarkerGoogle m = new GMarkerGoogle(p, GMarkerGoogleType.green_pushpin);
+            this.gMap.Position = p;
+            // add to overlay
+            markersOverlay.Markers.Add(m);
+            // allow map zooming
+            //marker.IsHitTestVisible = false;
+            return m;
+        }
+
+        #endregion
 
     }
 }
