@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using Modbus;
 using Modbus.Client;
 using System.Threading;
+using SQLiteDB;
 
 namespace MIRLE_GPLC
 {
@@ -33,6 +34,7 @@ namespace MIRLE_GPLC
             this.gMap.DragButton = System.Windows.Forms.MouseButtons.Left;
             this.gMap.ShowCenter = false;
             dataGridView1.Rows.Add(10);
+            //SQLiteDBMS.execUpdate("CREATE TABLE test (id int primary key);");
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -142,6 +144,7 @@ namespace MIRLE_GPLC
             int slot = i % 10;
             dataGridView1.Rows[slot].HeaderCell.Value = i.ToString();
             dataGridView1.Rows[slot].Cells[0].Value = d;
+            //dataGridView2.DataSource = SQLiteDBMS.execQuery("SELECT * FROM test");
         }
 
         private void dataGridWorker(object o)
@@ -169,14 +172,11 @@ namespace MIRLE_GPLC
                         }
                         i++;
                     }
+                    //SQLiteDBMS.execUpdate("INSERT INTO test values(" + j++ + ")");
                     SpinWait.SpinUntil(() => false, 1000);
                 }
                 catch (ModbusException)
                 {
-                }
-                catch (Exception)
-                {
-                    break;
                 }
             }
         }

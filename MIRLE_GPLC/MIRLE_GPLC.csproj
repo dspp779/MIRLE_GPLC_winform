@@ -102,6 +102,12 @@
     <Folder Include="dll\" />
     <Folder Include="src\gmarker\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SQLiteDB\SQLiteDB.csproj">
+      <Project>{adfda4b5-8ea6-4e2b-ad5e-c6563f764111}</Project>
+      <Name>SQLiteDB</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
