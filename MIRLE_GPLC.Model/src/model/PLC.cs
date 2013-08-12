@@ -7,13 +7,13 @@ namespace MIRLE_GPLC.Model
 {
     public class PLC
     {
-        private int _plcid;
+        private long _plcid;
         private int _id;
         private string _ip;
         private int _port;
         private List<Record> _dataFields;
 
-        public int PLC_ID
+        public long PLC_ID
         {
             get { return _plcid; }
         }
@@ -38,7 +38,7 @@ namespace MIRLE_GPLC.Model
             get { return _dataFields; }
         }
 
-        public PLC(int PLC_ID, int id, string ip, int port, List<Record> dataFields)
+        public PLC(long PLC_ID, int id, string ip, int port, List<Record> dataFields)
         {
             this._plcid = PLC_ID;
             this._id = id;

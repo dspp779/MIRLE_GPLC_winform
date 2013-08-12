@@ -7,14 +7,14 @@ namespace MIRLE_GPLC.Model
 {
     public class ProjectData
     {
-        private int _id;
+        private long _id;
         private string _name;
         private string _addr;
         private double _lat;
         private double _lng;
         private List<PLC> _plcs;
 
-        public int id
+        public Int64 id
         {
             get { return _id; }
         }
@@ -44,7 +44,7 @@ namespace MIRLE_GPLC.Model
             get { return _plcs; }
         }
 
-        public ProjectData(int id, string name, string addr,
+        public ProjectData(Int64 id, string name, string addr,
             double lat, double lng, List<PLC> plcs)
         {
             this._id = id;
