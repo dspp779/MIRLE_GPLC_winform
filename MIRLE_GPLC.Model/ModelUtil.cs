@@ -200,8 +200,8 @@ namespace MIRLE_GPLC.Model
         public static void updateProject(long id, string name, string addr, double lat, double lng)
         {
             SQLiteDBMS.execUpdate("UPDATE Project SET   "
-                + "name='" + name + "', addr='" + addr + "', lat=" + lat + ", lng=" + lat
-                + "WHERE id=" + id);
+                + "name='" + name + "', addr='" + addr + "', lat=" + lat + ", lng=" + lng
+                + " WHERE id=" + id);
         }
 
         #endregion

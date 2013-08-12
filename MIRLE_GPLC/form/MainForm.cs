@@ -275,7 +275,7 @@ namespace MIRLE_GPLC
                 }
 
                 // update database
-                if (markersOverlay.Markers.Contains(currMarker))
+                if (InputButton.Text.Equals("Modify"))
                 {
                     ModelUtil.updateProject(id, name, addr, lat, lng);
                 }
