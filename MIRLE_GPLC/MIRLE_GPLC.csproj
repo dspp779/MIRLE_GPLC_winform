@@ -95,12 +95,21 @@
     </Compile>
     <Compile Include="form\marker\ProjectMarker.cs" />
     <Compile Include="form\Program.cs" />
+    <Compile Include="form\ToolTipContent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="form\ToolTipContent.Designer.cs">
+      <DependentUpon>ToolTipContent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="form\InputForm.resx">
       <DependentUpon>InputForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="form\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="form\ToolTipContent.resx">
+      <DependentUpon>ToolTipContent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -131,6 +140,10 @@
     <Folder Include="src\gmarker\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Downloads\SuperContextMenu\SuperContextMenu.csproj">
+      <Project>{a04a0762-6790-40a2-8883-722febff8bf2}</Project>
+      <Name>SuperContextMenu %28SuperContextMenu\SuperContextMenu%29</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MIRLE_GPLC.Model\MIRLE_GPLC.Model.csproj">
       <Project>{5959daed-701a-42fb-b3ed-2257ef5693c9}</Project>
       <Name>MIRLE_GPLC.Model</Name>

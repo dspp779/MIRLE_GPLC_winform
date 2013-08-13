@@ -17,6 +17,9 @@ using System.Net.Sockets;
 using MIRLE_GPLC.Model;
 using System.Data.Common;
 using MIRLE_GPLC.form.marker;
+using MIRLE_GPLC.form;
+using SuperContextMenu;
+using GMap.NET.WindowsForms.ToolTips;
 
 namespace MIRLE_GPLC
 {
@@ -28,6 +31,7 @@ namespace MIRLE_GPLC
         private bool isDragging = false;
 
         private List<GMapMarker> focusMarkerList = new List<GMapMarker>();
+        private List<ProjectMarker> mouseOveredMarkers = new List<ProjectMarker>();
 
         AbsModbusClient client;
 
@@ -46,6 +50,9 @@ namespace MIRLE_GPLC
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            // initial position on screen
+            this.CenterToScreen();
+
             // initialize map properties
             gMap.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
             // set language
@@ -186,6 +193,41 @@ namespace MIRLE_GPLC
                 textBox_case_ID.Text = pd.id.ToString();
                 textBox_case_Name.Text = pd.name;
                 textBox_case_addr.Text = pd.addr;
+            }
+
+            if (mouseOveredMarkers.Contains(item))
+            {
+                // get marker local position
+                GPoint pos = gMap.FromLatLngToLocal(item.Position);
+                // set map center
+                this.gMap.Position = gMap.FromLocalToLatLng((int)pos.X, (int)pos.Y + gMap.Height / 4);
+                // set context menu
+                if (mouseOveredMarkers.Count >= 1)
+                {
+                    ToolTipContent ttc = new ToolTipContent(mouseOveredMarkers);
+                    PoperContainer ttcContainer = new PoperContainer(ttc);
+
+                    GPoint p = gMap.FromLatLngToLocal(item.Position);
+                    p.Offset(item.Size.Width / 2, -1 * (item.Size.Height));
+                    ttcContainer.Show(this, new System.Drawing.Point((int)p.X, (int)p.Y));
+                }
+            }
+
+        }
+
+        private void gMap_OnMarkerEnter(GMapMarker item)
+        {
+            if (item is ProjectMarker)
+            {
+                mouseOveredMarkers.Add(item as ProjectMarker);
+            }
+        }
+
+        private void gMap_OnMarkerLeave(GMapMarker item)
+        {
+            if (item is ProjectMarker)
+            {
+                mouseOveredMarkers.Remove(item as ProjectMarker);
             }
         }
 
@@ -350,6 +392,7 @@ namespace MIRLE_GPLC
             ProjectMarker m = new ProjectMarker(latlng, p);
             m.ToolTipText = p.name + "\n" + p.addr;
             m.ToolTipMode = MarkerTooltipMode.Never;
+            m.ToolTip.Format.Alignment = StringAlignment.Near;
             if (gMap.InvokeRequired)
             {
                 return (GMapMarker)Invoke(new addMarkerHandler(addMarker), new Object[] { m });
