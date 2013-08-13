@@ -29,27 +29,26 @@ namespace MIRLE.GPLC.Model.SQLite
             return new SQLiteConnection("Data Source=" + path);
         }
 
-        public static DataTable execQuery(string sql)
+        public static DataTable execQuery(SQLiteCommand cmd)
         {
             using (SQLiteConnection conn = getConnection())
             {
                 conn.Open();
-                SQLiteDataAdapter sda = new SQLiteDataAdapter(sql, conn);
+                cmd.Connection = conn;
+                SQLiteDataAdapter sda = new SQLiteDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 sda.Fill(dt);
                 return dt;
             }
         }
 
-        public static int execUpdate(string sql)
+        public static int execUpdate(SQLiteCommand cmd)
         {
             using (SQLiteConnection conn = getConnection())
             {
                 conn.Open();
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, conn))
-                {
-                    return cmd.ExecuteNonQuery();
-                }
+                cmd.Connection = conn;
+                return cmd.ExecuteNonQuery();
             }
         }
     }

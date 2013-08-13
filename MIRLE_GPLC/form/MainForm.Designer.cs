@@ -27,6 +27,10 @@
                 {
                     gMap.Dispose();
                 }
+                if (currMarker != null)
+                {
+                    currMarker.Dispose();
+                }
                 base.Dispose(disposing);
             }
         }

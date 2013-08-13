@@ -14,31 +14,54 @@ namespace MIRLE_GPLC.Model
     {
         #region -- add model --
 
-        public static void addProject(long id, string name, string addr, double lat, double lng)
+        public static int addProject(ProjectData p)
         {
-            SQLiteDBMS.execUpdate("INSERT INTO Project (id, name, addr, lat, lng) "
-                + "values (" + id + ", '" + name + "', '" + addr + "', " + lat + ", " + lng
-                + ")");
+            return addProject(p.id, p.name, p.addr, p.lat, p.lng);
         }
 
-        public static void addProject(ProjectData p)
+        public static int addProject(long id, string name, string addr, double lat, double lng)
         {
-            addProject(p.id, p.name, p.addr, p.lat, p.lng);
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "INSERT INTO Project (id, name, addr, lat, lng) values (@id, @name, @addr, @lat, @lng)"))
+            {
+                cmd.Parameters.Add("@id", DbType.Int64).Value = id;
+                cmd.Parameters.Add("@name", DbType.String).Value = name;
+                cmd.Parameters.Add("@addr", DbType.String).Value = addr;
+                cmd.Parameters.Add("@lat", DbType.Double).Value = lat;
+                cmd.Parameters.Add("@lng", DbType.Double).Value = lng;
+                return SQLiteDBMS.execUpdate(cmd);
+            }
         }
 
-        public static void addPLC(long plc_id, int id, string ip, int port, long project_id)
+        public static int addPLC(long plc_id, int id, string ip, int port, long project_id)
         {
-            SQLiteDBMS.execUpdate("INSERT INTO PLC (plc_id, id, ip, port, project_id) "
-                + "values (" + plc_id + ", " + id + ", '" + ip + "', " + port + ", "
-                + project_id + ")");
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "INSERT INTO PLC (plc_id, id, ip, port, project_id) values (@plc_id, @id, @ip, @port, @project_id)"))
+            {
+                cmd.Parameters.Add("@plc_id", DbType.Int64).Value = plc_id;
+                cmd.Parameters.Add("@id", DbType.Int32).Value = id;
+                cmd.Parameters.Add("@ip", DbType.String).Value = ip;
+                cmd.Parameters.Add("@port", DbType.Int32).Value = port;
+                cmd.Parameters.Add("@project_id", DbType.Int64).Value = project_id;
+                return SQLiteDBMS.execUpdate(cmd);
+            }
         }
 
 
-        public static void addDataField(long plc_id, string start_addr, int length, string format, string alias)
+        public static int addDataField(long plc_id, string start_addr, int length, string format, string alias)
         {
-            SQLiteDBMS.execUpdate("INSERT INTO DataField (plc_id, start_addr, length, format, alias) "
-                + "values (" + plc_id + ", " + start_addr + ", " + length + ", '" + format + "', '" + alias
-                + "')");
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "INSERT INTO DataField (plc_id, start_addr, length, format, alias) "
+                + "values (@plc_id, @start_addr, @length, @format, @alias)"))
+            {
+                cmd.Parameters.Add("@plc_id", DbType.Int64).Value = plc_id;
+                cmd.Parameters.Add("@start_addr", DbType.Int32).Value = start_addr;
+                cmd.Parameters.Add("@length", DbType.Int32).Value = length;
+                cmd.Parameters.Add("@format", DbType.String).Value = format;
+                cmd.Parameters.Add("@alias", DbType.String).Value = alias;
+                return SQLiteDBMS.execUpdate(cmd);
+            }
+
         }
 
         public static void addDataFields(List<Record> list, long plc_id)
@@ -57,10 +80,14 @@ namespace MIRLE_GPLC.Model
                 foreach (Record r in list)
                 {
                     string sql = "INSERT INTO DataField (plc_id, start_addr, length, format, alias) "
-                    + "values (" + plc_id + ", " + r.addr + ", " + r.length + ", " + r.format + ", "
-                    + r.alias + ")";
+                    + "values (@plc_id, @addr, @length , @format, @alias)";
                     using (cmd = new SQLiteCommand(sql, conn))
                     {
+                        cmd.Parameters.Add("@plc_id", DbType.Int64).Value = plc_id;
+                        cmd.Parameters.Add("@start_addr", DbType.Int32).Value = r.addr;
+                        cmd.Parameters.Add("@length", DbType.Int32).Value = r.length;
+                        cmd.Parameters.Add("@format", DbType.String).Value = r.format;
+                        cmd.Parameters.Add("@alias", DbType.String).Value = r.alias;
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -70,7 +97,6 @@ namespace MIRLE_GPLC.Model
                 {
                     cmd.ExecuteNonQuery();
                 }
-                conn.Close();
             }
         }
 
@@ -102,10 +128,11 @@ namespace MIRLE_GPLC.Model
             }
             catch (SQLiteException)
             {
-                SQLiteDBMS.execUpdate("CREATE TABLE Project"
-                    + "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + "name TEXT, addr TEXT, lat REAL, lng REAL)"
-                );
+                using (SQLiteCommand cmd = new SQLiteCommand("CREATE TABLE Project ("
+                    + "id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, addr TEXT, lat REAL, lng REAL)"))
+                {
+                    SQLiteDBMS.execUpdate(cmd);
+                }
 
                 return new List<ProjectData>();
             }
@@ -141,11 +168,12 @@ namespace MIRLE_GPLC.Model
             }
             catch (SQLiteException)
             {
-                SQLiteDBMS.execUpdate("CREATE TABLE PLC ("
-                    + "plc_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + "id INT, ip VARCHAR(15), port INT,"
-                    + "project_id INTEGER)"
-                );
+                using (SQLiteCommand cmd = new SQLiteCommand("CREATE TABLE PLC ("
+                    + "plc_id INTEGER PRIMARY KEY AUTOINCREMENT, id INT, ip VARCHAR(15), "
+                    + "port INT, project_id INTEGER)"))
+                {
+                    SQLiteDBMS.execUpdate(cmd);
+                }
 
                 return new List<PLC>();
             }
@@ -179,11 +207,12 @@ namespace MIRLE_GPLC.Model
             }
             catch (SQLiteException)
             {
-                SQLiteDBMS.execUpdate("CREATE TABLE PLC ("
-                    + "plc_id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + "id INT, ip VARCHAR(15), port INT,"
-                    + "project_id INTEGER)"
-                );
+                using (SQLiteCommand cmd = new SQLiteCommand("CREATE TABLE DataField ("
+                    + "plc_id INTEGER, start_addr INT, length INT, format VARCHAR(10), "
+                    + "alias VARCHAR(20))"))
+                {
+                    SQLiteDBMS.execUpdate(cmd);
+                }
 
                 return new List<Record>();
             }
@@ -197,11 +226,47 @@ namespace MIRLE_GPLC.Model
 
         #region -- modify model --
 
-        public static void updateProject(long id, string name, string addr, double lat, double lng)
+        public static int updateProject(long id, string name, string addr, double lat, double lng)
         {
-            SQLiteDBMS.execUpdate("UPDATE Project SET   "
-                + "name='" + name + "', addr='" + addr + "', lat=" + lat + ", lng=" + lng
-                + " WHERE id=" + id);
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "UPDATE Project SET name=@name, addr=@addr, lat=@lat, lng=@lng WHERE id=@id"))
+            {
+                cmd.Parameters.Add("@id", DbType.Int64).Value = id;
+                cmd.Parameters.Add("@name", DbType.String).Value = name;
+                cmd.Parameters.Add("@addr", DbType.String).Value = addr;
+                cmd.Parameters.Add("@lat", DbType.Double).Value = lat;
+                cmd.Parameters.Add("@lng", DbType.Double).Value = lng;
+                return SQLiteDBMS.execUpdate(cmd);
+            }
+        }
+
+        public static int updatePLC(long plc_id, int id, string ip, int port, long project_id)
+        {
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "UPDATE PLC SET id=@id, ip=@ip, port=@port, project_id=@project_id WHERE plc_id=@plc_id"))
+            {
+                cmd.Parameters.Add("@plc_id", DbType.Int64).Value = plc_id;
+                cmd.Parameters.Add("@id", DbType.Int32).Value = id;
+                cmd.Parameters.Add("@ip", DbType.String).Value = ip;
+                cmd.Parameters.Add("@port", DbType.Int32).Value = port;
+                cmd.Parameters.Add("@project_id", DbType.Int64).Value = project_id;
+                return SQLiteDBMS.execUpdate(cmd);
+            }
+        }
+
+        public static int updateDataField(long plc_id, string start_addr, int length, string format, string alias)
+        {
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "UPDATE DataField SET start_addr=@start_addr, length=@length, format=@format, alias=@alias"
+                + "' WHERE plc_id=@plc_id"))
+            {
+                cmd.Parameters.Add("@plc_id", DbType.Int64).Value = plc_id;
+                cmd.Parameters.Add("@start_addr", DbType.Int32).Value = start_addr;
+                cmd.Parameters.Add("@length", DbType.Int32).Value = length;
+                cmd.Parameters.Add("@format", DbType.String).Value = format;
+                cmd.Parameters.Add("@alias", DbType.String).Value = alias;
+                return SQLiteDBMS.execUpdate(cmd);
+            }
         }
 
         #endregion
