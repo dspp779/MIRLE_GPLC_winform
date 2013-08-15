@@ -46,5 +46,10 @@ namespace MIRLE_GPLC.Model
             this._format = format;
             this._alias = alias;
         }
+
+        public string getVal()
+        {
+            return _format;
+        }
     }
 }

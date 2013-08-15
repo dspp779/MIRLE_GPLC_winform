@@ -49,7 +49,6 @@
             this.latlngLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.modbusStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.groupBox_location = new System.Windows.Forms.GroupBox();
             this.label_latlng_lng = new System.Windows.Forms.Label();
             this.textBox_latlng_lng = new System.Windows.Forms.TextBox();
@@ -60,7 +59,6 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox_case = new System.Windows.Forms.GroupBox();
-            this.textBox_case_addr = new System.Windows.Forms.TextBox();
             this.label_case_addr = new System.Windows.Forms.Label();
             this.textBox_case_Name = new System.Windows.Forms.TextBox();
             this.label_case_Name = new System.Windows.Forms.Label();
@@ -74,9 +72,9 @@
             this.textBox_net_ID = new System.Windows.Forms.TextBox();
             this.label_net_ID = new System.Windows.Forms.Label();
             this.gMap = new GMap.NET.WindowsForms.GMapControl();
+            this.richTextBox_case_addr = new System.Windows.Forms.RichTextBox();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.groupBox_location.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox_case.SuspendLayout();
@@ -116,7 +114,6 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Controls.Add(this.dataGridView2);
             this.panel1.Controls.Add(this.groupBox_location);
             this.panel1.Controls.Add(this.resetButton);
             this.panel1.Controls.Add(this.InputButton);
@@ -128,18 +125,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(419, 657);
             this.panel1.TabIndex = 3;
-            // 
-            // dataGridView2
-            // 
-            this.dataGridView2.AllowUserToAddRows = false;
-            this.dataGridView2.AllowUserToDeleteRows = false;
-            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(4, 289);
-            this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.ReadOnly = true;
-            this.dataGridView2.RowTemplate.Height = 24;
-            this.dataGridView2.Size = new System.Drawing.Size(240, 150);
-            this.dataGridView2.TabIndex = 11;
             // 
             // groupBox_location
             // 
@@ -241,7 +226,7 @@
             // 
             // groupBox_case
             // 
-            this.groupBox_case.Controls.Add(this.textBox_case_addr);
+            this.groupBox_case.Controls.Add(this.richTextBox_case_addr);
             this.groupBox_case.Controls.Add(this.label_case_addr);
             this.groupBox_case.Controls.Add(this.textBox_case_Name);
             this.groupBox_case.Controls.Add(this.label_case_Name);
@@ -249,18 +234,10 @@
             this.groupBox_case.Controls.Add(this.label_case_ID);
             this.groupBox_case.Location = new System.Drawing.Point(3, 105);
             this.groupBox_case.Name = "groupBox_case";
-            this.groupBox_case.Size = new System.Drawing.Size(243, 177);
+            this.groupBox_case.Size = new System.Drawing.Size(243, 191);
             this.groupBox_case.TabIndex = 7;
             this.groupBox_case.TabStop = false;
             this.groupBox_case.Text = "Case";
-            // 
-            // textBox_case_addr
-            // 
-            this.textBox_case_addr.Location = new System.Drawing.Point(6, 133);
-            this.textBox_case_addr.MaxLength = 15;
-            this.textBox_case_addr.Name = "textBox_case_addr";
-            this.textBox_case_addr.Size = new System.Drawing.Size(228, 22);
-            this.textBox_case_addr.TabIndex = 10;
             // 
             // label_case_addr
             // 
@@ -274,7 +251,7 @@
             // textBox_case_Name
             // 
             this.textBox_case_Name.Location = new System.Drawing.Point(8, 84);
-            this.textBox_case_Name.MaxLength = 15;
+            this.textBox_case_Name.MaxLength = 100;
             this.textBox_case_Name.Name = "textBox_case_Name";
             this.textBox_case_Name.Size = new System.Drawing.Size(223, 22);
             this.textBox_case_Name.TabIndex = 8;
@@ -412,6 +389,14 @@
             this.gMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gMap_MouseMove);
             this.gMap.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gMap_MouseUp);
             // 
+            // richTextBox_case_addr
+            // 
+            this.richTextBox_case_addr.Location = new System.Drawing.Point(8, 130);
+            this.richTextBox_case_addr.Name = "richTextBox_case_addr";
+            this.richTextBox_case_addr.Size = new System.Drawing.Size(223, 48);
+            this.richTextBox_case_addr.TabIndex = 11;
+            this.richTextBox_case_addr.Text = "";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -425,7 +410,6 @@
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.groupBox_location.ResumeLayout(false);
             this.groupBox_location.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -454,7 +438,6 @@
         private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.Button InputButton;
         private System.Windows.Forms.GroupBox groupBox_case;
-        private System.Windows.Forms.TextBox textBox_case_addr;
         private System.Windows.Forms.Label label_case_addr;
         private System.Windows.Forms.TextBox textBox_case_Name;
         private System.Windows.Forms.Label label_case_Name;
@@ -468,7 +451,7 @@
         private System.Windows.Forms.TextBox textBox_net_ID;
         private System.Windows.Forms.Label label_net_ID;
         private System.Windows.Forms.ToolStripStatusLabel modbusStatusLabel;
-        private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.RichTextBox richTextBox_case_addr;
     }
 }
 

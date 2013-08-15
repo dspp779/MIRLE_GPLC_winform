@@ -47,5 +47,9 @@ namespace MIRLE_GPLC.Model
             this._dataFields = dataFields;
         }
 
+        public override string ToString()
+        {
+            return string.Format("{0}:{1}.{2}", ip, port, id);
+        }
     }
 }

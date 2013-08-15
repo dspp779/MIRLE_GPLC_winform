@@ -1,7 +1,4 @@
-﻿using GMap.NET;
-using GMap.NET.WindowsForms;
-using GMap.NET.WindowsForms.Markers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,16 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Modbus;
-using Modbus.Client;
 using System.Threading;
 using System.Net.Sockets;
-using MIRLE_GPLC.Model;
 using System.Data.Common;
-using MIRLE_GPLC.form.marker;
+using MIRLE_GPLC.Model;
 using MIRLE_GPLC.form;
-using SuperContextMenu;
+using MIRLE_GPLC.form.marker;
+using GMap.NET;
+using GMap.NET.WindowsForms;
+using GMap.NET.WindowsForms.Markers;
 using GMap.NET.WindowsForms.ToolTips;
+using SuperContextMenu;
+using Modbus;
+using Modbus.Client;
 
 namespace MIRLE_GPLC
 {
@@ -58,7 +58,7 @@ namespace MIRLE_GPLC
             // set language
             GMap.NET.MapProviders.GMapProvider.Language = GMap.NET.LanguageType.ChineseTraditional;
             // tile retrieve policy: ServerOnly, ServerAndCache, CacheOnly.
-            GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerAndCache;
+            GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.CacheOnly;
             // initial latlng
             this.gMap.Position = new PointLatLng(23.8, 121);
 
@@ -119,16 +119,9 @@ namespace MIRLE_GPLC
             // move hover markers while dragging
             if (isDragging && currMarker != null && focusMarkerList.Contains(currMarker))
             {
-                currMarker.Position = latlng;
+                setCurrMarker(latlng);
                 gMap.Refresh();
-            }
-            foreach (GMapMarker marker in markersOverlay.Markers)
-            {
-                if (marker.IsMouseOver)
-                {
-                    marker.ToolTipMode = MarkerTooltipMode.OnMouseOver;
-                    break;
-                }
+
             }
         }
 
@@ -192,7 +185,7 @@ namespace MIRLE_GPLC
                 ProjectData pd = ((ProjectMarker) item).ProjectData;
                 textBox_case_ID.Text = pd.id.ToString();
                 textBox_case_Name.Text = pd.name;
-                textBox_case_addr.Text = pd.addr;
+                richTextBox_case_addr.Text = pd.addr;
             }
 
             if (mouseOveredMarkers.Contains(item))
@@ -209,7 +202,7 @@ namespace MIRLE_GPLC
 
                     GPoint p = gMap.FromLatLngToLocal(item.Position);
                     p.Offset(item.Size.Width / 2, -1 * (item.Size.Height));
-                    ttcContainer.Show(this, new System.Drawing.Point((int)p.X, (int)p.Y));
+                    ttcContainer.Show(this, new Point((int)p.X, (int)p.Y));
                 }
             }
 
@@ -308,7 +301,7 @@ namespace MIRLE_GPLC
                     throw new FormatException("ID is not a valid");
                 }
                 string name = textBox_case_Name.Text;
-                string addr = textBox_case_addr.Text;
+                string addr = richTextBox_case_addr.Text;
                 double lat = double.Parse(textBox_latlng_lat.Text);
                 double lng = double.Parse(textBox_latlng_lng.Text);
                 if (lat > 90 || lat < -90 || lng > 180 || lat < -180)

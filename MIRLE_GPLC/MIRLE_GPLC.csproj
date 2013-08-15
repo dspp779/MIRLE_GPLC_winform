@@ -83,6 +83,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="form\DataFieldForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="form\DataFieldForm.Designer.cs">
+      <DependentUpon>DataFieldForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="form\InputForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -96,17 +102,31 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="form\marker\ProjectMarker.cs" />
+    <Compile Include="form\PLCForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="form\PLCForm.Designer.cs">
+      <DependentUpon>PLCForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="form\Program.cs" />
-    <Compile Include="form\ToolTipContent.cs" />
+    <Compile Include="form\ToolTipContent.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="form\ToolTipContent.Designer.cs">
       <DependentUpon>ToolTipContent.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="form\DataFieldForm.resx">
+      <DependentUpon>DataFieldForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="form\InputForm.resx">
       <DependentUpon>InputForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="form\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="form\PLCForm.resx">
+      <DependentUpon>PLCForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="form\ToolTipContent.resx">
       <DependentUpon>ToolTipContent.cs</DependentUpon>

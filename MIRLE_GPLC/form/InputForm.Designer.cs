@@ -137,7 +137,7 @@
             // textBox_case_addr
             // 
             this.textBox_case_addr.Location = new System.Drawing.Point(6, 133);
-            this.textBox_case_addr.MaxLength = 15;
+            this.textBox_case_addr.MaxLength = 100;
             this.textBox_case_addr.Name = "textBox_case_addr";
             this.textBox_case_addr.Size = new System.Drawing.Size(228, 22);
             this.textBox_case_addr.TabIndex = 10;
@@ -154,7 +154,7 @@
             // textBox_case_Name
             // 
             this.textBox_case_Name.Location = new System.Drawing.Point(8, 84);
-            this.textBox_case_Name.MaxLength = 15;
+            this.textBox_case_Name.MaxLength = 100;
             this.textBox_case_Name.Name = "textBox_case_Name";
             this.textBox_case_Name.Size = new System.Drawing.Size(223, 22);
             this.textBox_case_Name.TabIndex = 8;

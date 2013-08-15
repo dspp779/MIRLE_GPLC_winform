@@ -54,5 +54,10 @@ namespace MIRLE_GPLC.Model
             this._lng = lng;
             this._plcs = plcs;
         }
+
+        public void loadPLC()
+        {
+            _plcs = ModelUtil.getPLCList(id);
+        }
     }
 }
