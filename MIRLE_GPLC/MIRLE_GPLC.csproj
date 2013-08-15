@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -95,9 +97,7 @@
     </Compile>
     <Compile Include="form\marker\ProjectMarker.cs" />
     <Compile Include="form\Program.cs" />
-    <Compile Include="form\ToolTipContent.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
+    <Compile Include="form\ToolTipContent.cs" />
     <Compile Include="form\ToolTipContent.Designer.cs">
       <DependentUpon>ToolTipContent.cs</DependentUpon>
     </Compile>
@@ -140,16 +140,20 @@
     <Folder Include="src\gmarker\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Downloads\SuperContextMenu\SuperContextMenu.csproj">
-      <Project>{a04a0762-6790-40a2-8883-722febff8bf2}</Project>
-      <Name>SuperContextMenu %28SuperContextMenu\SuperContextMenu%29</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MIRLE_GPLC.Model\MIRLE_GPLC.Model.csproj">
       <Project>{5959daed-701a-42fb-b3ed-2257ef5693c9}</Project>
       <Name>MIRLE_GPLC.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SuperContextMenu\SuperContextMenu.csproj">
+      <Project>{a04a0762-6790-40a2-8883-722febff8bf2}</Project>
+      <Name>SuperContextMenu %28SuperContextMenu\SuperContextMenu%29</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

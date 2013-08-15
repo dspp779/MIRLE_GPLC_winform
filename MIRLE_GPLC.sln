@@ -13,7 +13,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MIRLE_GPLC.Model", "MIRLE_G
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SuperContextMenu", "SuperContextMenu", "{3AFCEA00-0239-48BD-A368-685F04EDE272}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperContextMenu", "..\..\..\..\Downloads\SuperContextMenu\SuperContextMenu.csproj", "{A04A0762-6790-40A2-8883-722FEBFF8BF2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperContextMenu", "SuperContextMenu\SuperContextMenu.csproj", "{A04A0762-6790-40A2-8883-722FEBFF8BF2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E2D7EBA0-D0DB-4511-A051-EE54215DD3AF}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
