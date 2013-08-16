@@ -6,14 +6,12 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using SuperContextMenu;
-using GMap.NET.WindowsForms;
 using MIRLE_GPLC.form.marker;
 using MIRLE_GPLC.Model;
 
 namespace MIRLE_GPLC.form
 {
-    internal partial class ToolTipContent : SuperContextMenu.PopedContainer
+    internal partial class ProjectDataView : UserControl
     {
         private List<ProjectMarker> markers = new List<ProjectMarker>();
         private int _shownMarker = 0;
@@ -40,10 +38,13 @@ namespace MIRLE_GPLC.form
             }
         }
 
-        public ToolTipContent(List<ProjectMarker> Markers)
+        public ProjectDataView()
         {
             InitializeComponent();
+        }
 
+        public void init(List<ProjectMarker> Markers)
+        {
             if (Markers.Count == 0)
                 return;
 
@@ -64,24 +65,27 @@ namespace MIRLE_GPLC.form
             ShownMarker = 0;
         }
 
+        #region -- Refresh List Method --
+
         private void refreshPLCList()
         {
             ProjectData p = markers[_shownMarker].ProjectData;
-            p.loadPLC();
+            p.reload();
 
             listView_plc.Items.Clear();
             listView_data.Items.Clear();
             foreach (PLC plc in p.plcs)
             {
-                ListViewItem item = new ListViewItem("PLC");
-                item.SubItems.Add(plc.id.ToString());
+                ListViewItem item = new ListViewItem(plc.alias);
+                item.SubItems.Add(plc.netid.ToString());
                 item.SubItems.Add(plc.ip);
                 item.SubItems.Add(plc.port.ToString());
                 listView_plc.Items.Add(item);
             }
+            lastSelectedPLC = null;
         }
 
-        private void refreshDataField(PLC plc)
+        private void refreshItemList(PLC plc)
         {
             listView_data.Items.Clear();
             foreach (Record r in plc.dataFields)
@@ -90,12 +94,9 @@ namespace MIRLE_GPLC.form
                 item.SubItems.Add(r.getVal());
                 listView_data.Items.Add(item);
             }
-            if (plc.dataFields.Count == 0)
-            {
-                ListViewItem item = new ListViewItem("none");
-                listView_data.Items.Add(item);
-            }
         }
+
+        #endregion
 
         private void buttonBack_Click(object sender, EventArgs e)
         {
@@ -107,53 +108,94 @@ namespace MIRLE_GPLC.form
             ShownMarker++;
         }
 
+
         private void listView_plc_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listView_plc.SelectedIndices.Count > 0)
             {
                 lastSelectedPLC = markers[_shownMarker].ProjectData.plcs[listView_plc.SelectedIndices[0]];
-                refreshDataField(lastSelectedPLC);
+                refreshItemList(lastSelectedPLC);
             }
         }
 
-        private void listView_plc_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void listView_plc_DoubleClick(object sender, EventArgs e)
         {
             int index = listView_plc.SelectedIndices.Count > 0 ? listView_plc.SelectedIndices[0] : -1;
             PLCEditDialog(index);
-            //refreshPLCList();
         }
 
-        private void listView_data_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void listView_data_DoubleClick(object sender, EventArgs e)
         {
             int index = listView_data.SelectedIndices.Count > 0 ? listView_data.SelectedIndices[0] : -1;
             DataFieldDialog(index);
-            //refreshPLCList();
         }
 
-        private void PLCEditDialog(int index)
-        {
-            ProjectData project = markers[_shownMarker].ProjectData;
-            PLC plc = project.plcs[index];
 
-            PLCForm f = (index >= 0) ?
-                new PLCForm(project, plc) : new PLCForm(project);
-            
-            if (f.ShowDialog(this) == DialogResult.OK)
+        #region -- mouse double click event for non-item area --
+
+        private void listView_plc_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Clicks == 2)
             {
-                ModelUtil.inputPLC(f.plc, project.id);
+                listView_plc_DoubleClick(sender, e);
             }
         }
 
+        private void listView_data_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Clicks == 2)
+            {
+                listView_data_DoubleClick(sender, e);
+            }
+        }
+
+        #endregion
+
+        #region -- input dialog --
+        
+        private void PLCEditDialog(int index)
+        {
+            ProjectData project = markers[_shownMarker].ProjectData;
+
+            PLCForm f = (index >= 0) ?
+                new PLCForm(project, project.plcs[index]) : new PLCForm(project);
+            
+            if (f.ShowDialog(this) == DialogResult.OK)
+            {
+                if (f.plc.id > 0)
+                {
+                    ModelUtil.inputPLC(f.plc, project.id);
+                }
+                else
+                {
+                    ModelUtil.insertPLC(f.plc, project.id);
+                }
+            }
+        }
         private void DataFieldDialog(int index)
         {
+            if (lastSelectedPLC == null)
+            {
+                return;
+            }
+
             DataFieldForm f = (index >= 0) ?
                 new DataFieldForm(lastSelectedPLC.dataFields[index]) : new DataFieldForm();
 
             if (f.ShowDialog(this) == DialogResult.OK)
             {
-                ModelUtil.inputDataField(f.record);
+                if (f.record.id > 0)
+                {
+                    ModelUtil.inputItem(f.record);
+                }
+                else
+                {
+                    ModelUtil.insertItem(f.record, lastSelectedPLC.id);
+                }
             }
         }
+
+        #endregion
 
     }
 }

@@ -12,52 +12,51 @@ namespace MIRLE_GPLC.Model
 {
     public class ModelUtil
     {
+
+        private static int executeUpdate(string sql)
+        {
+            using (SQLiteCommand cmd = new SQLiteCommand(sql))
+            {
+                return SQLiteDBMS.execUpdate(cmd);
+            }
+        }
+
         #region -- table creation --
 
         private static void createProjectTable()
         {
-            using (SQLiteCommand cmd = new SQLiteCommand("CREATE TABLE Project ("
-                + "id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, addr TEXT, lat REAL, lng REAL)"))
-            {
-                SQLiteDBMS.execUpdate(cmd);
-            }
+            string schema = "CREATE TABLE Project ( id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "name TEXT, addr TEXT, lat REAL, lng REAL)";
+            executeUpdate(schema);
         }
 
         private static void createPLCTable()
         {
-            using (SQLiteCommand cmd = new SQLiteCommand("CREATE TABLE PLC ("
-                + "plc_id INTEGER PRIMARY KEY AUTOINCREMENT, id INT, ip VARCHAR(15), "
-                + "port INT, project_id INTEGER)"))
-            {
-                SQLiteDBMS.execUpdate(cmd);
-            }
+            string schema = "CREATE TABLE PLC ( id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "net_id INT, net_ip VARCHAR(15), net_port INT, alias VARCHAR(20), project_id INTEGER)";
+            executeUpdate(schema);
         }
 
-        private static void createDataFieldTable()
+        private static void createItemTable()
         {
-            using (SQLiteCommand cmd = new SQLiteCommand("CREATE TABLE DataField ("
-                + "plc_id INTEGER, start_addr INT, length INT, format VARCHAR(10), "
-                + "alias VARCHAR(20))"))
-            {
-                SQLiteDBMS.execUpdate(cmd);
-            }
+            string schema = "CREATE TABLE Item ( id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "start_addr INT, length INT, format VARCHAR(10), alias VARCHAR(20), plc_id INTEGER)";
+            executeUpdate(schema);
         }
 
         #endregion
 
-        #region -- add model --
+        #region -- insert model --
 
-        public static int addProject(ProjectData p)
+        public static int insertProject(ProjectData p)
         {
-            return addProject(p.id, p.name, p.addr, p.lat, p.lng);
+            return insertProject(p.name, p.addr, p.lat, p.lng);
         }
-
-        public static int addProject(long id, string name, string addr, double lat, double lng)
+        public static int insertProject(string name, string addr, double lat, double lng)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "INSERT INTO Project (id, name, addr, lat, lng) values (@id, @name, @addr, @lat, @lng)"))
+                "INSERT INTO Project (name, addr, lat, lng) values (@name, @addr, @lat, @lng)"))
             {
-                cmd.Parameters.Add("@id", DbType.Int64).Value = id;
                 cmd.Parameters.Add("@name", DbType.String).Value = name;
                 cmd.Parameters.Add("@addr", DbType.String).Value = addr;
                 cmd.Parameters.Add("@lat", DbType.Double).Value = lat;
@@ -66,48 +65,45 @@ namespace MIRLE_GPLC.Model
             }
         }
 
-        public static int addPLC(PLC plc, long project_id)
+        public static int insertPLC(PLC plc, long project_id)
         {
-            return addPLC(plc.PLC_ID, plc.id, plc.ip, plc.port, project_id);
+            return insertPLC(plc.netid, plc.ip, plc.port, plc.alias, project_id);
         }
-
-        public static int addPLC(long plc_id, int id, string ip, int port, long project_id)
+        private static int insertPLC(int netid, string ip, int port, string alias, long project_id)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "INSERT INTO PLC (plc_id, id, ip, port, project_id) values (@plc_id, @id, @ip, @port, @project_id)"))
+                "INSERT INTO PLC (net_id, net_ip, net_port, alias, project_id) "
+                + "values (@net_id, @net_ip, @net_port, @alias, @project_id)"))
             {
-                cmd.Parameters.Add("@plc_id", DbType.Int64).Value = plc_id;
-                cmd.Parameters.Add("@id", DbType.Int32).Value = id;
-                cmd.Parameters.Add("@ip", DbType.String).Value = ip;
-                cmd.Parameters.Add("@port", DbType.Int32).Value = port;
+                cmd.Parameters.Add("@net_id", DbType.Int32).Value = netid;
+                cmd.Parameters.Add("@net_ip", DbType.String).Value = ip;
+                cmd.Parameters.Add("@net_port", DbType.Int32).Value = port;
+                cmd.Parameters.Add("@alias", DbType.String).Value = alias;
                 cmd.Parameters.Add("@project_id", DbType.Int64).Value = project_id;
                 return SQLiteDBMS.execUpdate(cmd);
             }
         }
 
-
-        public static int addDataField(Record r)
+        public static int insertItem(Record r, long plc_id)
         {
-            return addDataField(r.PLC_ID, r.addr, r.length, r.format, r.alias);
+            return insertItem(r.addr, r.length, r.format, r.alias,  plc_id);
         }
-
-        public static int addDataField(long plc_id, int start_addr, int length, string format, string alias)
+        private static int insertItem(int start_addr, int length, string format, string alias, long plc_id)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "INSERT INTO DataField (plc_id, start_addr, length, format, alias) "
-                + "values (@plc_id, @start_addr, @length, @format, @alias)"))
+                "INSERT INTO Item (start_addr, length, format, alias, plc_id) "
+                + "values (@start_addr, @length, @format, @alias, @plc_id)"))
             {
-                cmd.Parameters.Add("@plc_id", DbType.Int64).Value = plc_id;
                 cmd.Parameters.Add("@start_addr", DbType.Int32).Value = start_addr;
                 cmd.Parameters.Add("@length", DbType.Int32).Value = length;
                 cmd.Parameters.Add("@format", DbType.String).Value = format;
                 cmd.Parameters.Add("@alias", DbType.String).Value = alias;
+                cmd.Parameters.Add("@plc_id", DbType.Int64).Value = plc_id;
                 return SQLiteDBMS.execUpdate(cmd);
             }
 
         }
-
-        public static void addDataFields(List<Record> list, long plc_id)
+        public static void insertItem(List<Record> list, long plc_id)
         {
             using (SQLiteConnection conn = SQLiteDBMS.getConnection())
             {
@@ -122,15 +118,16 @@ namespace MIRLE_GPLC.Model
 
                 foreach (Record r in list)
                 {
-                    string sql = "INSERT INTO DataField (plc_id, start_addr, length, format, alias) "
-                    + "values (@plc_id, @addr, @length , @format, @alias)";
+                    string sql = "INSERT INTO Item (id, start_addr, length, format, alias, plc_id) "
+                    + "values (@id, @start_addr, @length, @format, @alias, @plc_id)";
                     using (cmd = new SQLiteCommand(sql, conn))
                     {
-                        cmd.Parameters.Add("@plc_id", DbType.Int64).Value = plc_id;
+                        cmd.Parameters.Add("@id", DbType.Int64).Value = r.id;
                         cmd.Parameters.Add("@start_addr", DbType.Int32).Value = r.addr;
                         cmd.Parameters.Add("@length", DbType.Int32).Value = r.length;
                         cmd.Parameters.Add("@format", DbType.String).Value = r.format;
                         cmd.Parameters.Add("@alias", DbType.String).Value = r.alias;
+                        cmd.Parameters.Add("@plc_id", DbType.Int64).Value = plc_id;
                         cmd.ExecuteNonQuery();
                     }
                 }
@@ -194,10 +191,10 @@ namespace MIRLE_GPLC.Model
                     {
                         while (reader.Read())
                         {
-                            long plc_id = reader.GetInt64(0);
-                            PLC p = new PLC(plc_id, reader.GetInt32(1),
+                            long id = reader.GetInt64(0);
+                            PLC p = new PLC(id, reader.GetInt32(1),
                                 reader.GetString(2), reader.GetInt32(3),
-                                getDataFields(plc_id));
+                                reader.GetString(4), null);
                             pList.Add(p);
                         }
                     }
@@ -215,7 +212,7 @@ namespace MIRLE_GPLC.Model
             }
         }
 
-        private static List<Record> getDataFields(long plc_id)
+        public static List<Record> getItemList(long plc_id)
         {
             try
             {
@@ -223,7 +220,7 @@ namespace MIRLE_GPLC.Model
                 {
                     conn.Open();
                     SQLiteCommand cmd = new SQLiteCommand(
-                        "SELECT * FROM DataField WHERE plc_id =" + plc_id, conn);
+                        "SELECT * FROM Item WHERE plc_id =" + plc_id, conn);
                     List<Record> list = new List<Record>();
                     using (SQLiteDataReader reader = cmd.ExecuteReader())
                     {
@@ -231,7 +228,8 @@ namespace MIRLE_GPLC.Model
                         {
                             list.Add(new Record(reader.GetInt64(0),
                                 reader.GetInt32(1), reader.GetInt32(2),
-                                reader.GetString(3), reader.GetString(4)));
+                                reader.GetString(3), reader.GetString(4),
+                                reader.GetInt64(5)));
                         }
                     }
                     return list;
@@ -239,7 +237,7 @@ namespace MIRLE_GPLC.Model
             }
             catch (SQLiteException)
             {
-                createDataFieldTable();
+                createItemTable();
                 return new List<Record>();
             }
             catch (Exception)
@@ -268,34 +266,33 @@ namespace MIRLE_GPLC.Model
 
         public static int updatePLC(PLC plc)
         {
-            return updatePLC(plc.PLC_ID, plc.id, plc.ip, plc.port);
+            return updatePLC(plc.id, plc.netid, plc.ip, plc.port, plc.alias);
         }
-
-        public static int updatePLC(long plc_id, int id, string ip, int port)
+        public static int updatePLC(long id, int netid, string ip, int port, string alias)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "UPDATE PLC SET id=@id, ip=@ip, port=@port WHERE plc_id=@plc_id"))
+                "UPDATE PLC SET net_id=@net_id, net_ip=@net_ip, net_port=@net_port, alias=@alias WHERE id=@id"))
             {
-                cmd.Parameters.Add("@plc_id", DbType.Int64).Value = plc_id;
-                cmd.Parameters.Add("@id", DbType.Int32).Value = id;
-                cmd.Parameters.Add("@ip", DbType.String).Value = ip;
-                cmd.Parameters.Add("@port", DbType.Int32).Value = port;
+                cmd.Parameters.Add("@id", DbType.Int64).Value = id;
+                cmd.Parameters.Add("@net_id", DbType.Int32).Value = netid;
+                cmd.Parameters.Add("@net_ip", DbType.String).Value = ip;
+                cmd.Parameters.Add("@net_port", DbType.Int32).Value = port;
+                cmd.Parameters.Add("@alias", DbType.String).Value = alias;
                 return SQLiteDBMS.execUpdate(cmd);
             }
         }
 
-        public static int updateDataField(Record r)
+        public static int updateItem(Record r)
         {
-            return updateDataField(r.PLC_ID, r.addr, r.length, r.format, r.alias);
+            return updateItem(r.id, r.addr, r.length, r.format, r.alias);
         }
-
-        public static int updateDataField(long plc_id, int start_addr, int length, string format, string alias)
+        public static int updateItem(long id, int start_addr, int length, string format, string alias)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "UPDATE DataField SET start_addr=@start_addr, length=@length, format=@format, alias=@alias"
-                + "' WHERE plc_id=@plc_id"))
+                "UPDATE Item SET start_addr=@start_addr, length=@length, format=@format, alias=@alias"
+                + " WHERE id=@id"))
             {
-                cmd.Parameters.Add("@plc_id", DbType.Int64).Value = plc_id;
+                cmd.Parameters.Add("@id", DbType.Int64).Value = id;
                 cmd.Parameters.Add("@start_addr", DbType.Int32).Value = start_addr;
                 cmd.Parameters.Add("@length", DbType.Int32).Value = length;
                 cmd.Parameters.Add("@format", DbType.String).Value = format;
@@ -316,19 +313,19 @@ namespace MIRLE_GPLC.Model
             }
             catch (SQLiteException)
             {
-                addPLC(p, project_id);
+                insertPLC(p, project_id);
             }
         }
 
-        public static void inputDataField(Record record)
+        public static void inputItem(Record record)
         {
             try
             {
-                updateDataField(record);
+                updateItem(record);
             }
             catch (SQLiteException)
             {
-                addDataField(record);
+                insertItem(record, record.plc_id);
             }
         }
 

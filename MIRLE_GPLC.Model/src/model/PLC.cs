@@ -7,20 +7,21 @@ namespace MIRLE_GPLC.Model
 {
     public class PLC
     {
-        private long _plcid;
-        private int _id;
+        private long _id;
+        private int _netid;
         private string _ip;
         private int _port;
+        private string _alias;
         private List<Record> _dataFields;
 
-        public long PLC_ID
-        {
-            get { return _plcid; }
-        }
-
-        public int id
+        public long id
         {
             get { return _id; }
+        }
+
+        public int netid
+        {
+            get { return _netid; }
         }
 
         public string ip
@@ -33,17 +34,29 @@ namespace MIRLE_GPLC.Model
             get { return _port; }
         }
 
-        public List<Record> dataFields
+        public string alias
         {
-            get { return _dataFields; }
+            get { return _alias; }
         }
 
-        public PLC(long PLC_ID, int id, string ip, int port, List<Record> dataFields)
+        public List<Record> dataFields
         {
-            this._plcid = PLC_ID;
+            get {
+                if (_dataFields == null)
+                {
+                    reload();
+                }
+                return _dataFields;
+            }
+        }
+
+        public PLC(long id, int netid, string ip, int port, string alias, List<Record> dataFields)
+        {
             this._id = id;
+            this._netid = netid;
             this._ip = ip;
             this._port = port;
+            this._alias = alias;
             this._dataFields = dataFields;
         }
 
@@ -51,5 +64,11 @@ namespace MIRLE_GPLC.Model
         {
             return string.Format("{0}:{1}.{2}", ip, port, id);
         }
+
+        public void reload()
+        {
+            _dataFields = ModelUtil.getItemList(_id);
+        }
+
     }
 }

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox_addr = new System.Windows.Forms.GroupBox();
+            this.textBox_net_ip = new System.Windows.Forms.TextBox();
             this.label_net_port = new System.Windows.Forms.Label();
             this.label_net_IP = new System.Windows.Forms.Label();
             this.textBox_net_port = new System.Windows.Forms.TextBox();
@@ -39,7 +40,6 @@
             this.label_project = new System.Windows.Forms.Label();
             this.label_name = new System.Windows.Forms.Label();
             this.textBox_name = new System.Windows.Forms.TextBox();
-            this.textBox_net_ip = new System.Windows.Forms.TextBox();
             this.groupBox_addr.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -54,9 +54,16 @@
             this.groupBox_addr.Location = new System.Drawing.Point(12, 70);
             this.groupBox_addr.Name = "groupBox_addr";
             this.groupBox_addr.Size = new System.Drawing.Size(194, 80);
-            this.groupBox_addr.TabIndex = 8;
+            this.groupBox_addr.TabIndex = 3;
             this.groupBox_addr.TabStop = false;
             this.groupBox_addr.Text = "Address";
+            // 
+            // textBox_net_ip
+            // 
+            this.textBox_net_ip.Location = new System.Drawing.Point(29, 36);
+            this.textBox_net_ip.Name = "textBox_net_ip";
+            this.textBox_net_ip.Size = new System.Drawing.Size(100, 22);
+            this.textBox_net_ip.TabIndex = 3;
             // 
             // label_net_port
             // 
@@ -64,7 +71,7 @@
             this.label_net_port.Location = new System.Drawing.Point(136, 18);
             this.label_net_port.Name = "label_net_port";
             this.label_net_port.Size = new System.Drawing.Size(24, 12);
-            this.label_net_port.TabIndex = 5;
+            this.label_net_port.TabIndex = 4;
             this.label_net_port.Text = "port";
             // 
             // label_net_IP
@@ -83,7 +90,7 @@
             this.textBox_net_port.MaxLength = 5;
             this.textBox_net_port.Name = "textBox_net_port";
             this.textBox_net_port.Size = new System.Drawing.Size(49, 22);
-            this.textBox_net_port.TabIndex = 4;
+            this.textBox_net_port.TabIndex = 5;
             this.textBox_net_port.Text = "502";
             // 
             // textBox_net_ID
@@ -100,30 +107,28 @@
             this.label_net_ID.Location = new System.Drawing.Point(6, 18);
             this.label_net_ID.Name = "label_net_ID";
             this.label_net_ID.Size = new System.Drawing.Size(17, 12);
-            this.label_net_ID.TabIndex = 3;
+            this.label_net_ID.TabIndex = 0;
             this.label_net_ID.Text = "ID";
             // 
             // btnOK
             // 
-            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOK.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOK.Location = new System.Drawing.Point(20, 156);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 9;
+            this.btnOK.TabIndex = 4;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             // 
             // btnCancel
             // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Location = new System.Drawing.Point(122, 156);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 10;
+            this.btnCancel.TabIndex = 5;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -134,7 +139,7 @@
             this.label_project.Location = new System.Drawing.Point(16, 9);
             this.label_project.Name = "label_project";
             this.label_project.Size = new System.Drawing.Size(39, 16);
-            this.label_project.TabIndex = 11;
+            this.label_project.TabIndex = 0;
             this.label_project.Text = "case";
             // 
             // label_name
@@ -143,7 +148,7 @@
             this.label_name.Location = new System.Drawing.Point(16, 40);
             this.label_name.Name = "label_name";
             this.label_name.Size = new System.Drawing.Size(32, 12);
-            this.label_name.TabIndex = 12;
+            this.label_name.TabIndex = 1;
             this.label_name.Text = "Name";
             // 
             // textBox_name
@@ -151,14 +156,7 @@
             this.textBox_name.Location = new System.Drawing.Point(54, 37);
             this.textBox_name.Name = "textBox_name";
             this.textBox_name.Size = new System.Drawing.Size(143, 22);
-            this.textBox_name.TabIndex = 13;
-            // 
-            // textBox_net_ip
-            // 
-            this.textBox_net_ip.Location = new System.Drawing.Point(29, 36);
-            this.textBox_net_ip.Name = "textBox_net_ip";
-            this.textBox_net_ip.Size = new System.Drawing.Size(100, 22);
-            this.textBox_net_ip.TabIndex = 6;
+            this.textBox_name.TabIndex = 2;
             // 
             // PLCForm
             // 

@@ -33,17 +33,17 @@ namespace MIRLE_GPLC.form
             this.CenterToScreen();
             if (plc != null)
             {
-                this.Text = "Modify PLC:" + plc.PLC_ID;
-                label_project.Text = project.name;
-                textBox_net_ID.Text = plc.id.ToString();
+                this.Text = "設定PLC";
+                textBox_name.Text = plc.alias;
+                textBox_net_ID.Text = plc.netid.ToString();
                 textBox_net_ip.Text = plc.ip;
                 textBox_net_port.Text = plc.port.ToString();
             }
             else
             {
-                this.Text = "Add PLC";
-                label_project.Text = project.id.ToString();
+                this.Text = "新增PLC到專案";
             }
+            label_project.Text = project.name;
         }
 
         private void PLCForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -52,8 +52,9 @@ namespace MIRLE_GPLC.form
             {
                 try
                 {
-                    plc = new PLC(plc.PLC_ID, int.Parse(textBox_net_ID.Text),
-                    textBox_net_ip.Text, int.Parse(textBox_net_port.Text), null);
+                    long id = (plc != null) ? plc.id: -1;
+                    plc = new PLC(id, int.Parse(textBox_net_ID.Text), textBox_net_ip.Text,
+                        int.Parse(textBox_net_port.Text), textBox_name.Text, null);
                 }
                 catch (FormatException ex)
                 {

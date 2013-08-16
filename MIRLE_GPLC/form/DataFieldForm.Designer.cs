@@ -45,7 +45,7 @@
             this.textBox_name.Location = new System.Drawing.Point(81, 12);
             this.textBox_name.Name = "textBox_name";
             this.textBox_name.Size = new System.Drawing.Size(143, 22);
-            this.textBox_name.TabIndex = 15;
+            this.textBox_name.TabIndex = 1;
             // 
             // label_name
             // 
@@ -53,7 +53,7 @@
             this.label_name.Location = new System.Drawing.Point(9, 15);
             this.label_name.Name = "label_name";
             this.label_name.Size = new System.Drawing.Size(56, 12);
-            this.label_name.TabIndex = 14;
+            this.label_name.TabIndex = 0;
             this.label_name.Text = "Item Name";
             // 
             // label1
@@ -62,7 +62,7 @@
             this.label1.Location = new System.Drawing.Point(12, 43);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 12);
-            this.label1.TabIndex = 16;
+            this.label1.TabIndex = 2;
             this.label1.Text = "Start Address";
             // 
             // label2
@@ -71,7 +71,7 @@
             this.label2.Location = new System.Drawing.Point(104, 43);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(38, 12);
-            this.label2.TabIndex = 18;
+            this.label2.TabIndex = 4;
             this.label2.Text = "Length";
             // 
             // label3
@@ -80,7 +80,7 @@
             this.label3.Location = new System.Drawing.Point(175, 43);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(38, 12);
-            this.label3.TabIndex = 20;
+            this.label3.TabIndex = 6;
             this.label3.Text = "Format";
             // 
             // textBox_addr
@@ -88,14 +88,14 @@
             this.textBox_addr.Location = new System.Drawing.Point(11, 58);
             this.textBox_addr.Name = "textBox_addr";
             this.textBox_addr.Size = new System.Drawing.Size(64, 22);
-            this.textBox_addr.TabIndex = 21;
+            this.textBox_addr.TabIndex = 3;
             // 
             // textBox_length
             // 
             this.textBox_length.Location = new System.Drawing.Point(92, 58);
             this.textBox_length.Name = "textBox_length";
             this.textBox_length.Size = new System.Drawing.Size(64, 22);
-            this.textBox_length.TabIndex = 22;
+            this.textBox_length.TabIndex = 5;
             // 
             // comboBox_format
             // 
@@ -109,7 +109,7 @@
             this.comboBox_format.Location = new System.Drawing.Point(169, 60);
             this.comboBox_format.Name = "comboBox_format";
             this.comboBox_format.Size = new System.Drawing.Size(55, 20);
-            this.comboBox_format.TabIndex = 23;
+            this.comboBox_format.TabIndex = 7;
             // 
             // btnCancel
             // 
@@ -119,7 +119,7 @@
             this.btnCancel.Location = new System.Drawing.Point(138, 97);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 25;
+            this.btnCancel.TabIndex = 9;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -131,7 +131,7 @@
             this.btnOK.Location = new System.Drawing.Point(36, 97);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 24;
+            this.btnOK.TabIndex = 8;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             // 

@@ -109,11 +109,23 @@
       <DependentUpon>PLCForm.cs</DependentUpon>
     </Compile>
     <Compile Include="form\Program.cs" />
-    <Compile Include="form\ToolTipContent.cs">
+    <Compile Include="form\ProjectCreateToolTipContent.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="form\ToolTipContent.Designer.cs">
-      <DependentUpon>ToolTipContent.cs</DependentUpon>
+    <Compile Include="form\ProjectCreateToolTipContent.Designer.cs">
+      <DependentUpon>ProjectCreateToolTipContent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="form\ToolTipContentContainer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="form\ToolTipContentContainer.Designer.cs">
+      <DependentUpon>ToolTipContentContainer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="form\ProjectDataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="form\ProjectDataView.Designer.cs">
+      <DependentUpon>ProjectDataView.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="form\DataFieldForm.resx">
@@ -128,8 +140,14 @@
     <EmbeddedResource Include="form\PLCForm.resx">
       <DependentUpon>PLCForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="form\ToolTipContent.resx">
-      <DependentUpon>ToolTipContent.cs</DependentUpon>
+    <EmbeddedResource Include="form\ProjectCreateToolTipContent.resx">
+      <DependentUpon>ProjectCreateToolTipContent.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="form\ToolTipContentContainer.resx">
+      <DependentUpon>ToolTipContentContainer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="form\ProjectDataView.resx">
+      <DependentUpon>ProjectDataView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

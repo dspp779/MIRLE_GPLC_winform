@@ -59,26 +59,17 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox_case = new System.Windows.Forms.GroupBox();
+            this.richTextBox_case_addr = new System.Windows.Forms.RichTextBox();
             this.label_case_addr = new System.Windows.Forms.Label();
             this.textBox_case_Name = new System.Windows.Forms.TextBox();
             this.label_case_Name = new System.Windows.Forms.Label();
-            this.textBox_case_ID = new System.Windows.Forms.TextBox();
             this.label_case_ID = new System.Windows.Forms.Label();
-            this.groupBox_addr = new System.Windows.Forms.GroupBox();
-            this.textBox_net_IP = new System.Windows.Forms.TextBox();
-            this.label_net_port = new System.Windows.Forms.Label();
-            this.label_net_IP = new System.Windows.Forms.Label();
-            this.textBox_net_port = new System.Windows.Forms.TextBox();
-            this.textBox_net_ID = new System.Windows.Forms.TextBox();
-            this.label_net_ID = new System.Windows.Forms.Label();
             this.gMap = new GMap.NET.WindowsForms.GMapControl();
-            this.richTextBox_case_addr = new System.Windows.Forms.RichTextBox();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox_location.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox_case.SuspendLayout();
-            this.groupBox_addr.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -88,7 +79,7 @@
             this.modbusStatusLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 660);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1035, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(870, 22);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.Stretch = false;
             this.statusStrip1.TabIndex = 1;
@@ -99,7 +90,7 @@
             this.latlngLabel.Name = "latlngLabel";
             this.latlngLabel.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.latlngLabel.RightToLeftAutoMirrorImage = true;
-            this.latlngLabel.Size = new System.Drawing.Size(930, 17);
+            this.latlngLabel.Size = new System.Drawing.Size(765, 17);
             this.latlngLabel.Spring = true;
             this.latlngLabel.Text = "latlngLabel";
             // 
@@ -119,11 +110,10 @@
             this.panel1.Controls.Add(this.InputButton);
             this.panel1.Controls.Add(this.dataGridView1);
             this.panel1.Controls.Add(this.groupBox_case);
-            this.panel1.Controls.Add(this.groupBox_addr);
             this.panel1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.panel1.Location = new System.Drawing.Point(616, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(419, 657);
+            this.panel1.Size = new System.Drawing.Size(254, 657);
             this.panel1.TabIndex = 3;
             // 
             // groupBox_location
@@ -132,9 +122,9 @@
             this.groupBox_location.Controls.Add(this.textBox_latlng_lng);
             this.groupBox_location.Controls.Add(this.label_latlng_lat);
             this.groupBox_location.Controls.Add(this.textBox_latlng_lat);
-            this.groupBox_location.Location = new System.Drawing.Point(203, 10);
+            this.groupBox_location.Location = new System.Drawing.Point(3, 207);
             this.groupBox_location.Name = "groupBox_location";
-            this.groupBox_location.Size = new System.Drawing.Size(209, 80);
+            this.groupBox_location.Size = new System.Drawing.Size(243, 80);
             this.groupBox_location.TabIndex = 10;
             this.groupBox_location.TabStop = false;
             this.groupBox_location.Text = "Location";
@@ -175,7 +165,7 @@
             // 
             // resetButton
             // 
-            this.resetButton.Location = new System.Drawing.Point(297, 188);
+            this.resetButton.Location = new System.Drawing.Point(129, 293);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(75, 23);
             this.resetButton.TabIndex = 9;
@@ -184,7 +174,7 @@
             // 
             // InputButton
             // 
-            this.InputButton.Location = new System.Drawing.Point(297, 140);
+            this.InputButton.Location = new System.Drawing.Point(16, 293);
             this.InputButton.Name = "InputButton";
             this.InputButton.Size = new System.Drawing.Size(75, 23);
             this.InputButton.TabIndex = 8;
@@ -207,15 +197,15 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Value});
-            this.dataGridView1.Location = new System.Drawing.Point(150, 381);
+            this.dataGridView1.Location = new System.Drawing.Point(9, 376);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.RowHeadersWidth = 165;
+            this.dataGridView1.RowHeadersWidth = 100;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
             this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle2;
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(267, 274);
+            this.dataGridView1.Size = new System.Drawing.Size(230, 274);
             this.dataGridView1.TabIndex = 4;
             // 
             // Value
@@ -230,19 +220,26 @@
             this.groupBox_case.Controls.Add(this.label_case_addr);
             this.groupBox_case.Controls.Add(this.textBox_case_Name);
             this.groupBox_case.Controls.Add(this.label_case_Name);
-            this.groupBox_case.Controls.Add(this.textBox_case_ID);
             this.groupBox_case.Controls.Add(this.label_case_ID);
-            this.groupBox_case.Location = new System.Drawing.Point(3, 105);
+            this.groupBox_case.Location = new System.Drawing.Point(3, 10);
             this.groupBox_case.Name = "groupBox_case";
             this.groupBox_case.Size = new System.Drawing.Size(243, 191);
             this.groupBox_case.TabIndex = 7;
             this.groupBox_case.TabStop = false;
             this.groupBox_case.Text = "Case";
             // 
+            // richTextBox_case_addr
+            // 
+            this.richTextBox_case_addr.Location = new System.Drawing.Point(6, 105);
+            this.richTextBox_case_addr.Name = "richTextBox_case_addr";
+            this.richTextBox_case_addr.Size = new System.Drawing.Size(223, 48);
+            this.richTextBox_case_addr.TabIndex = 11;
+            this.richTextBox_case_addr.Text = "";
+            // 
             // label_case_addr
             // 
             this.label_case_addr.AutoSize = true;
-            this.label_case_addr.Location = new System.Drawing.Point(6, 115);
+            this.label_case_addr.Location = new System.Drawing.Point(4, 90);
             this.label_case_addr.Name = "label_case_addr";
             this.label_case_addr.Size = new System.Drawing.Size(29, 12);
             this.label_case_addr.TabIndex = 11;
@@ -250,7 +247,7 @@
             // 
             // textBox_case_Name
             // 
-            this.textBox_case_Name.Location = new System.Drawing.Point(8, 84);
+            this.textBox_case_Name.Location = new System.Drawing.Point(6, 59);
             this.textBox_case_Name.MaxLength = 100;
             this.textBox_case_Name.Name = "textBox_case_Name";
             this.textBox_case_Name.Size = new System.Drawing.Size(223, 22);
@@ -259,19 +256,11 @@
             // label_case_Name
             // 
             this.label_case_Name.AutoSize = true;
-            this.label_case_Name.Location = new System.Drawing.Point(8, 66);
+            this.label_case_Name.Location = new System.Drawing.Point(6, 41);
             this.label_case_Name.Name = "label_case_Name";
             this.label_case_Name.Size = new System.Drawing.Size(29, 12);
             this.label_case_Name.TabIndex = 9;
             this.label_case_Name.Text = "案名";
-            // 
-            // textBox_case_ID
-            // 
-            this.textBox_case_ID.Location = new System.Drawing.Point(6, 37);
-            this.textBox_case_ID.MaxLength = 15;
-            this.textBox_case_ID.Name = "textBox_case_ID";
-            this.textBox_case_ID.Size = new System.Drawing.Size(100, 22);
-            this.textBox_case_ID.TabIndex = 6;
             // 
             // label_case_ID
             // 
@@ -281,74 +270,6 @@
             this.label_case_ID.Size = new System.Drawing.Size(17, 12);
             this.label_case_ID.TabIndex = 7;
             this.label_case_ID.Text = "ID";
-            // 
-            // groupBox_addr
-            // 
-            this.groupBox_addr.Controls.Add(this.textBox_net_IP);
-            this.groupBox_addr.Controls.Add(this.label_net_port);
-            this.groupBox_addr.Controls.Add(this.label_net_IP);
-            this.groupBox_addr.Controls.Add(this.textBox_net_port);
-            this.groupBox_addr.Controls.Add(this.textBox_net_ID);
-            this.groupBox_addr.Controls.Add(this.label_net_ID);
-            this.groupBox_addr.Location = new System.Drawing.Point(3, 10);
-            this.groupBox_addr.Name = "groupBox_addr";
-            this.groupBox_addr.Size = new System.Drawing.Size(196, 80);
-            this.groupBox_addr.TabIndex = 6;
-            this.groupBox_addr.TabStop = false;
-            this.groupBox_addr.Text = "Address";
-            // 
-            // textBox_net_IP
-            // 
-            this.textBox_net_IP.Location = new System.Drawing.Point(30, 36);
-            this.textBox_net_IP.MaxLength = 15;
-            this.textBox_net_IP.Name = "textBox_net_IP";
-            this.textBox_net_IP.Size = new System.Drawing.Size(100, 22);
-            this.textBox_net_IP.TabIndex = 0;
-            // 
-            // label_net_port
-            // 
-            this.label_net_port.AutoSize = true;
-            this.label_net_port.Location = new System.Drawing.Point(136, 18);
-            this.label_net_port.Name = "label_net_port";
-            this.label_net_port.Size = new System.Drawing.Size(24, 12);
-            this.label_net_port.TabIndex = 5;
-            this.label_net_port.Text = "port";
-            // 
-            // label_net_IP
-            // 
-            this.label_net_IP.AutoSize = true;
-            this.label_net_IP.Location = new System.Drawing.Point(30, 18);
-            this.label_net_IP.Name = "label_net_IP";
-            this.label_net_IP.Size = new System.Drawing.Size(15, 12);
-            this.label_net_IP.TabIndex = 1;
-            this.label_net_IP.Text = "IP";
-            // 
-            // textBox_net_port
-            // 
-            this.textBox_net_port.Enabled = false;
-            this.textBox_net_port.Location = new System.Drawing.Point(136, 36);
-            this.textBox_net_port.MaxLength = 5;
-            this.textBox_net_port.Name = "textBox_net_port";
-            this.textBox_net_port.Size = new System.Drawing.Size(49, 22);
-            this.textBox_net_port.TabIndex = 4;
-            this.textBox_net_port.Text = "502";
-            // 
-            // textBox_net_ID
-            // 
-            this.textBox_net_ID.Location = new System.Drawing.Point(6, 36);
-            this.textBox_net_ID.MaxLength = 2;
-            this.textBox_net_ID.Name = "textBox_net_ID";
-            this.textBox_net_ID.Size = new System.Drawing.Size(17, 22);
-            this.textBox_net_ID.TabIndex = 2;
-            // 
-            // label_net_ID
-            // 
-            this.label_net_ID.AutoSize = true;
-            this.label_net_ID.Location = new System.Drawing.Point(6, 18);
-            this.label_net_ID.Name = "label_net_ID";
-            this.label_net_ID.Size = new System.Drawing.Size(17, 12);
-            this.label_net_ID.TabIndex = 3;
-            this.label_net_ID.Text = "ID";
             // 
             // gMap
             // 
@@ -389,19 +310,11 @@
             this.gMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gMap_MouseMove);
             this.gMap.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gMap_MouseUp);
             // 
-            // richTextBox_case_addr
-            // 
-            this.richTextBox_case_addr.Location = new System.Drawing.Point(8, 130);
-            this.richTextBox_case_addr.Name = "richTextBox_case_addr";
-            this.richTextBox_case_addr.Size = new System.Drawing.Size(223, 48);
-            this.richTextBox_case_addr.TabIndex = 11;
-            this.richTextBox_case_addr.Text = "";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1035, 682);
+            this.ClientSize = new System.Drawing.Size(870, 682);
             this.Controls.Add(this.gMap);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
@@ -415,8 +328,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox_case.ResumeLayout(false);
             this.groupBox_case.PerformLayout();
-            this.groupBox_addr.ResumeLayout(false);
-            this.groupBox_addr.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -441,15 +352,7 @@
         private System.Windows.Forms.Label label_case_addr;
         private System.Windows.Forms.TextBox textBox_case_Name;
         private System.Windows.Forms.Label label_case_Name;
-        private System.Windows.Forms.TextBox textBox_case_ID;
         private System.Windows.Forms.Label label_case_ID;
-        private System.Windows.Forms.GroupBox groupBox_addr;
-        private System.Windows.Forms.TextBox textBox_net_IP;
-        private System.Windows.Forms.Label label_net_port;
-        private System.Windows.Forms.Label label_net_IP;
-        private System.Windows.Forms.TextBox textBox_net_port;
-        private System.Windows.Forms.TextBox textBox_net_ID;
-        private System.Windows.Forms.Label label_net_ID;
         private System.Windows.Forms.ToolStripStatusLabel modbusStatusLabel;
         private System.Windows.Forms.RichTextBox richTextBox_case_addr;
     }

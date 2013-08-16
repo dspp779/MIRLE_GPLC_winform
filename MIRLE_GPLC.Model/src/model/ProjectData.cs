@@ -41,7 +41,14 @@ namespace MIRLE_GPLC.Model
 
         public List<PLC> plcs
         {
-            get { return _plcs; }
+            get
+            {
+                if (_plcs == null)
+                {
+                    reload();
+                }
+                return _plcs;
+            }
         }
 
         public ProjectData(Int64 id, string name, string addr,
@@ -55,9 +62,9 @@ namespace MIRLE_GPLC.Model
             this._plcs = plcs;
         }
 
-        public void loadPLC()
+        public void reload()
         {
-            _plcs = ModelUtil.getPLCList(id);
+            _plcs = ModelUtil.getPLCList(_id);
         }
     }
 }

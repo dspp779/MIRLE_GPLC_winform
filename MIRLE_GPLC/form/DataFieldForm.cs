@@ -48,8 +48,9 @@ namespace MIRLE_GPLC.form
             {
                 try
                 {
-                    record = new Record(record.PLC_ID, int.Parse(textBox_addr.Text),
-                    int.Parse(textBox_length.Text), comboBox_format.Text, textBox_name.Text);
+                    long id = (record != null) ? record.id : -1;
+                    record = new Record(id, int.Parse(textBox_addr.Text), int.Parse(textBox_length.Text),
+                        comboBox_format.Text, textBox_name.Text, 0);
                 }
                 catch (FormatException ex)
                 {

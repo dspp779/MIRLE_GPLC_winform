@@ -26,12 +26,11 @@ namespace MIRLE_GPLC
     public partial class MainForm : Form
     {
         private GMapOverlay markersOverlay;
-        private GMapMarker currMarker = new GMarkerGoogle(
-            new PointLatLng(), GMarkerGoogleType.green_pushpin);
+        private GMapMarker currMarker;
         private bool isDragging = false;
 
-        private List<GMapMarker> focusMarkerList = new List<GMapMarker>();
-        private List<ProjectMarker> mouseOveredMarkers = new List<ProjectMarker>();
+
+        private List<GMapMarker> mouseOveredMarkers = new List<GMapMarker>();
 
         AbsModbusClient client;
 
@@ -70,13 +69,19 @@ namespace MIRLE_GPLC
             /* load projects from database
              * and add markers onto map
              */
-            ThreadPool.QueueUserWorkItem(new WaitCallback(loadProjects));
+            loadProjects();
 
             /* start up resident refresh 
              * modbus tcp worker
              */
             //ThreadPool.QueueUserWorkItem(new WaitCallback(modbusTCPWorker));
 
+        }
+
+        private void loadProjects()
+        {
+            markersOverlay.Clear();
+            ThreadPool.QueueUserWorkItem(new WaitCallback(loadProjects));
         }
 
         private void loadProjects(object o)
@@ -94,6 +99,7 @@ namespace MIRLE_GPLC
 
         private void gMap_MouseClick(object sender, MouseEventArgs e)
         {
+
         }
 
         private void gMap_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -101,6 +107,7 @@ namespace MIRLE_GPLC
             // zoom in when double clicked
             if (e.Button == MouseButtons.Left)
             {
+                gMap.Position = gMap.FromLocalToLatLng(e.Location.X, e.Location.Y);
                 gMap.Zoom++;
             }
         }
@@ -112,12 +119,12 @@ namespace MIRLE_GPLC
             latlngLabel.Text = string.Format("({0:0.00}, {1:0.00})", latlng.Lat, latlng.Lng);
 
             // clicked when mouse moving : dragging
-            if (e.Button != MouseButtons.None)
+            if (e.Button == MouseButtons.Right)
             {
                 isDragging = true;
             }
             // move hover markers while dragging
-            if (isDragging && currMarker != null && focusMarkerList.Contains(currMarker))
+            if (isDragging && currMarker != null && !(currMarker is ProjectMarker) )
             {
                 setCurrMarker(latlng);
                 gMap.Refresh();
@@ -127,42 +134,37 @@ namespace MIRLE_GPLC
 
         private void gMap_MouseUp(object sender, MouseEventArgs e)
         {
-            if (!isDragging)
-            {
-                if (focusMarkerList.Count > 0)
-                {
-                    InputButton.Text = (focusMarkerList[0] is ProjectMarker)
-                        ? "Modify" : "Add";
-                }
-            }
-            // clear hover markers while mouse up
-            focusMarkerList.Clear();
+            InputButton.Text = (currMarker is ProjectMarker) ? "Modify" : "Add";
             // set dragging status to false while mouse up
             isDragging = false;
         }
 
         private void gMap_MouseDown(object sender, MouseEventArgs e)
         {
-            // add hover markers to list while mouse down
-            foreach (GMapMarker marker in markersOverlay.Markers)
+            if (currMarker is GMarkerGoogle && !(currMarker is ProjectMarker))
             {
-                if (marker.IsMouseOver)
+                foreach (GMapMarker marker in mouseOveredMarkers)
                 {
-                    focusMarkerList.Add(marker);
+                    if (marker is ProjectMarker)
+                    {
+                        mouseOveredMarkers.Remove(currMarker);
+                        markersOverlay.Markers.Remove(currMarker);
+                        currMarker.Dispose();
+                        currMarker = null;
+                        gMap.Refresh();
+                        break;
+                    }
                 }
             }
-            // mouse down on a marker
-            if (focusMarkerList.Count > 0)
+            // mouse down on marker
+            if (mouseOveredMarkers.Count > 0)
             {
-                if (!currMarker.IsMouseOver || focusMarkerList.Count > 1)
-                {
-                    markersOverlay.Markers.Remove(currMarker);
-                }
+                currMarker = mouseOveredMarkers[0];
             }
             // add new marker while right mouse button downed
             else if (e.Button == MouseButtons.Right)
             {
-                focusMarkerList.Add(setCurrMarker(gMap.FromLocalToLatLng(e.X, e.Y)));
+                setCurrMarker(gMap.FromLocalToLatLng(e.X, e.Y));
             }
             gMap.Refresh();
         }
@@ -180,48 +182,43 @@ namespace MIRLE_GPLC
             }*/
             textBox_latlng_lat.Text = string.Format("{0:0.00000}", item.Position.Lat);
             textBox_latlng_lng.Text = string.Format("{0:0.00000}", item.Position.Lng);
-            if (item is ProjectMarker)
+            if (item == currMarker && item is ProjectMarker)
             {
-                ProjectData pd = ((ProjectMarker) item).ProjectData;
-                textBox_case_ID.Text = pd.id.ToString();
+                ProjectData pd = (item as ProjectMarker).ProjectData;
+                label_case_ID.Text = "ID:" + pd.id.ToString();
                 textBox_case_Name.Text = pd.name;
                 richTextBox_case_addr.Text = pd.addr;
-            }
 
-            if (mouseOveredMarkers.Contains(item))
-            {
                 // get marker local position
                 GPoint pos = gMap.FromLatLngToLocal(item.Position);
                 // set map center
                 this.gMap.Position = gMap.FromLocalToLatLng((int)pos.X, (int)pos.Y + gMap.Height / 4);
                 // set context menu
-                if (mouseOveredMarkers.Count >= 1)
+                List<ProjectMarker> list = new List<ProjectMarker>();
+                foreach (GMapMarker marker in mouseOveredMarkers)
                 {
-                    ToolTipContent ttc = new ToolTipContent(mouseOveredMarkers);
-                    PoperContainer ttcContainer = new PoperContainer(ttc);
-
-                    GPoint p = gMap.FromLatLngToLocal(item.Position);
-                    p.Offset(item.Size.Width / 2, -1 * (item.Size.Height));
-                    ttcContainer.Show(this, new Point((int)p.X, (int)p.Y));
+                    list.Add(marker as ProjectMarker);
                 }
-            }
+                ToolTipContentContainer ttc = new ToolTipContentContainer(list);
+                PoperContainer ttcContainer = new PoperContainer(ttc);
 
+                GPoint p = gMap.FromLatLngToLocal(item.Position);
+                p.Offset(item.Size.Width / 2, -1 * (item.Size.Height));
+                ttcContainer.Show(this, new Point((int)p.X, (int)p.Y));
+            }
+            else if (!(item is ProjectMarker))
+            {
+            }
         }
 
         private void gMap_OnMarkerEnter(GMapMarker item)
         {
-            if (item is ProjectMarker)
-            {
-                mouseOveredMarkers.Add(item as ProjectMarker);
-            }
+            mouseOveredMarkers.Add(item);
         }
 
         private void gMap_OnMarkerLeave(GMapMarker item)
         {
-            if (item is ProjectMarker)
-            {
-                mouseOveredMarkers.Remove(item as ProjectMarker);
-            }
+            mouseOveredMarkers.Remove(item);
         }
 
         #endregion
@@ -295,11 +292,6 @@ namespace MIRLE_GPLC
         {
             try
             {
-                int id;
-                if (!int.TryParse(textBox_case_ID.Text, out id))
-                {
-                    throw new FormatException("ID is not a valid");
-                }
                 string name = textBox_case_Name.Text;
                 string addr = richTextBox_case_addr.Text;
                 double lat = double.Parse(textBox_latlng_lat.Text);
@@ -312,13 +304,15 @@ namespace MIRLE_GPLC
                 // update database
                 if (InputButton.Text.Equals("Modify"))
                 {
+                    long id = (currMarker as ProjectMarker).ProjectData.id;
                     ModelUtil.updateProject(id, name, addr, lat, lng);
                 }
                 else
                 {
-                    addProject(id, name, addr, lat, lng);
+                    addProject(name, addr, lat, lng);
                 }
                 // update marker overlay and current marker
+                loadProjects();
             }
             catch (FormatException ex)
             {
@@ -384,7 +378,6 @@ namespace MIRLE_GPLC
         {
             ProjectMarker m = new ProjectMarker(latlng, p);
             m.ToolTipText = p.name + "\n" + p.addr;
-            m.ToolTipMode = MarkerTooltipMode.Never;
             m.ToolTip.Format.Alignment = StringAlignment.Near;
             if (gMap.InvokeRequired)
             {
@@ -398,14 +391,18 @@ namespace MIRLE_GPLC
 
         private GMapMarker setCurrMarker(PointLatLng p)
         {
-            currMarker.Position = p;
+            if (currMarker == null || currMarker is ProjectMarker)
+            {
+                currMarker = new GMarkerGoogle(p, GMarkerGoogleType.green_pushpin);
+                markersOverlay.Markers.Add(currMarker);
+            }
+            else
+            {
+                currMarker.Position = p;
+            }
             // set textbox as the latlng of current marker
             textBox_latlng_lat.Text = string.Format("{0:0.00000}", currMarker.Position.Lat);
             textBox_latlng_lng.Text = string.Format("{0:0.00000}", currMarker.Position.Lng);
-            if (!markersOverlay.Markers.Contains(currMarker))
-            {
-                markersOverlay.Markers.Add(currMarker);
-            }
             // refresh map
             this.gMap.Refresh();
             return currMarker;
@@ -415,20 +412,13 @@ namespace MIRLE_GPLC
         
         #region -- DB transaction --
 
-        private void addProject(ProjectData p)
-        {
-            addProject(p.id, p.name, p.addr, p.lat, p.lng);
-        }
-
-        private void addProject(long id, string name, string addr, double lat, double lng)
+        private void addProject(string name, string addr, double lat, double lng)
         {
             try
             {
-                ModelUtil.addProject(id, name, addr, lat, lng);
+                ModelUtil.insertProject(name, addr, lat, lng);
                 markersOverlay.Markers.Remove(currMarker);
                 currMarker.Dispose();
-                // ui
-                addPMarker(new ProjectData(id, name, addr, lat, lng, null));
             }
             catch (DbException ex)
             {

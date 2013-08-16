@@ -7,15 +7,16 @@ namespace MIRLE_GPLC.Model
 {
     public class Record
     {
-        private long _plcid;
+        private long _id;
         private int _addr;
         private int _length;
         private string _format;
         private string _alias;
+        private long _plcid;
 
-        public Int64 PLC_ID
+        public long id
         {
-            get { return _plcid; }
+            get { return _id; }
         }
 
         public int addr
@@ -38,13 +39,19 @@ namespace MIRLE_GPLC.Model
             get { return _alias; }
         }
 
-        public Record(long plcid, int addr, int length, string format, string alias)
+        public long plc_id
         {
-            this._plcid = plcid;
+            get { return _plcid; }
+        }
+
+        public Record(long id, int addr, int length, string format, string alias, long plcid)
+        {
+            this._id = id;
             this._addr = addr;
             this._length = length;
             this._format = format;
             this._alias = alias;
+            this._plcid = plcid;
         }
 
         public string getVal()
