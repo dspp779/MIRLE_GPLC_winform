@@ -28,13 +28,14 @@ namespace MIRLE_GPLC.form
                     value = 0;
 
                 _shownMarker = value;
+                lastSelectedPLC = null;
 
                 labelTitle.Text = markers[_shownMarker].ProjectData.name;
                 labelText.Text = markers[_shownMarker].ProjectData.addr;
 
                 labelCounter.Text = (_shownMarker + 1).ToString() + " of " + markers.Count;
 
-                refreshPLCList();
+                Refresh();
             }
         }
 
@@ -43,17 +44,17 @@ namespace MIRLE_GPLC.form
             InitializeComponent();
         }
 
-        public void init(List<ProjectMarker> Markers)
+        public void init(List<ProjectMarker> markers)
         {
-            if (Markers.Count == 0)
+            if (markers.Count == 0)
                 return;
 
             // Assign the list of markers
-            this.markers = Markers;
+            this.markers = markers;
 
             // Sort the list of markers if you want to
             // Exclude this if you dont care about order
-            markers.Sort(
+            this.markers.Sort(
                 delegate(ProjectMarker m1, ProjectMarker m2)
                 {
                     return m1.ProjectData.id.CompareTo(m2.ProjectData.id);
@@ -63,9 +64,21 @@ namespace MIRLE_GPLC.form
             // Show the first marker
             buttonBack.Enabled = buttonNext.Enabled = (markers.Count != 1);
             ShownMarker = 0;
+
+            this.Show();
         }
 
         #region -- Refresh List Method --
+
+        public override void Refresh()
+        {
+            base.Refresh();
+            projectCreateControl1.Hide();
+            dataFieldInputControl1.Hide();
+            this.listView_data.Show();
+            this.listView_plc.Show();
+            refreshPLCList();
+        }
 
         private void refreshPLCList()
         {
@@ -82,17 +95,21 @@ namespace MIRLE_GPLC.form
                 item.SubItems.Add(plc.port.ToString());
                 listView_plc.Items.Add(item);
             }
-            lastSelectedPLC = null;
+            refreshItemList(lastSelectedPLC);
         }
 
         private void refreshItemList(PLC plc)
         {
             listView_data.Items.Clear();
-            foreach (Record r in plc.dataFields)
+            if (plc != null)
             {
-                ListViewItem item = new ListViewItem(r.alias);
-                item.SubItems.Add(r.getVal());
-                listView_data.Items.Add(item);
+                plc.reload();
+                foreach (Record r in plc.dataFields)
+                {
+                    ListViewItem item = new ListViewItem(r.alias);
+                    item.SubItems.Add(r.getVal());
+                    listView_data.Items.Add(item);
+                }
             }
         }
 
@@ -114,20 +131,19 @@ namespace MIRLE_GPLC.form
             if (listView_plc.SelectedIndices.Count > 0)
             {
                 lastSelectedPLC = markers[_shownMarker].ProjectData.plcs[listView_plc.SelectedIndices[0]];
-                refreshItemList(lastSelectedPLC);
             }
         }
 
         private void listView_plc_DoubleClick(object sender, EventArgs e)
         {
             int index = listView_plc.SelectedIndices.Count > 0 ? listView_plc.SelectedIndices[0] : -1;
-            PLCEditDialog(index);
+            PLCEditControl(index);
         }
 
         private void listView_data_DoubleClick(object sender, EventArgs e)
         {
             int index = listView_data.SelectedIndices.Count > 0 ? listView_data.SelectedIndices[0] : -1;
-            DataFieldDialog(index);
+            DataFieldControl(index);
         }
 
 
@@ -149,49 +165,51 @@ namespace MIRLE_GPLC.form
             }
         }
 
+       
+        private void listView_plc_MouseUp(object sender, MouseEventArgs e)
+        {
+            if(!listView_plc.Visible && listView_plc.SelectedIndices.Count > 0)
+            {
+                lastSelectedPLC = null;
+            }
+            refreshItemList(lastSelectedPLC);
+        }
+
         #endregion
 
-        #region -- input dialog --
+        #region -- input control --
         
-        private void PLCEditDialog(int index)
+        private void PLCEditControl(int index)
         {
             ProjectData project = markers[_shownMarker].ProjectData;
 
-            PLCForm f = (index >= 0) ?
-                new PLCForm(project, project.plcs[index]) : new PLCForm(project);
-            
-            if (f.ShowDialog(this) == DialogResult.OK)
+            this.listView_data.Hide();
+            this.listView_plc.Hide();
+            if (index >= 0)
             {
-                if (f.plc.id > 0)
-                {
-                    ModelUtil.inputPLC(f.plc, project.id);
-                }
-                else
-                {
-                    ModelUtil.insertPLC(f.plc, project.id);
-                }
+                projectCreateControl1.init(project, project.plcs[index]);
+            }
+            else
+            {
+                projectCreateControl1.init(project);
             }
         }
-        private void DataFieldDialog(int index)
+        private void DataFieldControl(int index)
         {
             if (lastSelectedPLC == null)
             {
                 return;
             }
 
-            DataFieldForm f = (index >= 0) ?
-                new DataFieldForm(lastSelectedPLC.dataFields[index]) : new DataFieldForm();
-
-            if (f.ShowDialog(this) == DialogResult.OK)
+            this.listView_data.Hide();
+            this.listView_plc.Hide();
+            if (index >= 0)
             {
-                if (f.record.id > 0)
-                {
-                    ModelUtil.inputItem(f.record);
-                }
-                else
-                {
-                    ModelUtil.insertItem(f.record, lastSelectedPLC.id);
-                }
+                dataFieldInputControl1.init(lastSelectedPLC.id, lastSelectedPLC.dataFields[index]);
+            }
+            else
+            {
+                dataFieldInputControl1.init(lastSelectedPLC.id);
             }
         }
 

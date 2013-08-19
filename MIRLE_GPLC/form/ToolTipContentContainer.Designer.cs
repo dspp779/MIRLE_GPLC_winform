@@ -28,23 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.toolTipContent1 = new MIRLE_GPLC.form.ProjectDataView();
+            this.projectDataInputControl1 = new MIRLE_GPLC.form.ProjectDataInputControl();
+            this.projectDataView = new MIRLE_GPLC.form.ProjectDataView();
             this.SuspendLayout();
             // 
-            // toolTipContent1
+            // projectDataInputControl1
             // 
-            this.toolTipContent1.AutoSize = true;
-            this.toolTipContent1.Location = new System.Drawing.Point(13, 13);
-            this.toolTipContent1.Name = "toolTipContent1";
-            this.toolTipContent1.Size = new System.Drawing.Size(521, 356);
-            this.toolTipContent1.TabIndex = 0;
+            this.projectDataInputControl1.AutoSize = true;
+            this.projectDataInputControl1.Location = new System.Drawing.Point(8, 8);
+            this.projectDataInputControl1.Name = "projectDataInputControl1";
+            this.projectDataInputControl1.Size = new System.Drawing.Size(289, 360);
+            this.projectDataInputControl1.TabIndex = 1;
+            this.projectDataInputControl1.Visible = false;
             // 
-            // ProjectToolTipContent
+            // projectDataView
+            // 
+            this.projectDataView.AutoSize = true;
+            this.projectDataView.Location = new System.Drawing.Point(8, 8);
+            this.projectDataView.Name = "projectDataView";
+            this.projectDataView.Size = new System.Drawing.Size(522, 356);
+            this.projectDataView.TabIndex = 0;
+            this.projectDataView.Visible = false;
+            // 
+            // ToolTipContentContainer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.toolTipContent1);
-            this.Name = "ProjectToolTipContent";
+            this.Controls.Add(this.projectDataInputControl1);
+            this.Controls.Add(this.projectDataView);
+            this.Name = "ToolTipContentContainer";
             this.Size = new System.Drawing.Size(544, 384);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -53,7 +65,8 @@
 
         #endregion
 
-        private ProjectDataView toolTipContent1;
+        private ProjectDataView projectDataView;
+        private ProjectDataInputControl projectDataInputControl1;
 
 
 

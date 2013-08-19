@@ -15,15 +15,18 @@ namespace MIRLE_GPLC.form
 {
     internal partial class ToolTipContentContainer : SuperContextMenu.PopedContainer
     {
-        public ToolTipContentContainer()
+        public ToolTipContentContainer(GMapMarker marker)
         {
             InitializeComponent();
+            this.Size = new Size(300, 370);
+            projectDataInputControl1.init(marker);
         }
 
-        public ToolTipContentContainer(List<ProjectMarker> Markers)
+        public ToolTipContentContainer(List<ProjectMarker> markers)
         {
             InitializeComponent();
-            toolTipContent1.init(Markers);
+            this.Size = new Size(544, 384);
+            projectDataView.init(markers);
         }
     }
 }

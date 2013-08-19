@@ -29,7 +29,6 @@ namespace MIRLE_GPLC
         private GMapMarker currMarker;
         private bool isDragging = false;
 
-
         private List<GMapMarker> mouseOveredMarkers = new List<GMapMarker>();
 
         AbsModbusClient client;
@@ -57,7 +56,7 @@ namespace MIRLE_GPLC
             // set language
             GMap.NET.MapProviders.GMapProvider.Language = GMap.NET.LanguageType.ChineseTraditional;
             // tile retrieve policy: ServerOnly, ServerAndCache, CacheOnly.
-            GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.CacheOnly;
+            GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerAndCache;
             // initial latlng
             this.gMap.Position = new PointLatLng(23.8, 121);
 
@@ -78,7 +77,7 @@ namespace MIRLE_GPLC
 
         }
 
-        private void loadProjects()
+        public void loadProjects()
         {
             markersOverlay.Clear();
             ThreadPool.QueueUserWorkItem(new WaitCallback(loadProjects));
@@ -86,8 +85,11 @@ namespace MIRLE_GPLC
 
         private void loadProjects(object o)
         {
+            List<ProjectData> list = ModelUtil.getProjectList();
+            // reverse order for reverse render order
+            list.Reverse();
             // get project list from database and add markers to map
-            foreach (ProjectData p in ModelUtil.getProjectList())
+            foreach (ProjectData p in list)
             {
                 addPMarker(p);
             }
@@ -99,7 +101,12 @@ namespace MIRLE_GPLC
 
         private void gMap_MouseClick(object sender, MouseEventArgs e)
         {
-
+            PointLatLng latlng = gMap.FromLocalToLatLng(e.X, e.Y);
+            if (e.Button == MouseButtons.Left)
+            {
+                textBox_latlng_lat.Text = string.Format("{0:0.00000}", latlng.Lat);
+                textBox_latlng_lng.Text = string.Format("{0:0.00000}", latlng.Lng);
+            }
         }
 
         private void gMap_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -175,39 +182,35 @@ namespace MIRLE_GPLC
 
         private void gMap_OnMarkerClick(GMapMarker item, MouseEventArgs e)
         {
-            // set tooltip always show when marker clicked
-            /*if (e.Button == MouseButtons.Left)
-            {
-                item.ToolTipMode = MarkerTooltipMode.Always;
-            }*/
             textBox_latlng_lat.Text = string.Format("{0:0.00000}", item.Position.Lat);
             textBox_latlng_lng.Text = string.Format("{0:0.00000}", item.Position.Lng);
-            if (item == currMarker && item is ProjectMarker)
+            if (mouseOveredMarkers.Contains(item))
             {
-                ProjectData pd = (item as ProjectMarker).ProjectData;
-                label_case_ID.Text = "ID:" + pd.id.ToString();
-                textBox_case_Name.Text = pd.name;
-                richTextBox_case_addr.Text = pd.addr;
-
-                // get marker local position
-                GPoint pos = gMap.FromLatLngToLocal(item.Position);
-                // set map center
-                this.gMap.Position = gMap.FromLocalToLatLng((int)pos.X, (int)pos.Y + gMap.Height / 4);
-                // set context menu
-                List<ProjectMarker> list = new List<ProjectMarker>();
-                foreach (GMapMarker marker in mouseOveredMarkers)
+                if (item is ProjectMarker)
                 {
-                    list.Add(marker as ProjectMarker);
-                }
-                ToolTipContentContainer ttc = new ToolTipContentContainer(list);
-                PoperContainer ttcContainer = new PoperContainer(ttc);
+                    ProjectData pd = (item as ProjectMarker).ProjectData;
+                    // set text box
+                    label_case_ID.Text = "ID:" + pd.id.ToString();
+                    textBox_case_Name.Text = pd.name;
+                    richTextBox_case_addr.Text = pd.addr;
 
-                GPoint p = gMap.FromLatLngToLocal(item.Position);
-                p.Offset(item.Size.Width / 2, -1 * (item.Size.Height));
-                ttcContainer.Show(this, new Point((int)p.X, (int)p.Y));
-            }
-            else if (!(item is ProjectMarker))
-            {
+                    // get marker local position
+                    //GPoint pos = gMap.FromLatLngToLocal(item.Position);
+                    // set map center
+                    //this.gMap.Position = gMap.FromLocalToLatLng((int)pos.X, (int)pos.Y + gMap.Height / 4);
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        viewProject(item);
+                    }
+                    else if (e.Button == MouseButtons.Right)
+                    {
+                        inputProject(mouseOveredMarkers.Last());
+                    }
+                }
+                else
+                {
+                    inputProject(mouseOveredMarkers.Last());
+                }
             }
         }
 
@@ -345,6 +348,8 @@ namespace MIRLE_GPLC
         {
             // this.gMap.Position = p;
             // add to overlay
+            marker.ToolTipMode = (gMap.Zoom > 13) ? MarkerTooltipMode.Always :
+                MarkerTooltipMode.OnMouseOver;
             markersOverlay.Markers.Add(marker);
             // allow map zooming
             //m.IsHitTestVisible = false;
@@ -355,7 +360,6 @@ namespace MIRLE_GPLC
         {
             return addGMarker(new PointLatLng(lat, lng), type);
         }
-
         private GMapMarker addGMarker(PointLatLng p, GMarkerGoogleType type)
         {
             GMarkerGoogle m = new GMarkerGoogle(p, type);
@@ -373,7 +377,6 @@ namespace MIRLE_GPLC
         {
             return addPMarker(new PointLatLng(p.lat, p.lng), p);
         }
-
         private GMapMarker addPMarker(PointLatLng latlng, ProjectData p)
         {
             ProjectMarker m = new ProjectMarker(latlng, p);
@@ -428,5 +431,46 @@ namespace MIRLE_GPLC
 
         #endregion
 
+        private void gMap_OnMapZoomChanged()
+        {
+            MarkerTooltipMode mode = (gMap.Zoom > 13) ? MarkerTooltipMode.Always :
+                MarkerTooltipMode.OnMouseOver;
+            foreach (GMapMarker marker in markersOverlay.Markers)
+            {
+                marker.ToolTipMode = mode;
+            }
+        }
+
+        private void viewProject(GMapMarker item)
+        {
+            // set context menu
+            List<ProjectMarker> list = new List<ProjectMarker>();
+            foreach (GMapMarker marker in mouseOveredMarkers)
+            {
+                list.Add(marker as ProjectMarker);
+            }
+            // set context menu
+            ToolTipContentContainer ttc = new ToolTipContentContainer(list);
+
+            GPoint p = gMap.FromLatLngToLocal(item.Position);
+            p.Offset(item.Size.Width / 2, -1 * (item.Size.Height));
+            contextMenu(ttc, new Point((int)p.X, (int)p.Y));
+        }
+        private void inputProject(GMapMarker item)
+        {
+            // set context menu
+            ToolTipContentContainer ttc = new ToolTipContentContainer(item);
+
+            GPoint p = gMap.FromLatLngToLocal(item.Position);
+            p.Offset(item.Size.Width*2/3, -1 * (item.Size.Height));
+            contextMenu(ttc, new Point((int)p.X, (int)p.Y));
+        }
+
+        private void contextMenu(ToolTipContentContainer ttc, Point p)
+        {
+            // set context menu
+            PoperContainer ttcContainer = new PoperContainer(ttc);
+            ttcContainer.Show(this, p);
+        }
     }
 }

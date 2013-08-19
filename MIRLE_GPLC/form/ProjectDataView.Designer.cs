@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.listView_data = new System.Windows.Forms.ListView();
             this.item = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.value = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -41,6 +42,9 @@
             this.labelCounter = new System.Windows.Forms.Label();
             this.labelText = new System.Windows.Forms.Label();
             this.labelTitle = new System.Windows.Forms.Label();
+            this.toolTip_listview = new System.Windows.Forms.ToolTip(this.components);
+            this.dataFieldInputControl1 = new MIRLE_GPLC.form.DataFieldInputControl();
+            this.projectCreateControl1 = new MIRLE_GPLC.form.PLCInputControl();
             this.SuspendLayout();
             // 
             // listView_data
@@ -54,6 +58,7 @@
             this.listView_data.Name = "listView_data";
             this.listView_data.Size = new System.Drawing.Size(174, 255);
             this.listView_data.TabIndex = 13;
+            this.toolTip_listview.SetToolTip(this.listView_data, "滑鼠連按二下新增資料項");
             this.listView_data.UseCompatibleStateImageBehavior = false;
             this.listView_data.View = System.Windows.Forms.View.Details;
             this.listView_data.DoubleClick += new System.EventHandler(this.listView_data_DoubleClick);
@@ -83,11 +88,13 @@
             this.listView_plc.Name = "listView_plc";
             this.listView_plc.Size = new System.Drawing.Size(264, 255);
             this.listView_plc.TabIndex = 12;
+            this.toolTip_listview.SetToolTip(this.listView_plc, "滑鼠連按二下新增PLC");
             this.listView_plc.UseCompatibleStateImageBehavior = false;
             this.listView_plc.View = System.Windows.Forms.View.Details;
             this.listView_plc.SelectedIndexChanged += new System.EventHandler(this.listView_plc_SelectedIndexChanged);
             this.listView_plc.DoubleClick += new System.EventHandler(this.listView_plc_DoubleClick);
             this.listView_plc.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listView_plc_MouseDown);
+            this.listView_plc.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listView_plc_MouseUp);
             // 
             // name
             // 
@@ -160,11 +167,33 @@
             this.labelTitle.TabIndex = 7;
             this.labelTitle.Text = "title";
             // 
-            // ToolTipContent
+            // toolTip_listview
+            // 
+            this.toolTip_listview.IsBalloon = true;
+            // 
+            // dataFieldInputControl1
+            // 
+            this.dataFieldInputControl1.Location = new System.Drawing.Point(78, 48);
+            this.dataFieldInputControl1.Name = "dataFieldInputControl1";
+            this.dataFieldInputControl1.Size = new System.Drawing.Size(233, 149);
+            this.dataFieldInputControl1.TabIndex = 15;
+            this.dataFieldInputControl1.Visible = false;
+            // 
+            // projectCreateControl1
+            // 
+            this.projectCreateControl1.Location = new System.Drawing.Point(77, 48);
+            this.projectCreateControl1.Name = "projectCreateControl1";
+            this.projectCreateControl1.Size = new System.Drawing.Size(304, 145);
+            this.projectCreateControl1.TabIndex = 14;
+            this.projectCreateControl1.Visible = false;
+            // 
+            // ProjectDataView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.Controls.Add(this.dataFieldInputControl1);
+            this.Controls.Add(this.projectCreateControl1);
             this.Controls.Add(this.listView_data);
             this.Controls.Add(this.listView_plc);
             this.Controls.Add(this.buttonNext);
@@ -172,7 +201,7 @@
             this.Controls.Add(this.labelCounter);
             this.Controls.Add(this.labelText);
             this.Controls.Add(this.labelTitle);
-            this.Name = "ToolTipContent";
+            this.Name = "ProjectDataView";
             this.Size = new System.Drawing.Size(448, 306);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -194,6 +223,9 @@
         private System.Windows.Forms.Label labelCounter;
         private System.Windows.Forms.Label labelText;
         private System.Windows.Forms.Label labelTitle;
+        private PLCInputControl projectCreateControl1;
+        private DataFieldInputControl dataFieldInputControl1;
+        private System.Windows.Forms.ToolTip toolTip_listview;
 
     }
 }

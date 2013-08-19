@@ -89,6 +89,12 @@
     <Compile Include="form\DataFieldForm.Designer.cs">
       <DependentUpon>DataFieldForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="form\DataFieldInputControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="form\DataFieldInputControl.Designer.cs">
+      <DependentUpon>DataFieldInputControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="form\InputForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -109,11 +115,17 @@
       <DependentUpon>PLCForm.cs</DependentUpon>
     </Compile>
     <Compile Include="form\Program.cs" />
-    <Compile Include="form\ProjectCreateToolTipContent.cs">
+    <Compile Include="form\PLCInputControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="form\ProjectCreateToolTipContent.Designer.cs">
-      <DependentUpon>ProjectCreateToolTipContent.cs</DependentUpon>
+    <Compile Include="form\PLCInputControl.Designer.cs">
+      <DependentUpon>PLCInputControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="form\ProjectDataInputControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="form\ProjectDataInputControl.Designer.cs">
+      <DependentUpon>ProjectDataInputControl.cs</DependentUpon>
     </Compile>
     <Compile Include="form\ToolTipContentContainer.cs">
       <SubType>UserControl</SubType>
@@ -131,6 +143,9 @@
     <EmbeddedResource Include="form\DataFieldForm.resx">
       <DependentUpon>DataFieldForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="form\DataFieldInputControl.resx">
+      <DependentUpon>DataFieldInputControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="form\InputForm.resx">
       <DependentUpon>InputForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -140,8 +155,11 @@
     <EmbeddedResource Include="form\PLCForm.resx">
       <DependentUpon>PLCForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="form\ProjectCreateToolTipContent.resx">
-      <DependentUpon>ProjectCreateToolTipContent.cs</DependentUpon>
+    <EmbeddedResource Include="form\PLCInputControl.resx">
+      <DependentUpon>PLCInputControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="form\ProjectDataInputControl.resx">
+      <DependentUpon>ProjectDataInputControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="form\ToolTipContentContainer.resx">
       <DependentUpon>ToolTipContentContainer.cs</DependentUpon>

@@ -8,6 +8,7 @@ namespace MIRLE_GPLC
 {
     static class Program
     {
+        public static MainForm mainForm;
         /// <summary>
         /// 應用程式的主要進入點。
         /// </summary>
@@ -16,7 +17,8 @@ namespace MIRLE_GPLC
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            mainForm = new MainForm();
+            Application.Run(mainForm);
         }
     }
 }

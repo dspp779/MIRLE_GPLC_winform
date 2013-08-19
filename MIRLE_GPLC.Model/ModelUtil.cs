@@ -69,7 +69,7 @@ namespace MIRLE_GPLC.Model
         {
             return insertPLC(plc.netid, plc.ip, plc.port, plc.alias, project_id);
         }
-        private static int insertPLC(int netid, string ip, int port, string alias, long project_id)
+        public static int insertPLC(int netid, string ip, int port, string alias, long project_id)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
                 "INSERT INTO PLC (net_id, net_ip, net_port, alias, project_id) "
@@ -88,7 +88,7 @@ namespace MIRLE_GPLC.Model
         {
             return insertItem(r.addr, r.length, r.format, r.alias,  plc_id);
         }
-        private static int insertItem(int start_addr, int length, string format, string alias, long plc_id)
+        public static int insertItem(int start_addr, int length, string format, string alias, long plc_id)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
                 "INSERT INTO Item (start_addr, length, format, alias, plc_id) "
@@ -303,8 +303,43 @@ namespace MIRLE_GPLC.Model
 
         #endregion
 
+        #region -- delete model --
+
+
+        public static int deleteProject(long id)
+        {
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "delete FROM Project WHERE id=@id"))
+            {
+                cmd.Parameters.Add("@id", DbType.Int64).Value = id;
+                return SQLiteDBMS.execUpdate(cmd);
+            }
+        }
+
+        public static int updatePLC(long id)
+        {
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "delete FROM PLC WHERE id=@id"))
+            {
+                cmd.Parameters.Add("@id", DbType.Int64).Value = id;
+                return SQLiteDBMS.execUpdate(cmd);
+            }
+        }
+
+        public static int updateItem(long id)
+        {
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "delete FROM Item WHERE id=@id"))
+            {
+                cmd.Parameters.Add("@id", DbType.Int64).Value = id;
+                return SQLiteDBMS.execUpdate(cmd);
+            }
+        }
+
+        #endregion
+
         #region -- input method --
-        
+
         public static void inputPLC(PLC p, long project_id)
         {
             try
