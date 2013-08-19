@@ -316,7 +316,7 @@ namespace MIRLE_GPLC.Model
             }
         }
 
-        public static int updatePLC(long id)
+        public static int deletePLC(long id)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
                 "delete FROM PLC WHERE id=@id"))
@@ -326,7 +326,7 @@ namespace MIRLE_GPLC.Model
             }
         }
 
-        public static int updateItem(long id)
+        public static int deleteItem(long id)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
                 "delete FROM Item WHERE id=@id"))

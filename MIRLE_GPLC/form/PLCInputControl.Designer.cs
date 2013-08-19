@@ -101,7 +101,7 @@
             this.groupBox_addr.Controls.Add(this.label_net_ID);
             this.groupBox_addr.Location = new System.Drawing.Point(3, 56);
             this.groupBox_addr.Name = "groupBox_addr";
-            this.groupBox_addr.Size = new System.Drawing.Size(194, 80);
+            this.groupBox_addr.Size = new System.Drawing.Size(194, 67);
             this.groupBox_addr.TabIndex = 15;
             this.groupBox_addr.TabStop = false;
             this.groupBox_addr.Text = "Address";
@@ -158,7 +158,7 @@
             this.label_net_ID.TabIndex = 0;
             this.label_net_ID.Text = "ID";
             // 
-            // ProjectInputControl
+            // PLCInputControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -168,8 +168,8 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.groupBox_addr);
-            this.Name = "ProjectInputControl";
-            this.Size = new System.Drawing.Size(305, 136);
+            this.Name = "PLCInputControl";
+            this.Size = new System.Drawing.Size(305, 129);
             this.groupBox_addr.ResumeLayout(false);
             this.groupBox_addr.PerformLayout();
             this.ResumeLayout(false);

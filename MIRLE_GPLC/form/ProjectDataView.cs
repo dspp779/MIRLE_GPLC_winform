@@ -168,7 +168,7 @@ namespace MIRLE_GPLC.form
        
         private void listView_plc_MouseUp(object sender, MouseEventArgs e)
         {
-            if(!listView_plc.Visible && listView_plc.SelectedIndices.Count > 0)
+            if(listView_plc.Visible && listView_plc.SelectedIndices.Count < 0)
             {
                 lastSelectedPLC = null;
             }
@@ -214,6 +214,27 @@ namespace MIRLE_GPLC.form
         }
 
         #endregion
+
+        private void listView_plc_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete && lastSelectedPLC != null)
+            {
+                ModelUtil.deletePLC(lastSelectedPLC.id);
+                refreshPLCList();
+            }
+        }
+
+        private void listView_data_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete && lastSelectedPLC != null)
+            {
+                if (listView_data.SelectedIndices.Count > 0)
+                {
+                    ModelUtil.deleteItem(lastSelectedPLC.dataFields[listView_data.SelectedIndices[0]].id);
+                    refreshItemList(lastSelectedPLC);
+                }
+            }
+        }
 
     }
 }

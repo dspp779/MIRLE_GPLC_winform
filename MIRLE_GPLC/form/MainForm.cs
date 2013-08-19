@@ -20,6 +20,7 @@ using GMap.NET.WindowsForms.ToolTips;
 using SuperContextMenu;
 using Modbus;
 using Modbus.Client;
+using GMap.NET.ObjectModel;
 
 namespace MIRLE_GPLC
 {
@@ -29,7 +30,8 @@ namespace MIRLE_GPLC
         private GMapMarker currMarker;
         private bool isDragging = false;
 
-        private List<GMapMarker> mouseOveredMarkers = new List<GMapMarker>();
+        private ObservableCollectionThreadSafe<GMapMarker> mouseOveredMarkers
+            = new ObservableCollectionThreadSafe<GMapMarker>();
 
         AbsModbusClient client;
 
@@ -166,7 +168,7 @@ namespace MIRLE_GPLC
             // mouse down on marker
             if (mouseOveredMarkers.Count > 0)
             {
-                currMarker = mouseOveredMarkers[0];
+                currMarker = mouseOveredMarkers.Last();
             }
             // add new marker while right mouse button downed
             else if (e.Button == MouseButtons.Right)
@@ -182,13 +184,14 @@ namespace MIRLE_GPLC
 
         private void gMap_OnMarkerClick(GMapMarker item, MouseEventArgs e)
         {
-            textBox_latlng_lat.Text = string.Format("{0:0.00000}", item.Position.Lat);
-            textBox_latlng_lng.Text = string.Format("{0:0.00000}", item.Position.Lng);
+            GMapMarker marker = mouseOveredMarkers.Last();
+            textBox_latlng_lat.Text = string.Format("{0:0.00000}", marker.Position.Lat);
+            textBox_latlng_lng.Text = string.Format("{0:0.00000}", marker.Position.Lng);
             if (mouseOveredMarkers.Contains(item))
             {
                 if (item is ProjectMarker)
                 {
-                    ProjectData pd = (item as ProjectMarker).ProjectData;
+                    ProjectData pd = (marker as ProjectMarker).ProjectData;
                     // set text box
                     label_case_ID.Text = "ID:" + pd.id.ToString();
                     textBox_case_Name.Text = pd.name;
@@ -209,7 +212,7 @@ namespace MIRLE_GPLC
                 }
                 else
                 {
-                    inputProject(mouseOveredMarkers.Last());
+                    inputProject(item);
                 }
             }
         }

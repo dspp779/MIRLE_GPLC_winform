@@ -62,6 +62,7 @@
             this.listView_data.UseCompatibleStateImageBehavior = false;
             this.listView_data.View = System.Windows.Forms.View.Details;
             this.listView_data.DoubleClick += new System.EventHandler(this.listView_data_DoubleClick);
+            this.listView_data.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView_data_KeyDown);
             this.listView_data.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listView_data_MouseDown);
             // 
             // item
@@ -93,6 +94,7 @@
             this.listView_plc.View = System.Windows.Forms.View.Details;
             this.listView_plc.SelectedIndexChanged += new System.EventHandler(this.listView_plc_SelectedIndexChanged);
             this.listView_plc.DoubleClick += new System.EventHandler(this.listView_plc_DoubleClick);
+            this.listView_plc.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView_plc_KeyDown);
             this.listView_plc.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listView_plc_MouseDown);
             this.listView_plc.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listView_plc_MouseUp);
             // 
