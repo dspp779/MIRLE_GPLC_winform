@@ -54,9 +54,9 @@
             this.item,
             this.value});
             this.listView_data.FullRowSelect = true;
-            this.listView_data.Location = new System.Drawing.Point(271, 48);
+            this.listView_data.Location = new System.Drawing.Point(261, 48);
             this.listView_data.Name = "listView_data";
-            this.listView_data.Size = new System.Drawing.Size(174, 255);
+            this.listView_data.Size = new System.Drawing.Size(184, 255);
             this.listView_data.TabIndex = 13;
             this.toolTip_listview.SetToolTip(this.listView_data, "滑鼠連按二下新增資料項");
             this.listView_data.UseCompatibleStateImageBehavior = false;
@@ -67,13 +67,15 @@
             // 
             // item
             // 
+            this.item.Tag = "1";
             this.item.Text = "項目";
-            this.item.Width = 90;
+            this.item.Width = 155;
             // 
             // value
             // 
+            this.value.Tag = "1";
             this.value.Text = "值";
-            this.value.Width = 80;
+            this.value.Width = 50;
             // 
             // listView_plc
             // 
@@ -87,7 +89,7 @@
             this.listView_plc.LabelEdit = true;
             this.listView_plc.Location = new System.Drawing.Point(1, 48);
             this.listView_plc.Name = "listView_plc";
-            this.listView_plc.Size = new System.Drawing.Size(264, 255);
+            this.listView_plc.Size = new System.Drawing.Size(254, 255);
             this.listView_plc.TabIndex = 12;
             this.toolTip_listview.SetToolTip(this.listView_plc, "滑鼠連按二下新增PLC");
             this.listView_plc.UseCompatibleStateImageBehavior = false;
@@ -101,7 +103,7 @@
             // name
             // 
             this.name.Text = "名稱";
-            this.name.Width = 70;
+            this.name.Width = 95;
             // 
             // id
             // 
@@ -175,7 +177,7 @@
             // 
             // dataFieldInputControl1
             // 
-            this.dataFieldInputControl1.Location = new System.Drawing.Point(78, 48);
+            this.dataFieldInputControl1.Location = new System.Drawing.Point(125, 48);
             this.dataFieldInputControl1.Name = "dataFieldInputControl1";
             this.dataFieldInputControl1.Size = new System.Drawing.Size(233, 149);
             this.dataFieldInputControl1.TabIndex = 15;
@@ -183,7 +185,7 @@
             // 
             // projectCreateControl1
             // 
-            this.projectCreateControl1.Location = new System.Drawing.Point(77, 48);
+            this.projectCreateControl1.Location = new System.Drawing.Point(88, 48);
             this.projectCreateControl1.Name = "projectCreateControl1";
             this.projectCreateControl1.Size = new System.Drawing.Size(304, 145);
             this.projectCreateControl1.TabIndex = 14;
@@ -193,7 +195,6 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
             this.Controls.Add(this.dataFieldInputControl1);
             this.Controls.Add(this.projectCreateControl1);
             this.Controls.Add(this.listView_data);

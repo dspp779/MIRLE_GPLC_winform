@@ -57,7 +57,7 @@
             this.Controls.Add(this.projectDataInputControl1);
             this.Controls.Add(this.projectDataView);
             this.Name = "ToolTipContentContainer";
-            this.Size = new System.Drawing.Size(544, 384);
+            this.Size = new System.Drawing.Size(544, 403);
             this.ResumeLayout(false);
             this.PerformLayout();
 

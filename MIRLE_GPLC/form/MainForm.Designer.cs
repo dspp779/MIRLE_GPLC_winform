@@ -320,7 +320,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Text = "MainForm";
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);

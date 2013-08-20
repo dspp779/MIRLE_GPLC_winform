@@ -110,7 +110,6 @@ namespace MIRLE_GPLC
                 textBox_latlng_lng.Text = string.Format("{0:0.00000}", latlng.Lng);
             }
         }
-
         private void gMap_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             // zoom in when double clicked
@@ -147,7 +146,6 @@ namespace MIRLE_GPLC
             // set dragging status to false while mouse up
             isDragging = false;
         }
-
         private void gMap_MouseDown(object sender, MouseEventArgs e)
         {
             if (currMarker is GMarkerGoogle && !(currMarker is ProjectMarker))
@@ -184,7 +182,7 @@ namespace MIRLE_GPLC
 
         private void gMap_OnMarkerClick(GMapMarker item, MouseEventArgs e)
         {
-            GMapMarker marker = mouseOveredMarkers.Last();
+            GMapMarker marker = (mouseOveredMarkers.Count > 0) ? mouseOveredMarkers.Last() : item;
             textBox_latlng_lat.Text = string.Format("{0:0.00000}", marker.Position.Lat);
             textBox_latlng_lng.Text = string.Format("{0:0.00000}", marker.Position.Lng);
             if (mouseOveredMarkers.Contains(item))
@@ -207,7 +205,7 @@ namespace MIRLE_GPLC
                     }
                     else if (e.Button == MouseButtons.Right)
                     {
-                        inputProject(mouseOveredMarkers.Last());
+                        inputProject(marker);
                     }
                 }
                 else
@@ -216,12 +214,10 @@ namespace MIRLE_GPLC
                 }
             }
         }
-
         private void gMap_OnMarkerEnter(GMapMarker item)
         {
             mouseOveredMarkers.Add(item);
         }
-
         private void gMap_OnMarkerLeave(GMapMarker item)
         {
             mouseOveredMarkers.Remove(item);

@@ -140,6 +140,7 @@
       <DependentUpon>ProjectDataView.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\modbusTCP.cs" />
     <EmbeddedResource Include="form\DataFieldForm.resx">
       <DependentUpon>DataFieldForm.cs</DependentUpon>
     </EmbeddedResource>

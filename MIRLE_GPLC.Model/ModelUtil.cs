@@ -308,6 +308,7 @@ namespace MIRLE_GPLC.Model
 
         public static int deleteProject(long id)
         {
+            deletePLCs(id);
             using (SQLiteCommand cmd = new SQLiteCommand(
                 "delete FROM Project WHERE id=@id"))
             {
@@ -318,10 +319,24 @@ namespace MIRLE_GPLC.Model
 
         public static int deletePLC(long id)
         {
+            deleteItems(id);
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "delete FROM PLC WHERE id=@id"))
+                "delete FROM PLC WHERE id=@id"))    
             {
                 cmd.Parameters.Add("@id", DbType.Int64).Value = id;
+                return SQLiteDBMS.execUpdate(cmd);
+            }
+        }
+        private static int deletePLCs(long project_id)
+        {
+            foreach (PLC plc in getPLCList(project_id))
+            {
+                deleteItems(plc.id);
+            }
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "delete FROM PLC WHERE project_id=@project_id"))
+            {
+                cmd.Parameters.Add("@project_id", DbType.Int64).Value = project_id;
                 return SQLiteDBMS.execUpdate(cmd);
             }
         }
@@ -332,6 +347,16 @@ namespace MIRLE_GPLC.Model
                 "delete FROM Item WHERE id=@id"))
             {
                 cmd.Parameters.Add("@id", DbType.Int64).Value = id;
+                return SQLiteDBMS.execUpdate(cmd);
+            }
+        }
+        private static int deleteItems(long plc_id)
+        {
+            // delete items belonging to the plc
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "delete FROM Item WHERE plc_id=@plcid"))
+            {
+                cmd.Parameters.Add("@plcid", DbType.Int64).Value = plc_id;
                 return SQLiteDBMS.execUpdate(cmd);
             }
         }
