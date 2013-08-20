@@ -8,6 +8,10 @@ using System.Text;
 using System.Windows.Forms;
 using MIRLE_GPLC.form.marker;
 using MIRLE_GPLC.Model;
+using Modbus.Client;
+using Modbus;
+using System.Threading;
+using System.Net.Sockets;
 
 namespace MIRLE_GPLC.form
 {
@@ -16,6 +20,7 @@ namespace MIRLE_GPLC.form
         private List<ProjectMarker> markers = new List<ProjectMarker>();
         private int _shownMarker = 0;
         private PLC lastSelectedPLC;
+        AbsModbusClient client;
 
         private int ShownMarker
         {
@@ -236,5 +241,73 @@ namespace MIRLE_GPLC.form
             }
         }
 
+
+        #region -- Modbus TCP Worker --
+
+        private void modbusTCPWorker(object o)
+        {
+            PLC plc = o as PLC;
+            if (plc == null)
+                return;
+            // initialize modbus TCP/IP
+            ModbusClientAdpater adpater = new ModbusClientAdpater();
+            // config ip and port
+            TcpModbusConnectConfig config = new TcpModbusConnectConfig() { IpAddress = plc.ip, Port = plc.port };
+            // config modbus connection type
+            if (client.IsConnected)
+            {
+                client.Disconnect();
+            }
+            client = adpater.CreateModbusClient(EnumModbusFraming.TCP);
+            // connecting message "Connecting to [IP]:[PORT]"
+            string str = string.Format("Connecting to {0}:{1}", config.IpAddress, config.Port);
+
+            // modbus TCP connect
+            try
+            {
+                do
+                {
+                    // invoke ui thread to change tooltip
+                    //Invoke(new DataFieldHandler(RefreshDataField), new Object[] { str });
+                    SpinWait.SpinUntil(() => false, 1000);
+                } while (!client.Connect(config));
+            }
+            catch (SocketException)
+            {
+                // invoke ui thread to change tooltip
+                //Invoke(new DataFieldHandler(RefreshDataField), new Object[] { "Modbus TCP/IP connect fail" });
+            }
+
+            // refresh dataGrid periodically
+            while (client.IsConnected)
+            {
+                try
+                {
+                    int i = 0;
+                    foreach (Record r in plc.dataFields)
+                    {
+                        // modbus read
+                        byte[] data = client.ReadHoldingRegisters(1, (ushort)r.addr, (ushort)r.length);
+                        // convert to wanted value
+                        long val = Convert.ToInt64(data);
+                        Invoke(new DataFieldHandler(RefreshDataField), new Object[] { i++, val.ToString() });
+                    }
+                    // spin wait
+                    SpinWait.SpinUntil(() => false, 1000);
+                }
+                catch (ModbusException)
+                {
+                }
+            }
+        }
+
+        #endregion
+
+        // status delegate
+        delegate void DataFieldHandler(int i, string str);
+        private void RefreshDataField(int i, string str)
+        {
+            listView_data.Items[i].SubItems[0].Text = str;
+        }
     }
 }

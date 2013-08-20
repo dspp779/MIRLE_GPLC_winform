@@ -233,10 +233,13 @@ namespace MIRLE_GPLC
 
         private void modbusTCPWorker(object o)
         {
+            PLC plc = o as PLC;
+            if (plc == null)
+                return;
             // initialize modbus TCP/IP
             ModbusClientAdpater adpater = new ModbusClientAdpater();
             // config ip and port
-            TcpModbusConnectConfig config = new TcpModbusConnectConfig() { IpAddress = "192.168.30.236", Port = 502 };
+            TcpModbusConnectConfig config = new TcpModbusConnectConfig() { IpAddress = plc.ip, Port = plc.port };
             // config modbus connection type
             client = adpater.CreateModbusClient(EnumModbusFraming.TCP);
             // connecting message "Connecting to [IP]:[PORT]"
@@ -263,25 +266,12 @@ namespace MIRLE_GPLC
             {
                 try
                 {
-                    // modbus read
-                    var result = client.ReadHoldingRegistersToDecimal(1, 0, 10);
-                    int i = 0;
-                    int slot;
-                    foreach (long d in result)
+                    foreach (Record r in plc.dataFields)
                     {
-                        string s = (string)dataGridView1.Rows[i].HeaderCell.Value;
-                        Object val = dataGridView1.Rows[i].Cells[0].Value;
-                        if (val == null || (long)val != d || int.TryParse(s, out slot) || slot != i)
-                        {
-                            try
-                            {
-                                Invoke(new dataGridHandler(RefreshGridValue), new Object[] { i, d });
-                            }
-                            catch (Exception)
-                            {
-                            }
-                        }
-                        i++;
+                        // modbus read
+                        byte[] data = client.ReadHoldingRegisters(1, (ushort)r.addr, (ushort)r.length);
+                        // convert to wanted value
+                        long val = Convert.ToInt64(data);
                     }
                     // spin wait
                     SpinWait.SpinUntil(() => false, 1000);
