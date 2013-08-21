@@ -26,9 +26,9 @@ namespace MIRLE_GPLC.form
             this.record = null;
             // ui
             label_field.Text = "新增資料項";
-            textBox_name.Tag = "資料項名稱";
-            textBox_addr.Tag = "開始位址";
-            textBox_length.Tag = "長度";
+            textBox_name.Text = "";
+            textBox_addr.Text = "";
+            textBox_length.Text = "";
             comboBox_format.Text = "";
             this.Show();
         }

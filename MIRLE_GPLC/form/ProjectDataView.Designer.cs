@@ -17,6 +17,10 @@
             {
                 components.Dispose();
             }
+            if (modbusThread != null && modbusThread.IsAlive)
+            {
+                modbusThread.Abort();
+            }
             base.Dispose(disposing);
         }
 

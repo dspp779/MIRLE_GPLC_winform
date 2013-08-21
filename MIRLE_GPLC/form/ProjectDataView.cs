@@ -16,10 +16,12 @@ namespace MIRLE_GPLC.form
 {
     internal partial class ProjectDataView : UserControl
     {
+        private static Master MBmaster;
+        private static Thread modbusThread;
+
         private List<ProjectMarker> markers = new List<ProjectMarker>();
         private int _shownMarker = 0;
         private PLC _lastSelectedPLC;
-        private Master MBmaster;
 
         private int ShownMarker
         {
@@ -57,11 +59,15 @@ namespace MIRLE_GPLC.form
                     MBmaster.disconnect();
                     MBmaster = null;
                 }
+                if (modbusThread != null && modbusThread.IsAlive)
+                {
+                    modbusThread.Abort();
+                    modbusThread = null;
+                }
                 _lastSelectedPLC = value;
                 refreshItemList(_lastSelectedPLC);
             }
         }
-
 
         public ProjectDataView()
         {
@@ -134,7 +140,9 @@ namespace MIRLE_GPLC.form
                 listView_data.Items.Add(item);
             }
             // modbus worker
-            ThreadPool.QueueUserWorkItem(new WaitCallback(o => modbusTCPWorker(plc)));
+            modbusThread = new Thread(new ParameterizedThreadStart(modbusTCPWorker));
+            modbusThread.Start(plc);
+            //ThreadPool.QueueUserWorkItem(new WaitCallback(o => modbusTCPWorker(plc)));
 
         }
 
@@ -309,14 +317,19 @@ namespace MIRLE_GPLC.form
             }
         }*/
         
-        private void modbusTCPWorker(PLC plc)
+        private void modbusTCPWorker(object o)
         {
+            PLC plc = o as PLC;
             if (plc == null)
             {
                 return;
             }
 
             // initialize modbus TCP/IP
+            if (MBmaster != null && MBmaster.connected)
+            {
+                MBmaster.disconnect();
+            }
             MBmaster = new Master("192.168.7.27", 502);
             // connecting message "Connecting to [IP]:[PORT]"
             //string str = string.Format("Connecting to {0}:{1}", plc.ip, plc.port);
@@ -332,7 +345,7 @@ namespace MIRLE_GPLC.form
                         readData(Convert.ToByte(r.id), Convert.ToUInt16(r.addr), Convert.ToUInt16(r.length), i++);
                     }
                     // spin wait
-                    SpinWait.SpinUntil(() => false, 1000);
+                    SpinWait.SpinUntil(() => false, 2000);
                 }
                 catch (Exception)
                 {

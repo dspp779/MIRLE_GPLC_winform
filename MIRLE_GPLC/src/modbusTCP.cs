@@ -131,6 +131,10 @@ namespace Modbus.TCP
                 _connected = false;
                 throw (error);
             }
+            catch (SocketException)
+            {
+                _connected = false;
+            }
         }
 
         // ------------------------------------------------------------------------

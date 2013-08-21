@@ -33,7 +33,8 @@ namespace MIRLE_GPLC
         private ObservableCollectionThreadSafe<GMapMarker> mouseOveredMarkers
             = new ObservableCollectionThreadSafe<GMapMarker>();
 
-        AbsModbusClient client;
+        private AbsModbusClient client;
+        private ToolTipContentContainer ttc;
 
         #region -- Form Properties & Initialization --
 
@@ -208,7 +209,7 @@ namespace MIRLE_GPLC
                         inputProject(marker);
                     }
                 }
-                else
+                else if(e.Button == MouseButtons.Left)
                 {
                     inputProject(item);
                 }
@@ -439,7 +440,7 @@ namespace MIRLE_GPLC
                 list.Add(marker as ProjectMarker);
             }
             // set context menu
-            ToolTipContentContainer ttc = new ToolTipContentContainer(list);
+            ttc = new ToolTipContentContainer(list);
 
             GPoint p = gMap.FromLatLngToLocal(item.Position);
             p.Offset(item.Size.Width / 2, -1 * (item.Size.Height));
@@ -448,7 +449,7 @@ namespace MIRLE_GPLC
         private void inputProject(GMapMarker item)
         {
             // set context menu
-            ToolTipContentContainer ttc = new ToolTipContentContainer(item);
+            ttc = new ToolTipContentContainer(item);
 
             GPoint p = gMap.FromLatLngToLocal(item.Position);
             p.Offset(item.Size.Width*2/3, -1 * (item.Size.Height));

@@ -31,6 +31,10 @@
                 {
                     currMarker.Dispose();
                 }
+                if (ttc != null)
+                {
+                    ttc.Dispose();
+                }
                 base.Dispose(disposing);
             }
         }

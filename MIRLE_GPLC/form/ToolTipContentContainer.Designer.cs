@@ -17,6 +17,7 @@
             {
                 components.Dispose();
             }
+            projectDataView.Dispose();
             base.Dispose(disposing);
         }
 
@@ -67,14 +68,5 @@
 
         private ProjectDataView projectDataView;
         private ProjectDataInputControl projectDataInputControl1;
-
-
-
-
-
-
-
-
-
     }
 }
