@@ -1,4 +1,5 @@
-﻿namespace MIRLE_GPLC.form
+﻿using System;
+namespace MIRLE_GPLC.form
 {
     partial class ProjectDataView
     {

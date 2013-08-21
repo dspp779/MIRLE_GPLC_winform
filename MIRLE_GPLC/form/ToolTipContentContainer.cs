@@ -25,8 +25,13 @@ namespace MIRLE_GPLC.form
         public ToolTipContentContainer(List<ProjectMarker> markers)
         {
             InitializeComponent();
-            this.Size = new Size(544, 384);
+            this.Size = new Size(544, 400);
             projectDataView.init(markers);
+        }
+
+        private void button_close_Click(object sender, EventArgs e)
+        {
+            this.Dispose();
         }
     }
 }
