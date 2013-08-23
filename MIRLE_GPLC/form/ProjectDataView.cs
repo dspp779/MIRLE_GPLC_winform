@@ -140,6 +140,12 @@ namespace MIRLE_GPLC.form
                 listView_data.Items.Add(item);
             }
             // modbus worker
+
+            if (modbusThread != null && modbusThread.IsAlive)
+            {
+                modbusThread.Abort();
+                modbusThread = null;
+            }
             modbusThread = new Thread(new ParameterizedThreadStart(modbusTCPWorker));
             modbusThread.Start(plc);
             //ThreadPool.QueueUserWorkItem(new WaitCallback(o => modbusTCPWorker(plc)));
@@ -330,7 +336,7 @@ namespace MIRLE_GPLC.form
             {
                 MBmaster.disconnect();
             }
-            MBmaster = new Master("192.168.7.27", 502);
+            MBmaster = new Master(plc.ip, Convert.ToUInt16(plc.port));
             // connecting message "Connecting to [IP]:[PORT]"
             //string str = string.Format("Connecting to {0}:{1}", plc.ip, plc.port);
 
@@ -345,7 +351,7 @@ namespace MIRLE_GPLC.form
                         readData(Convert.ToByte(r.id), Convert.ToUInt16(r.addr), Convert.ToUInt16(r.length), i++);
                     }
                     // spin wait
-                    SpinWait.SpinUntil(() => false, 2000);
+                    SpinWait.SpinUntil(() => false, 1000);
                 }
                 catch (Exception)
                 {

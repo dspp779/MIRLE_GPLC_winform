@@ -21,6 +21,7 @@ namespace MIRLE_GPLC.form
             if (modbusThread != null && modbusThread.IsAlive)
             {
                 modbusThread.Abort();
+                modbusThread = null;
             }
             base.Dispose(disposing);
         }

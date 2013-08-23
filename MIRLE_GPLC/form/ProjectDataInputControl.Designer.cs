@@ -41,6 +41,7 @@
             this.textBox_case_Name = new System.Windows.Forms.TextBox();
             this.label_case_Name = new System.Windows.Forms.Label();
             this.label_project = new System.Windows.Forms.Label();
+            this.button_delete = new System.Windows.Forms.Button();
             this.groupBox_location.SuspendLayout();
             this.groupBox_case.SuspendLayout();
             this.SuspendLayout();
@@ -169,18 +170,30 @@
             this.label_project.TabIndex = 15;
             this.label_project.Text = "Project";
             // 
+            // button_delete
+            // 
+            this.button_delete.Enabled = false;
+            this.button_delete.Location = new System.Drawing.Point(176, 11);
+            this.button_delete.Name = "button_delete";
+            this.button_delete.Size = new System.Drawing.Size(56, 23);
+            this.button_delete.TabIndex = 16;
+            this.button_delete.Text = "Delete";
+            this.button_delete.UseVisualStyleBackColor = true;
+            this.button_delete.Click += new System.EventHandler(this.button_delete_Click);
+            // 
             // ProjectDataInputControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.Controls.Add(this.button_delete);
             this.Controls.Add(this.label_project);
             this.Controls.Add(this.groupBox_location);
             this.Controls.Add(this.resetButton);
             this.Controls.Add(this.InputButton);
             this.Controls.Add(this.groupBox_case);
             this.Name = "ProjectDataInputControl";
-            this.Size = new System.Drawing.Size(249, 309);
+            this.Size = new System.Drawing.Size(249, 316);
             this.groupBox_location.ResumeLayout(false);
             this.groupBox_location.PerformLayout();
             this.groupBox_case.ResumeLayout(false);
@@ -205,5 +218,6 @@
         private System.Windows.Forms.TextBox textBox_case_Name;
         private System.Windows.Forms.Label label_case_Name;
         private System.Windows.Forms.Label label_project;
+        private System.Windows.Forms.Button button_delete;
     }
 }

@@ -30,6 +30,7 @@ namespace MIRLE_GPLC.form
                 label_project.Text = "設定專案";
                 InputButton.Text = "Modify";
                 setInput(p.name, p.addr, p.lat, p.lng);
+                button_delete.Enabled = true;
             }
             else
             {
@@ -92,6 +93,14 @@ namespace MIRLE_GPLC.form
             richTextBox_case_addr.Text = addr;
             textBox_latlng_lat.Text = lat.ToString();
             textBox_latlng_lng.Text = lng.ToString();
+        }
+
+        private void button_delete_Click(object sender, EventArgs e)
+        {
+            ModelUtil.deleteProject((marker as ProjectMarker).ProjectData.id);
+            //refresh map
+            Program.mainForm.loadProjects();
+            this.Parent.Dispose();
         }
     }
 }

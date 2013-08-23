@@ -18,7 +18,7 @@ namespace MIRLE_GPLC.form
         public ToolTipContentContainer(GMapMarker marker)
         {
             InitializeComponent();
-            this.Size = new Size(300, 370);
+            this.Size = new Size(300, 380);
             projectDataInputControl1.init(marker);
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Security.Permissions;
 using System.Windows.Forms;
 
 
@@ -44,9 +45,9 @@ namespace SuperContextMenu
             };
         }
 
-        
 
 
+        [UIPermission(SecurityAction.LinkDemand, Window = UIPermissionWindow.AllWindows)]
         protected override bool ProcessDialogKey(Keys keyData)
         {//prevent alt from closing it and allow alt+menumonic to work
             if ((keyData & Keys.Alt) == Keys.Alt)
@@ -138,10 +139,6 @@ namespace SuperContextMenu
             
             base.OnOpened(e);
         }
-
-
-
-        
 
     }
 }

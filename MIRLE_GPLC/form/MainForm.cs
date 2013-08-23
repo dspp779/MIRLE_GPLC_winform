@@ -440,6 +440,11 @@ namespace MIRLE_GPLC
                 list.Add(marker as ProjectMarker);
             }
             // set context menu
+            if (ttc != null)
+            {
+                ttc.Dispose();
+                ttc = null;
+            }
             ttc = new ToolTipContentContainer(list);
 
             GPoint p = gMap.FromLatLngToLocal(item.Position);
@@ -449,6 +454,11 @@ namespace MIRLE_GPLC
         private void inputProject(GMapMarker item)
         {
             // set context menu
+            if (ttc != null)
+            {
+                ttc.Dispose();
+                ttc = null;
+            }
             ttc = new ToolTipContentContainer(item);
 
             GPoint p = gMap.FromLatLngToLocal(item.Position);
