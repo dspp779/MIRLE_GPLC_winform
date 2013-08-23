@@ -195,11 +195,11 @@ namespace MIRLE_GPLC
                     label_case_ID.Text = "ID:" + pd.id.ToString();
                     textBox_case_Name.Text = pd.name;
                     richTextBox_case_addr.Text = pd.addr;
-
                     // get marker local position
-                    //GPoint pos = gMap.FromLatLngToLocal(item.Position);
+                    GPoint pos = gMap.FromLatLngToLocal(item.Position);
                     // set map center
-                    //this.gMap.Position = gMap.FromLocalToLatLng((int)pos.X, (int)pos.Y + gMap.Height / 4);
+                    this.gMap.Position = gMap.FromLocalToLatLng((int)pos.X, (int)pos.Y + gMap.Height / 4);
+
                     if (e.Button == MouseButtons.Left)
                     {
                         viewProject(item);
@@ -471,6 +471,28 @@ namespace MIRLE_GPLC
             // set context menu
             PoperContainer ttcContainer = new PoperContainer(ttc);
             ttcContainer.Show(this, p);
+        }
+
+        private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.ShowDialog(this);
+        }
+
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.ShowDialog(this);
+        }
+
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+            ModelUtil.setPath(openFileDialog1.FileName);
+            loadProjects();
+        }
+
+        private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+            ModelUtil.copyTo(openFileDialog1.FileName);
+            ModelUtil.setPath(openFileDialog1.FileName);
         }
 
     }

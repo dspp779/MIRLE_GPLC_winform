@@ -29,9 +29,23 @@ namespace MIRLE_GPLC.form
             projectDataView.init(markers);
         }
 
+        private void ToolTipContentContainer_Load(object sender, EventArgs e)
+        {
+            this.VisibleChanged += new EventHandler(ToolTipVisibleChanged);
+        }
+
         private void button_close_Click(object sender, EventArgs e)
         {
             this.Dispose();
         }
+
+        private void ToolTipVisibleChanged(object sender, EventArgs e)
+        {
+            if (!this.Visible)
+            {
+                //this.projectDataView.Dispose();
+            }
+        }
+
     }
 }

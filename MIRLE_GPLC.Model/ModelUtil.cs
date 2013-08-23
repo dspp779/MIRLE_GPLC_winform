@@ -390,5 +390,15 @@ namespace MIRLE_GPLC.Model
         }
 
         #endregion
+
+        public static void setPath(string path)
+        {
+            SQLiteDBMS.setDBPath(path);
+        }
+
+        public static void copyTo(string path)
+        {
+            SQLiteDBMS.copyTo(path);
+        }
     }
 }

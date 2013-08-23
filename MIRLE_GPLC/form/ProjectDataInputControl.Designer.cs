@@ -33,7 +33,7 @@
             this.textBox_latlng_lng = new System.Windows.Forms.TextBox();
             this.label_latlng_lat = new System.Windows.Forms.Label();
             this.textBox_latlng_lat = new System.Windows.Forms.TextBox();
-            this.resetButton = new System.Windows.Forms.Button();
+            this.DeleteButton = new System.Windows.Forms.Button();
             this.InputButton = new System.Windows.Forms.Button();
             this.groupBox_case = new System.Windows.Forms.GroupBox();
             this.richTextBox_case_addr = new System.Windows.Forms.RichTextBox();
@@ -41,9 +41,10 @@
             this.textBox_case_Name = new System.Windows.Forms.TextBox();
             this.label_case_Name = new System.Windows.Forms.Label();
             this.label_project = new System.Windows.Forms.Label();
-            this.button_delete = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox_location.SuspendLayout();
             this.groupBox_case.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox_location
@@ -93,19 +94,20 @@
             this.textBox_latlng_lat.Size = new System.Drawing.Size(58, 22);
             this.textBox_latlng_lat.TabIndex = 6;
             // 
-            // resetButton
+            // DeleteButton
             // 
-            this.resetButton.Location = new System.Drawing.Point(146, 283);
-            this.resetButton.Name = "resetButton";
-            this.resetButton.Size = new System.Drawing.Size(75, 23);
-            this.resetButton.TabIndex = 13;
-            this.resetButton.Text = "Reset";
-            this.resetButton.UseVisualStyleBackColor = true;
-            this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
+            this.DeleteButton.Location = new System.Drawing.Point(131, 0);
+            this.DeleteButton.Name = "DeleteButton";
+            this.DeleteButton.Size = new System.Drawing.Size(75, 23);
+            this.DeleteButton.TabIndex = 13;
+            this.DeleteButton.Text = "Delete";
+            this.DeleteButton.UseVisualStyleBackColor = true;
+            this.DeleteButton.Visible = false;
+            this.DeleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
             // 
             // InputButton
             // 
-            this.InputButton.Location = new System.Drawing.Point(33, 283);
+            this.InputButton.Location = new System.Drawing.Point(12, 1);
             this.InputButton.Name = "InputButton";
             this.InputButton.Size = new System.Drawing.Size(75, 23);
             this.InputButton.TabIndex = 12;
@@ -170,27 +172,23 @@
             this.label_project.TabIndex = 15;
             this.label_project.Text = "Project";
             // 
-            // button_delete
+            // panel1
             // 
-            this.button_delete.Enabled = false;
-            this.button_delete.Location = new System.Drawing.Point(176, 11);
-            this.button_delete.Name = "button_delete";
-            this.button_delete.Size = new System.Drawing.Size(56, 23);
-            this.button_delete.TabIndex = 16;
-            this.button_delete.Text = "Delete";
-            this.button_delete.UseVisualStyleBackColor = true;
-            this.button_delete.Click += new System.EventHandler(this.button_delete_Click);
+            this.panel1.Controls.Add(this.InputButton);
+            this.panel1.Controls.Add(this.DeleteButton);
+            this.panel1.Location = new System.Drawing.Point(16, 283);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(216, 24);
+            this.panel1.TabIndex = 16;
             // 
             // ProjectDataInputControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
-            this.Controls.Add(this.button_delete);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.label_project);
             this.Controls.Add(this.groupBox_location);
-            this.Controls.Add(this.resetButton);
-            this.Controls.Add(this.InputButton);
             this.Controls.Add(this.groupBox_case);
             this.Name = "ProjectDataInputControl";
             this.Size = new System.Drawing.Size(249, 316);
@@ -198,6 +196,7 @@
             this.groupBox_location.PerformLayout();
             this.groupBox_case.ResumeLayout(false);
             this.groupBox_case.PerformLayout();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -210,7 +209,7 @@
         private System.Windows.Forms.TextBox textBox_latlng_lng;
         private System.Windows.Forms.Label label_latlng_lat;
         private System.Windows.Forms.TextBox textBox_latlng_lat;
-        private System.Windows.Forms.Button resetButton;
+        private System.Windows.Forms.Button DeleteButton;
         private System.Windows.Forms.Button InputButton;
         private System.Windows.Forms.GroupBox groupBox_case;
         private System.Windows.Forms.RichTextBox richTextBox_case_addr;
@@ -218,6 +217,6 @@
         private System.Windows.Forms.TextBox textBox_case_Name;
         private System.Windows.Forms.Label label_case_Name;
         private System.Windows.Forms.Label label_project;
-        private System.Windows.Forms.Button button_delete;
+        private System.Windows.Forms.Panel panel1;
     }
 }

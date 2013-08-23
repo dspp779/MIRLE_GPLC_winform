@@ -11,16 +11,31 @@ namespace MIRLE.GPLC.Model.SQLite
 {
     public class SQLiteDBMS
     {
-        public static SQLiteConnection getConnection()
+        private static string dataSource = "default.sql";
+
+        public static void setDBPath(string path)
         {
-            if (!File.Exists("default.sql"))
-            {
-                SQLiteConnection.CreateFile("default.sql");
-            }
-            return new SQLiteConnection("Data Source=default.sql");
+            dataSource = path;
         }
 
-        public static SQLiteConnection getConnection(string path)
+        public static void copyTo(string path)
+        {
+            using (SQLiteConnection db1 = getConnection(dataSource), db2 = getConnection(path))
+            {
+                db1.Open();
+                db2.Open();
+                //db1.BackupDatabase(db2, path, dataSource, -1, null, 0);
+                //db2.BackupDatabase(db1, path, dataSource, -1, null, 0);
+            }
+        }
+
+        public static SQLiteConnection getConnection()
+        {
+            return getConnection(dataSource);
+        }
+
+
+        private static SQLiteConnection getConnection(string path)
         {
             if (!File.Exists(path))
             {

@@ -35,7 +35,8 @@
             // 
             // button_close
             // 
-            this.button_close.Location = new System.Drawing.Point(455, 368);
+            this.button_close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_close.Location = new System.Drawing.Point(457, 370);
             this.button_close.Name = "button_close";
             this.button_close.Size = new System.Drawing.Size(75, 23);
             this.button_close.TabIndex = 2;
@@ -69,6 +70,7 @@
             this.Controls.Add(this.projectDataView);
             this.Name = "ToolTipContentContainer";
             this.Size = new System.Drawing.Size(544, 400);
+            this.Load += new System.EventHandler(this.ToolTipContentContainer_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
