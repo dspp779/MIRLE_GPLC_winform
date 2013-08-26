@@ -50,7 +50,7 @@ namespace MIRLE_GPLC.form
             this.labelTitle = new System.Windows.Forms.Label();
             this.toolTip_listview = new System.Windows.Forms.ToolTip(this.components);
             this.dataFieldInputControl1 = new MIRLE_GPLC.form.DataFieldInputControl();
-            this.projectCreateControl1 = new MIRLE_GPLC.form.PLCInputControl();
+            this.plcInputControl = new MIRLE_GPLC.form.PLCInputControl();
             this.SuspendLayout();
             // 
             // listView_data
@@ -189,20 +189,20 @@ namespace MIRLE_GPLC.form
             this.dataFieldInputControl1.TabIndex = 15;
             this.dataFieldInputControl1.Visible = false;
             // 
-            // projectCreateControl1
+            // plcInputControl
             // 
-            this.projectCreateControl1.Location = new System.Drawing.Point(88, 48);
-            this.projectCreateControl1.Name = "projectCreateControl1";
-            this.projectCreateControl1.Size = new System.Drawing.Size(304, 145);
-            this.projectCreateControl1.TabIndex = 14;
-            this.projectCreateControl1.Visible = false;
+            this.plcInputControl.Location = new System.Drawing.Point(88, 48);
+            this.plcInputControl.Name = "plcInputControl";
+            this.plcInputControl.Size = new System.Drawing.Size(304, 145);
+            this.plcInputControl.TabIndex = 14;
+            this.plcInputControl.Visible = false;
             // 
             // ProjectDataView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.dataFieldInputControl1);
-            this.Controls.Add(this.projectCreateControl1);
+            this.Controls.Add(this.plcInputControl);
             this.Controls.Add(this.listView_data);
             this.Controls.Add(this.listView_plc);
             this.Controls.Add(this.buttonNext);
@@ -232,7 +232,7 @@ namespace MIRLE_GPLC.form
         private System.Windows.Forms.Label labelCounter;
         private System.Windows.Forms.Label labelText;
         private System.Windows.Forms.Label labelTitle;
-        private PLCInputControl projectCreateControl1;
+        private PLCInputControl plcInputControl;
         private DataFieldInputControl dataFieldInputControl1;
         private System.Windows.Forms.ToolTip toolTip_listview;
 

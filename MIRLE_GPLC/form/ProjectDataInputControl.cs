@@ -85,6 +85,7 @@ namespace MIRLE_GPLC.form
             }
             catch (FormatException)
             {
+                this.Parent.Dispose();
             }
         }
 

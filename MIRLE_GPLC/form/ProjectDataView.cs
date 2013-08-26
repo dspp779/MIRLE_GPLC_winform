@@ -11,6 +11,7 @@ using MIRLE_GPLC.Model;
 using Modbus.TCP;
 using System.Threading;
 using System.Net.Sockets;
+using System.Diagnostics;
 
 namespace MIRLE_GPLC.form
 {
@@ -20,21 +21,29 @@ namespace MIRLE_GPLC.form
         private static Thread modbusThread;
 
         private List<ProjectMarker> markers = new List<ProjectMarker>();
-        private int _shownMarker = 0;
-        private PLC _lastSelectedPLC;
+        private int _shownMarker = -1;
+        private int _lastSelectedPLC;
 
         private int ShownMarker
         {
             get { return _shownMarker; }
             set
             {
-                if (value < 0)
+                if (value == _shownMarker)
+                {
+                    return;
+                }
+                else if (value < 0)
+                {
                     value = markers.Count - 1;
+                }
                 else if (value >= markers.Count)
+                {
                     value = 0;
+                }
 
                 _shownMarker = value;
-                lastSelectedPLC = null;
+                lastSelectedPLC = -1;
 
                 labelTitle.Text = markers[_shownMarker].ProjectData.name;
                 labelText.Text = markers[_shownMarker].ProjectData.addr;
@@ -44,15 +53,18 @@ namespace MIRLE_GPLC.form
                 Refresh();
             }
         }
-        private PLC lastSelectedPLC
+        private int lastSelectedPLC
         {
-            get { return _lastSelectedPLC; }
+            get
+            {
+                return (_lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count)
+                    ? _lastSelectedPLC : markers[_shownMarker].ProjectData.plcs.Count - 1;
+            }
             set
             {
-                /*if (client != null && client.IsConnected)
+                /*if (value == _lastSelectedPLC)
                 {
-                    client.Disconnect();
-                    client = null;
+                    return;
                 }*/
                 if (MBmaster != null && MBmaster.connected)
                 {
@@ -64,8 +76,12 @@ namespace MIRLE_GPLC.form
                     modbusThread.Abort();
                     modbusThread = null;
                 }
+
                 _lastSelectedPLC = value;
-                refreshItemList(_lastSelectedPLC);
+
+                Debug.Assert(_lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count);
+
+                refreshItemList();
             }
         }
 
@@ -76,7 +92,9 @@ namespace MIRLE_GPLC.form
         public void init(List<ProjectMarker> markers)
         {
             if (markers.Count == 0)
+            {
                 return;
+            }
 
             // Assign the list of markers
             this.markers = markers;
@@ -101,21 +119,22 @@ namespace MIRLE_GPLC.form
 
         public override void Refresh()
         {
-            base.Refresh();
-            projectCreateControl1.Hide();
+            // hide input control
+            plcInputControl.Hide();
             dataFieldInputControl1.Hide();
             this.listView_data.Show();
             this.listView_plc.Show();
             refreshPLCList();
+            base.Refresh();
         }
         private void refreshPLCList()
         {
-            ProjectData p = markers[_shownMarker].ProjectData;
-            p.reload();
+            ProjectData project = markers[_shownMarker].ProjectData;
+            project.reload();
 
             listView_plc.Items.Clear();
             listView_data.Items.Clear();
-            foreach (PLC plc in p.plcs)
+            foreach (PLC plc in project.plcs)
             {
                 ListViewItem item = new ListViewItem(plc.alias);
                 item.SubItems.Add(plc.netid.ToString());
@@ -123,15 +142,22 @@ namespace MIRLE_GPLC.form
                 item.SubItems.Add(plc.port.ToString());
                 listView_plc.Items.Add(item);
             }
-            refreshItemList(lastSelectedPLC);
+            if (lastSelectedPLC >= 0)
+            {
+                listView_plc.Items[lastSelectedPLC].Selected = true;
+            }
         }
-        private void refreshItemList(PLC plc)
+        private void refreshItemList()
         {
             listView_data.Items.Clear();
-            if (plc == null)
+            if (lastSelectedPLC < 0)
             {
                 return;
             }
+
+            Debug.Assert(lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count);
+
+            PLC plc = markers[_shownMarker].ProjectData.plcs[lastSelectedPLC];
             plc.reload();
             foreach (Record r in plc.dataFields)
             {
@@ -139,8 +165,8 @@ namespace MIRLE_GPLC.form
                 item.SubItems.Add("????");
                 listView_data.Items.Add(item);
             }
-            // modbus worker
 
+            // modbus worker
             if (modbusThread != null && modbusThread.IsAlive)
             {
                 modbusThread.Abort();
@@ -148,8 +174,6 @@ namespace MIRLE_GPLC.form
             }
             modbusThread = new Thread(new ParameterizedThreadStart(modbusTCPWorker));
             modbusThread.Start(plc);
-            //ThreadPool.QueueUserWorkItem(new WaitCallback(o => modbusTCPWorker(plc)));
-
         }
 
         #endregion
@@ -169,7 +193,7 @@ namespace MIRLE_GPLC.form
         {
             if (listView_plc.SelectedIndices.Count > 0)
             {
-                lastSelectedPLC = markers[_shownMarker].ProjectData.plcs[listView_plc.SelectedIndices[0]];
+                lastSelectedPLC = listView_plc.SelectedIndices[0];
             }
         }
         private void listView_plc_DoubleClick(object sender, EventArgs e)
@@ -185,20 +209,25 @@ namespace MIRLE_GPLC.form
 
         private void listView_plc_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Delete && lastSelectedPLC != null)
+            if (e.KeyCode == Keys.Delete && lastSelectedPLC >= 0)
             {
-                ModelUtil.deletePLC(lastSelectedPLC.id);
+                Debug.Assert(lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count);
+                PLC plc = markers[_shownMarker].ProjectData.plcs[lastSelectedPLC];
+                ModelUtil.deletePLC(plc.id);
                 refreshPLCList();
             }
         }
         private void listView_data_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Delete && lastSelectedPLC != null)
+            if (e.KeyCode == Keys.Delete && lastSelectedPLC >= 0)
             {
+                Debug.Assert(lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count);
                 if (listView_data.SelectedIndices.Count > 0)
                 {
-                    ModelUtil.deleteItem(lastSelectedPLC.dataFields[listView_data.SelectedIndices[0]].id);
-                    refreshItemList(lastSelectedPLC);
+                    int index = listView_data.SelectedIndices[0];
+                    PLC plc = markers[_shownMarker].ProjectData.plcs[lastSelectedPLC];
+                    ModelUtil.deleteItem(plc.dataFields[index].id);
+                    refreshItemList();
                 }
             }
         }
@@ -225,7 +254,7 @@ namespace MIRLE_GPLC.form
         {
             if(listView_plc.Visible && listView_plc.SelectedIndices.Count <= 0)
             {
-                lastSelectedPLC = null;
+                lastSelectedPLC = -1;
             }
         }
 
@@ -235,35 +264,35 @@ namespace MIRLE_GPLC.form
         
         private void PLCEditControl(int index)
         {
-            ProjectData project = markers[_shownMarker].ProjectData;
-
             this.listView_data.Hide();
             this.listView_plc.Hide();
-            if (index >= 0)
+
+            ProjectData project = markers[ShownMarker].ProjectData;
+
+            if (index < 0)
             {
-                projectCreateControl1.init(project, project.plcs[index]);
+                plcInputControl.init(project);
             }
             else
             {
-                projectCreateControl1.init(project);
+                plcInputControl.init(project, project.plcs[index]);
             }
         }
         private void DataFieldControl(int index)
         {
-            if (lastSelectedPLC == null)
-            {
-                return;
-            }
-
             this.listView_data.Hide();
             this.listView_plc.Hide();
-            if (index >= 0)
+
+            PLC plc = markers[ShownMarker].ProjectData.plcs[lastSelectedPLC];
+
+            if (index < 0)
             {
-                dataFieldInputControl1.init(lastSelectedPLC.id, lastSelectedPLC.dataFields[index]);
+                dataFieldInputControl1.init(plc.id);
             }
             else
             {
-                dataFieldInputControl1.init(lastSelectedPLC.id);
+                Debug.Assert(index < plc.dataFields.Count);
+                dataFieldInputControl1.init(plc.id, plc.dataFields[index]);
             }
         }
 
@@ -391,15 +420,15 @@ namespace MIRLE_GPLC.form
                     break;
                 case 3:
                     MBmaster.ReadInputRegister(3, id, addr, length, ref data);
-                    break;
+                    return (data[0] << 8) + data[1];
                 case 4:
                     MBmaster.ReadHoldingRegister(4, id, addr, length, ref data);
-                    break;
+                    return (data[0] << 8) + data[1];
                 default:
                     MBmaster.ReadHoldingRegister(4, id, addr, length, ref data);
                     break;
             }
-            return (data[0] << 8) + data[1];
+            return data[0];
         }
 
         #endregion
