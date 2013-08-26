@@ -33,7 +33,6 @@ namespace MIRLE_GPLC
         private ObservableCollectionThreadSafe<GMapMarker> mouseOveredMarkers
             = new ObservableCollectionThreadSafe<GMapMarker>();
 
-        private AbsModbusClient client;
         private ToolTipContentContainer ttc;
 
         #region -- Form Properties & Initialization --
@@ -72,20 +71,17 @@ namespace MIRLE_GPLC
              * and add markers onto map
              */
             loadProjects();
-
-            /* start up resident refresh 
-             * modbus tcp worker
-             */
-            //ThreadPool.QueueUserWorkItem(new WaitCallback(modbusTCPWorker));
-
         }
 
         public void loadProjects()
         {
             markersOverlay.Clear();
+            currMarker = null;
+            /* project data can be extent
+             * create another thread to work on
+             */
             ThreadPool.QueueUserWorkItem(new WaitCallback(loadProjects));
         }
-
         private void loadProjects(object o)
         {
             List<ProjectData> list = ModelUtil.getProjectList();
@@ -102,25 +98,6 @@ namespace MIRLE_GPLC
         #endregion
 
         #region -- Mouse Events --
-
-        private void gMap_MouseClick(object sender, MouseEventArgs e)
-        {
-            PointLatLng latlng = gMap.FromLocalToLatLng(e.X, e.Y);
-            if (e.Button == MouseButtons.Left)
-            {
-                textBox_latlng_lat.Text = string.Format("{0:0.00000}", latlng.Lat);
-                textBox_latlng_lng.Text = string.Format("{0:0.00000}", latlng.Lng);
-            }
-        }
-        private void gMap_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            // zoom in when double clicked
-            if (e.Button == MouseButtons.Left)
-            {
-                gMap.Position = gMap.FromLocalToLatLng(e.Location.X, e.Location.Y);
-                gMap.Zoom++;
-            }
-        }
 
         private void gMap_MouseMove(object sender, MouseEventArgs e)
         {
@@ -178,6 +155,25 @@ namespace MIRLE_GPLC
             gMap.Refresh();
         }
 
+        private void gMap_MouseClick(object sender, MouseEventArgs e)
+        {
+            PointLatLng latlng = gMap.FromLocalToLatLng(e.X, e.Y);
+            if (e.Button == MouseButtons.Left)
+            {
+                textBox_latlng_lat.Text = string.Format("{0:0.00000}", latlng.Lat);
+                textBox_latlng_lng.Text = string.Format("{0:0.00000}", latlng.Lng);
+            }
+        }
+        private void gMap_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            // zoom in when double clicked
+            if (e.Button == MouseButtons.Left)
+            {
+                gMap.Position = gMap.FromLocalToLatLng(e.Location.X, e.Location.Y);
+                gMap.Zoom++;
+            }
+        }
+
         #endregion
 
         #region -- Marker Event --
@@ -227,61 +223,6 @@ namespace MIRLE_GPLC
 
         #endregion
 
-        #region -- Modbus TCP Worker --
-
-        private void modbusTCPWorker(object o)
-        {
-            PLC plc = o as PLC;
-            if (plc == null)
-                return;
-            // initialize modbus TCP/IP
-            ModbusClientAdpater adpater = new ModbusClientAdpater();
-            // config ip and port
-            TcpModbusConnectConfig config = new TcpModbusConnectConfig() { IpAddress = plc.ip, Port = plc.port };
-            // config modbus connection type
-            client = adpater.CreateModbusClient(EnumModbusFraming.TCP);
-            // connecting message "Connecting to [IP]:[PORT]"
-            string str = string.Format("Connecting to {0}:{1}", config.IpAddress, config.Port);
-
-            // modbus TCP connect
-            try
-            {
-                do
-                {
-                    // invoke ui thread to change tooltip
-                    Invoke(new ModbusStatusHandler(RefreshModbusLabel), new Object[] { str });
-                    SpinWait.SpinUntil(() => false, 1000);
-                } while (!client.Connect(config));
-            }
-            catch (SocketException)
-            {
-                // invoke ui thread to change tooltip
-                Invoke(new ModbusStatusHandler(RefreshModbusLabel), new Object[] { "Modbus TCP/IP connect fail" });
-            }
-
-            // refresh dataGrid periodically
-            while (client.IsConnected)
-            {
-                try
-                {
-                    foreach (Record r in plc.dataFields)
-                    {
-                        // modbus read
-                        byte[] data = client.ReadHoldingRegisters(1, (ushort)r.addr, (ushort)r.length);
-                        // convert to wanted value
-                        long val = Convert.ToInt64(data);
-                    }
-                    // spin wait
-                    SpinWait.SpinUntil(() => false, 1000);
-                }
-                catch (ModbusException)
-                {
-                }
-            }
-        }
-
-        #endregion
-         
         private void InputButton_Click(object sender, EventArgs e)
         {
             try
@@ -296,14 +237,23 @@ namespace MIRLE_GPLC
                 }
 
                 // update database
-                if (InputButton.Text.Equals("Modify"))
+                try
                 {
-                    long id = (currMarker as ProjectMarker).ProjectData.id;
-                    ModelUtil.updateProject(id, name, addr, lat, lng);
+                    if (InputButton.Text.Equals("Modify"))
+                    {
+                        long id = (currMarker as ProjectMarker).ProjectData.id;
+                        ModelUtil.updateProject(id, name, addr, lat, lng);
+                    }
+                    else
+                    {
+                        ModelUtil.insertProject(name, addr, lat, lng);
+                        markersOverlay.Markers.Remove(currMarker);
+                        currMarker.Dispose();
+                    }
                 }
-                else
+                catch (DbException ex)
                 {
-                    addProject(name, addr, lat, lng);
+                    MessageBox.Show(ex.Message);
                 }
                 // update marker overlay and current marker
                 loadProjects();
@@ -403,29 +353,19 @@ namespace MIRLE_GPLC
         }
 
         #endregion
-        
-        #region -- DB transaction --
 
-        private void addProject(string name, string addr, double lat, double lng)
-        {
-            try
-            {
-                ModelUtil.insertProject(name, addr, lat, lng);
-                markersOverlay.Markers.Remove(currMarker);
-                currMarker.Dispose();
-            }
-            catch (DbException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        #endregion
-
+        // spot detail is determined by map zoom
         private void gMap_OnMapZoomChanged()
         {
+            /* set tooltip always shows while zoom is bigger than 13
+             * otherwise, tooltip shows when mouse over.
+             */
             MarkerTooltipMode mode = (gMap.Zoom > 13) ? MarkerTooltipMode.Always :
                 MarkerTooltipMode.OnMouseOver;
+            setMapDetailMode(mode);
+        }
+        private void setMapDetailMode(MarkerTooltipMode mode)
+        {
             foreach (GMapMarker marker in markersOverlay.Markers)
             {
                 marker.ToolTipMode = mode;
@@ -464,7 +404,7 @@ namespace MIRLE_GPLC
 
             GPoint p = gMap.FromLatLngToLocal(item.Position);
             p.Offset(item.Size.Width*2/3, -1 * (item.Size.Height));
-            contextMenu(ttc, new Point((int)p.X, (int)p.Y));
+            contextMenu(ttc, new Point(Convert.ToInt32(p.X), Convert.ToInt32(p.Y)));
         }
 
         private void contextMenu(ToolTipContentContainer ttc, Point p)
@@ -474,27 +414,28 @@ namespace MIRLE_GPLC
             ttcContainer.Show(this, p);
         }
 
+        #region -- File Operation --
+
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
             openFileDialog1.ShowDialog(this);
         }
-
-        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            saveFileDialog1.ShowDialog(this);
-        }
-
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
             ModelUtil.setPath(openFileDialog1.FileName);
             loadProjects();
         }
 
+        private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.ShowDialog(this);
+        }
         private void saveFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            ModelUtil.copyTo(openFileDialog1.FileName);
-            ModelUtil.setPath(openFileDialog1.FileName);
+            ModelUtil.copyTo(saveFileDialog1.FileName);
+            ModelUtil.setPath(saveFileDialog1.FileName);
         }
 
+        #endregion
     }
 }

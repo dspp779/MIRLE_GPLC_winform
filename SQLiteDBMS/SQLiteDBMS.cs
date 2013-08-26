@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.Data;
 
-namespace MIRLE.GPLC.Model.SQLite
+namespace MIRLE.GPLC.DB.SQLite
 {
     public class SQLiteDBMS
     {
@@ -20,13 +20,7 @@ namespace MIRLE.GPLC.Model.SQLite
 
         public static void copyTo(string path)
         {
-            using (SQLiteConnection db1 = getConnection(dataSource), db2 = getConnection(path))
-            {
-                db1.Open();
-                db2.Open();
-                //db1.BackupDatabase(db2, path, dataSource, -1, null, 0);
-                //db2.BackupDatabase(db1, path, dataSource, -1, null, 0);
-            }
+            System.IO.File.Copy(dataSource, path, true);
         }
 
         public static SQLiteConnection getConnection()

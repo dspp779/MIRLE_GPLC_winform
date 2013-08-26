@@ -191,6 +191,10 @@
       <Project>{5959daed-701a-42fb-b3ed-2257ef5693c9}</Project>
       <Name>MIRLE_GPLC.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MIRLE_GPLC.Security\MIRLE_GPLC.Security.csproj">
+      <Project>{7a390cfe-d761-414f-98fb-2f40ffd72a06}</Project>
+      <Name>MIRLE_GPLC.Security</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SuperContextMenu\SuperContextMenu.csproj">
       <Project>{a04a0762-6790-40a2-8883-722febff8bf2}</Project>
       <Name>SuperContextMenu %28SuperContextMenu\SuperContextMenu%29</Name>

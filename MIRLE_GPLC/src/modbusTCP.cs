@@ -36,8 +36,8 @@ namespace Modbus.TCP
     {
         // ------------------------------------------------------------------------
         // Private declarations
-        private static ushort _timeout = 500;
-        private static ushort _refresh = 10;
+        private ushort _timeout = 500;
+        private ushort _refresh = 10;
         private bool _connected = false;
 
         private Socket tcpAsyCl;

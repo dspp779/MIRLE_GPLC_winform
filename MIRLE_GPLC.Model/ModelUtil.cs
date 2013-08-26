@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
-using MIRLE.GPLC.Model.SQLite;
+using MIRLE.GPLC.DB.SQLite;
 using System.Data.SQLite;
 using System.Data.Common;
 
@@ -395,7 +395,6 @@ namespace MIRLE_GPLC.Model
         {
             SQLiteDBMS.setDBPath(path);
         }
-
         public static void copyTo(string path)
         {
             SQLiteDBMS.copyTo(path);

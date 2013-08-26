@@ -300,58 +300,6 @@ namespace MIRLE_GPLC.form
 
         #region -- Modbus TCP Worker --
 
-        /*private void modbusTCPWorker(PLC plc)
-        {
-            if (plc == null)
-            {
-                return;
-            }
-
-            // initialize modbus TCP/IP
-            ModbusClientAdpater adpater = new ModbusClientAdpater();
-            // config ip and port
-            TcpModbusConnectConfig config = new TcpModbusConnectConfig() { IpAddress = plc.ip, Port = plc.port };
-            // config modbus connection type
-            client = adpater.CreateModbusClient(EnumModbusFraming.TCP);
-            // connecting message "Connecting to [IP]:[PORT]"
-            string str = string.Format("Connecting to {0}:{1}", config.IpAddress, config.Port);
-
-            // modbus TCP connect
-            try
-            {
-                do
-                {
-                    // invoke ui thread to change tooltip
-                    //Invoke(new DataFieldHandler(RefreshDataField), new Object[] { str });
-                    SpinWait.SpinUntil(() => false, 1000);
-                } while (!client.Connect(config));
-            }
-            catch (SocketException)
-            {
-                // invoke ui thread to change tooltip
-                //Invoke(new DataFieldHandler(RefreshDataField), new Object[] { "Modbus TCP/IP connect fail" });
-            }
-
-            // refresh dataGrid periodically
-            while (client != null && client.IsConnected)
-            {
-                try
-                {
-                    int i = 0;
-                    foreach (Record r in plc.dataFields)
-                    {
-                        //ThreadPool.QueueUserWorkItem(new WaitCallback(o => readData((ushort)r.addr, (ushort)r.length, index)));
-                        readData((ushort)r.addr, (ushort)r.length, i++);
-                    }
-                    // spin wait
-                    SpinWait.SpinUntil(() => false, 1000);
-                }
-                catch (ModbusException)
-                {
-                }
-            }
-        }*/
-        
         private void modbusTCPWorker(object o)
         {
             PLC plc = o as PLC;
