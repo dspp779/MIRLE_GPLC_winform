@@ -47,11 +47,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.latlngLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.modbusStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.AuthStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox_location = new System.Windows.Forms.GroupBox();
             this.label_latlng_lng = new System.Windows.Forms.Label();
@@ -59,8 +57,6 @@
             this.label_latlng_lat = new System.Windows.Forms.Label();
             this.textBox_latlng_lat = new System.Windows.Forms.TextBox();
             this.InputButton = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox_case = new System.Windows.Forms.GroupBox();
             this.richTextBox_case_addr = new System.Windows.Forms.RichTextBox();
             this.label_case_addr = new System.Windows.Forms.Label();
@@ -72,16 +68,14 @@
             this.檔案ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.OpenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.權限ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_anonymous = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolStripMenuItem_auth = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.權限ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.唯讀權限ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.控制權限ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.編輯權限ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox_location.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox_case.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -90,7 +84,7 @@
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.latlngLabel,
-            this.modbusStatusLabel});
+            this.AuthStatusLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 660);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(870, 22);
@@ -104,15 +98,15 @@
             this.latlngLabel.Name = "latlngLabel";
             this.latlngLabel.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.latlngLabel.RightToLeftAutoMirrorImage = true;
-            this.latlngLabel.Size = new System.Drawing.Size(765, 17);
+            this.latlngLabel.Size = new System.Drawing.Size(821, 17);
             this.latlngLabel.Spring = true;
             this.latlngLabel.Text = "latlngLabel";
             // 
-            // modbusStatusLabel
+            // AuthStatusLabel
             // 
-            this.modbusStatusLabel.Name = "modbusStatusLabel";
-            this.modbusStatusLabel.Size = new System.Drawing.Size(90, 17);
-            this.modbusStatusLabel.Text = "modbus status";
+            this.AuthStatusLabel.Name = "AuthStatusLabel";
+            this.AuthStatusLabel.Size = new System.Drawing.Size(34, 17);
+            this.AuthStatusLabel.Text = "Auth";
             // 
             // panel1
             // 
@@ -121,7 +115,6 @@
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel1.Controls.Add(this.groupBox_location);
             this.panel1.Controls.Add(this.InputButton);
-            this.panel1.Controls.Add(this.dataGridView1);
             this.panel1.Controls.Add(this.groupBox_case);
             this.panel1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.panel1.Location = new System.Drawing.Point(616, 22);
@@ -185,38 +178,6 @@
             this.InputButton.Text = "Add";
             this.InputButton.UseVisualStyleBackColor = true;
             this.InputButton.Click += new System.EventHandler(this.InputButton_Click);
-            // 
-            // dataGridView1
-            // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Value});
-            this.dataGridView1.Location = new System.Drawing.Point(9, 354);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.RowHeadersWidth = 100;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.dataGridView1.RowsDefaultCellStyle = dataGridViewCellStyle2;
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(230, 274);
-            this.dataGridView1.TabIndex = 4;
-            // 
-            // Value
-            // 
-            this.Value.HeaderText = "Value";
-            this.Value.Name = "Value";
-            this.Value.ReadOnly = true;
             // 
             // groupBox_case
             // 
@@ -349,6 +310,29 @@
             this.SaveToolStripMenuItem.Text = "Save as";
             this.SaveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
             // 
+            // 權限ToolStripMenuItem
+            // 
+            this.權限ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ToolStripMenuItem_anonymous,
+            this.ToolStripMenuItem_auth});
+            this.權限ToolStripMenuItem.Name = "權限ToolStripMenuItem";
+            this.權限ToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.權限ToolStripMenuItem.Text = "權限";
+            // 
+            // ToolStripMenuItem_anonymous
+            // 
+            this.ToolStripMenuItem_anonymous.Name = "ToolStripMenuItem_anonymous";
+            this.ToolStripMenuItem_anonymous.Size = new System.Drawing.Size(124, 22);
+            this.ToolStripMenuItem_anonymous.Text = "唯讀模式";
+            this.ToolStripMenuItem_anonymous.Click += new System.EventHandler(this.ToolStripMenuItem_anonymous_Click);
+            // 
+            // ToolStripMenuItem_auth
+            // 
+            this.ToolStripMenuItem_auth.Name = "ToolStripMenuItem_auth";
+            this.ToolStripMenuItem_auth.Size = new System.Drawing.Size(124, 22);
+            this.ToolStripMenuItem_auth.Text = "認證";
+            this.ToolStripMenuItem_auth.Click += new System.EventHandler(this.ToolStripMenuItem_auth_Click);
+            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
@@ -357,34 +341,6 @@
             // saveFileDialog1
             // 
             this.saveFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog1_FileOk);
-            // 
-            // 權限ToolStripMenuItem
-            // 
-            this.權限ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.唯讀權限ToolStripMenuItem,
-            this.控制權限ToolStripMenuItem,
-            this.編輯權限ToolStripMenuItem});
-            this.權限ToolStripMenuItem.Name = "權限ToolStripMenuItem";
-            this.權限ToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.權限ToolStripMenuItem.Text = "權限";
-            // 
-            // 唯讀權限ToolStripMenuItem
-            // 
-            this.唯讀權限ToolStripMenuItem.Name = "唯讀權限ToolStripMenuItem";
-            this.唯讀權限ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.唯讀權限ToolStripMenuItem.Text = "唯讀權限";
-            // 
-            // 控制權限ToolStripMenuItem
-            // 
-            this.控制權限ToolStripMenuItem.Name = "控制權限ToolStripMenuItem";
-            this.控制權限ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.控制權限ToolStripMenuItem.Text = "控制權限";
-            // 
-            // 編輯權限ToolStripMenuItem
-            // 
-            this.編輯權限ToolStripMenuItem.Name = "編輯權限ToolStripMenuItem";
-            this.編輯權限ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.編輯權限ToolStripMenuItem.Text = "編輯權限";
             // 
             // MainForm
             // 
@@ -397,13 +353,12 @@
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
-            this.Text = "MainForm";
+            this.Text = "MIRLE GPLC";
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.groupBox_location.ResumeLayout(false);
             this.groupBox_location.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox_case.ResumeLayout(false);
             this.groupBox_case.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
@@ -419,8 +374,6 @@
         private System.Windows.Forms.ToolStripStatusLabel latlngLabel;
         private System.Windows.Forms.Panel panel1;
         private GMap.NET.WindowsForms.GMapControl gMap;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Value;
         private System.Windows.Forms.GroupBox groupBox_location;
         private System.Windows.Forms.Label label_latlng_lng;
         private System.Windows.Forms.TextBox textBox_latlng_lng;
@@ -432,7 +385,7 @@
         private System.Windows.Forms.TextBox textBox_case_Name;
         private System.Windows.Forms.Label label_case_Name;
         private System.Windows.Forms.Label label_case_ID;
-        private System.Windows.Forms.ToolStripStatusLabel modbusStatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel AuthStatusLabel;
         private System.Windows.Forms.RichTextBox richTextBox_case_addr;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 檔案ToolStripMenuItem;
@@ -441,9 +394,8 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem 權限ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 唯讀權限ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 控制權限ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 編輯權限ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_anonymous;
+        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_auth;
     }
 }
 

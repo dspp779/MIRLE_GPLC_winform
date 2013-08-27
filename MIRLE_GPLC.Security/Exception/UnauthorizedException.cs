@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MIRLE_GPLC.Security.Exception
+namespace MIRLE_GPLC.Security
 {
-    public class UnauthorizedException : UnauthorizedAccessException
+    public class UnauthorizedException : Exception
     {
         private GPLCAuthority authority;
 
@@ -18,9 +18,7 @@ namespace MIRLE_GPLC.Security.Exception
         {
             get
             {
-                string str = (authority == GPLCAuthority.Administrator) ?
-                    "Operator" : "Administrator";
-                return str + " authority needed to do such operation.";
+                return authority + " authority required to do such operation.";
             }
         }
     }

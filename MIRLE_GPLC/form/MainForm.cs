@@ -13,6 +13,7 @@ using System.Data.Common;
 using MIRLE_GPLC.Model;
 using MIRLE_GPLC.form;
 using MIRLE_GPLC.form.marker;
+using MIRLE_GPLC.Security;
 using GMap.NET;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
@@ -44,8 +45,6 @@ namespace MIRLE_GPLC
             this.gMap.DragButton = System.Windows.Forms.MouseButtons.Left;
             // no center red cross
             this.gMap.ShowCenter = false;
-            // init modbus view
-            dataGridView1.Rows.Add(10);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -62,6 +61,8 @@ namespace MIRLE_GPLC
             // initial latlng
             this.gMap.Position = new PointLatLng(23.8, 121);
 
+            // initial Auth
+            authenticate("root", "1234567");
 
             // intialize marker overlay
             markersOverlay = new GMapOverlay("markers");
@@ -73,10 +74,8 @@ namespace MIRLE_GPLC
             loadProjects();
         }
 
-        public void loadProjects()
+        private void loadProjects()
         {
-            markersOverlay.Clear();
-            currMarker = null;
             /* project data can be extent
              * create another thread to work on
              */
@@ -93,6 +92,43 @@ namespace MIRLE_GPLC
             {
                 addPMarker(p);
             }
+        }
+
+        public override void Refresh()
+        {
+            markersOverlay.Clear();
+            mouseOveredMarkers.Clear();
+            if (currMarker != null)
+            {
+                currMarker.Dispose();
+                currMarker = null;
+            }
+            loadProjects();
+            base.Refresh();
+        }
+
+        #endregion
+
+        #region -- Authentication --
+
+        private void authenticate()
+        {
+            GPLC.user = new GPLCUser();
+            RefreshAuthLabel();
+        }
+        private void authenticate(string id, string pass)
+        {
+            try
+            {
+                GPLC.user = new GPLCUser(id, pass);
+                string str = string.Format("以{0}身分登入成功。({1}權限)", id, GPLC.user.authority.ToString());
+                MessageBox.Show(str, "認證成功");
+            }
+            catch (WrongIdPassException)
+            {
+                MessageBox.Show("使用者名稱不存在或密碼錯誤", "認證失敗");
+            }
+            RefreshAuthLabel();
         }
 
         #endregion
@@ -148,7 +184,7 @@ namespace MIRLE_GPLC
                 currMarker = mouseOveredMarkers.Last();
             }
             // add new marker while right mouse button downed
-            else if (e.Button == MouseButtons.Right)
+            else if (e.Button == MouseButtons.Right && GPLC.Authendtic(GPLCAuthority.Administrator))
             {
                 setCurrMarker(gMap.FromLocalToLatLng(e.X, e.Y));
             }
@@ -185,30 +221,33 @@ namespace MIRLE_GPLC
             textBox_latlng_lng.Text = string.Format("{0:0.00000}", marker.Position.Lng);
             if (mouseOveredMarkers.Contains(item))
             {
-                if (item is ProjectMarker)
+                if (e.Button == MouseButtons.Left)
                 {
-                    ProjectData pd = (marker as ProjectMarker).ProjectData;
-                    // set text box
-                    label_case_ID.Text = "ID:" + pd.id.ToString();
-                    textBox_case_Name.Text = pd.name;
-                    richTextBox_case_addr.Text = pd.addr;
-                    // get marker local position
-                    GPoint pos = gMap.FromLatLngToLocal(item.Position);
-                    // set map center
-                    this.gMap.Position = gMap.FromLocalToLatLng((int)pos.X, (int)pos.Y + gMap.Height / 4);
-
-                    if (e.Button == MouseButtons.Left)
+                    if (item is ProjectMarker)
                     {
+                        ProjectData pd = (marker as ProjectMarker).ProjectData;
+                        // set text box
+                        label_case_ID.Text = "ID:" + pd.id.ToString();
+                        textBox_case_Name.Text = pd.name;
+                        richTextBox_case_addr.Text = pd.addr;
+                        // get marker local position
+                        GPoint pos = gMap.FromLatLngToLocal(item.Position);
+                        // set map center
+                        //this.gMap.Position = gMap.FromLocalToLatLng((int)pos.X, (int)pos.Y + gMap.Height / 4);
+
                         viewProject(item);
                     }
-                    else if (e.Button == MouseButtons.Right)
+                    else if (GPLC.Authendtic(GPLCAuthority.Administrator))
+                    {
+                        inputProject(item);
+                    }
+                }
+                else if (e.Button == MouseButtons.Right && GPLC.Authendtic(GPLCAuthority.Administrator))
+                {
+                    if (item is ProjectMarker)
                     {
                         inputProject(marker);
                     }
-                }
-                else if(e.Button == MouseButtons.Left)
-                {
-                    inputProject(item);
                 }
             }
         }
@@ -223,64 +262,24 @@ namespace MIRLE_GPLC
 
         #endregion
 
-        private void InputButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                string name = textBox_case_Name.Text;
-                string addr = richTextBox_case_addr.Text;
-                double lat = double.Parse(textBox_latlng_lat.Text);
-                double lng = double.Parse(textBox_latlng_lng.Text);
-                if (lat > 90 || lat < -90 || lng > 180 || lat < -180)
-                {
-                    throw new FormatException("Latlng value out of bound");
-                }
-
-                // update database
-                try
-                {
-                    if (InputButton.Text.Equals("Modify"))
-                    {
-                        long id = (currMarker as ProjectMarker).ProjectData.id;
-                        ModelUtil.updateProject(id, name, addr, lat, lng);
-                    }
-                    else
-                    {
-                        ModelUtil.insertProject(name, addr, lat, lng);
-                        markersOverlay.Markers.Remove(currMarker);
-                        currMarker.Dispose();
-                    }
-                }
-                catch (DbException ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-                // update marker overlay and current marker
-                loadProjects();
-            }
-            catch (FormatException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
         #region -- UI delegate --
 
-        // dataGridView delegate
-        delegate void dataGridHandler(int i, long d);
-        private void RefreshGridValue(int i, long d)
-        {
-            int slot = i % 10;
-            dataGridView1.Rows[slot].HeaderCell.Value = i.ToString();
-            dataGridView1.Rows[slot].Cells[0].Value = d;
-            //dataGridView2.DataSource = SQLiteDBMS.execQuery("SELECT * FROM test");
-        }
-
         // status delegate
-        delegate void ModbusStatusHandler(string status);
-        private void RefreshModbusLabel(string status)
+        private void RefreshAuthLabel()
         {
-            modbusStatusLabel.Text = status;
+            if (this.InvokeRequired)
+            {
+                Invoke(new AuthStatusHandler(RefreshAuthLabel), new object[] { GPLC.user.authInfo() });
+            }
+            else
+            {
+                RefreshAuthLabel(GPLC.user.authInfo());
+            }
+        }
+        delegate void AuthStatusHandler(string status);
+        private void RefreshAuthLabel(string status)
+        {
+            AuthStatusLabel.Text = status;
         }
 
         // add marker to overlay delegate
@@ -335,6 +334,9 @@ namespace MIRLE_GPLC
 
         private GMapMarker setCurrMarker(PointLatLng p)
         {
+            // check authentication
+            GPLC.user.Authenticate(GPLCAuthority.Administrator);
+
             if (currMarker == null || currMarker is ProjectMarker)
             {
                 currMarker = new GMarkerGoogle(p, GMarkerGoogleType.green_pushpin);
@@ -378,7 +380,10 @@ namespace MIRLE_GPLC
             List<ProjectMarker> list = new List<ProjectMarker>();
             foreach (GMapMarker marker in mouseOveredMarkers)
             {
-                list.Add(marker as ProjectMarker);
+                if (marker is ProjectMarker)
+                {
+                    list.Add(marker as ProjectMarker);
+                }
             }
             // set context menu
             if (ttc != null)
@@ -394,6 +399,9 @@ namespace MIRLE_GPLC
         }
         private void inputProject(GMapMarker item)
         {
+            // check authentication
+            GPLC.user.Authenticate(GPLCAuthority.Administrator);
+
             // set context menu
             if (ttc != null)
             {
@@ -437,5 +445,69 @@ namespace MIRLE_GPLC
         }
 
         #endregion
+
+
+        private void InputButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // check authentication
+                GPLC.Auth(GPLCAuthority.Administrator);
+
+                string name = textBox_case_Name.Text;
+                string addr = richTextBox_case_addr.Text;
+                double lat = double.Parse(textBox_latlng_lat.Text);
+                double lng = double.Parse(textBox_latlng_lng.Text);
+                if (lat > 90 || lat < -90 || lng > 180 || lat < -180)
+                {
+                    throw new FormatException("Latlng value out of bound");
+                }
+
+                // update database
+                try
+                {
+                    if (InputButton.Text.Equals("Modify"))
+                    {
+                        long id = (currMarker as ProjectMarker).ProjectData.id;
+                        ModelUtil.updateProject(id, name, addr, lat, lng);
+                    }
+                    else
+                    {
+                        ModelUtil.insertProject(name, addr, lat, lng);
+                        markersOverlay.Markers.Remove(currMarker);
+                        currMarker.Dispose();
+                    }
+                }
+                catch (DbException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                // update marker overlay and current marker
+                loadProjects();
+            }
+            catch (FormatException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            catch (UnauthorizedException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void ToolStripMenuItem_anonymous_Click(object sender, EventArgs e)
+        {
+            authenticate();
+        }
+
+        private void ToolStripMenuItem_auth_Click(object sender, EventArgs e)
+        {
+            AuthForm authform = new AuthForm();
+            if (authform.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                authenticate(authform.id, authform.pass);
+            }
+        }
+
     }
 }

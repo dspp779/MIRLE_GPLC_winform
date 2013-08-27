@@ -80,7 +80,7 @@ namespace MIRLE_GPLC.form
                 }
 
                 //refresh map
-                Program.mainForm.loadProjects();
+                GPLC.Refresh();
                 this.Parent.Dispose();
             }
             catch (FormatException)
@@ -93,7 +93,7 @@ namespace MIRLE_GPLC.form
         {
             ModelUtil.deleteProject((marker as ProjectMarker).ProjectData.id);
             //refresh map
-            Program.mainForm.loadProjects();
+            GPLC.Refresh();
             this.Parent.Dispose();
         }
     }

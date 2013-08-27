@@ -198,13 +198,19 @@ namespace MIRLE_GPLC.form
         }
         private void listView_plc_DoubleClick(object sender, EventArgs e)
         {
-            int index = listView_plc.SelectedIndices.Count > 0 ? listView_plc.SelectedIndices[0] : -1;
-            PLCEditControl(index);
+            if (GPLC.Authendtic(Security.GPLCAuthority.Administrator))
+            {
+                int index = listView_plc.SelectedIndices.Count > 0 ? listView_plc.SelectedIndices[0] : -1;
+                PLCEditControl(index);
+            }
         }
         private void listView_data_DoubleClick(object sender, EventArgs e)
         {
-            int index = listView_data.SelectedIndices.Count > 0 ? listView_data.SelectedIndices[0] : -1;
-            DataFieldControl(index);
+            if (GPLC.Authendtic(Security.GPLCAuthority.Administrator))
+            {
+                int index = listView_data.SelectedIndices.Count > 0 ? listView_data.SelectedIndices[0] : -1;
+                DataFieldControl(index);
+            }
         }
 
         private void listView_plc_KeyDown(object sender, KeyEventArgs e)
@@ -302,7 +308,16 @@ namespace MIRLE_GPLC.form
 
         private void modbusTCPWorker(object o)
         {
-            PLC plc = o as PLC;
+            try
+            {
+                modbusTCPWorker(o as PLC);
+            }
+            catch (ThreadAbortException)
+            {
+            }
+        }
+        private void modbusTCPWorker(PLC plc)
+        {
             if (plc == null)
             {
                 return;

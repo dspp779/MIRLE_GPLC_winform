@@ -34,7 +34,6 @@ namespace MIRLE_GPLC.form
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.listView_data = new System.Windows.Forms.ListView();
             this.item = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.value = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -48,7 +47,6 @@ namespace MIRLE_GPLC.form
             this.labelCounter = new System.Windows.Forms.Label();
             this.labelText = new System.Windows.Forms.Label();
             this.labelTitle = new System.Windows.Forms.Label();
-            this.toolTip_listview = new System.Windows.Forms.ToolTip(this.components);
             this.dataFieldInputControl1 = new MIRLE_GPLC.form.DataFieldInputControl();
             this.plcInputControl = new MIRLE_GPLC.form.PLCInputControl();
             this.SuspendLayout();
@@ -64,7 +62,6 @@ namespace MIRLE_GPLC.form
             this.listView_data.Name = "listView_data";
             this.listView_data.Size = new System.Drawing.Size(184, 255);
             this.listView_data.TabIndex = 13;
-            this.toolTip_listview.SetToolTip(this.listView_data, "滑鼠連按二下新增資料項");
             this.listView_data.UseCompatibleStateImageBehavior = false;
             this.listView_data.View = System.Windows.Forms.View.Details;
             this.listView_data.DoubleClick += new System.EventHandler(this.listView_data_DoubleClick);
@@ -92,12 +89,10 @@ namespace MIRLE_GPLC.form
             this.ip,
             this.port});
             this.listView_plc.FullRowSelect = true;
-            this.listView_plc.LabelEdit = true;
             this.listView_plc.Location = new System.Drawing.Point(1, 48);
             this.listView_plc.Name = "listView_plc";
             this.listView_plc.Size = new System.Drawing.Size(254, 255);
             this.listView_plc.TabIndex = 12;
-            this.toolTip_listview.SetToolTip(this.listView_plc, "滑鼠連按二下新增PLC");
             this.listView_plc.UseCompatibleStateImageBehavior = false;
             this.listView_plc.View = System.Windows.Forms.View.Details;
             this.listView_plc.SelectedIndexChanged += new System.EventHandler(this.listView_plc_SelectedIndexChanged);
@@ -177,10 +172,6 @@ namespace MIRLE_GPLC.form
             this.labelTitle.TabIndex = 7;
             this.labelTitle.Text = "title";
             // 
-            // toolTip_listview
-            // 
-            this.toolTip_listview.IsBalloon = true;
-            // 
             // dataFieldInputControl1
             // 
             this.dataFieldInputControl1.Location = new System.Drawing.Point(125, 48);
@@ -234,7 +225,6 @@ namespace MIRLE_GPLC.form
         private System.Windows.Forms.Label labelTitle;
         private PLCInputControl plcInputControl;
         private DataFieldInputControl dataFieldInputControl1;
-        private System.Windows.Forms.ToolTip toolTip_listview;
 
     }
 }
