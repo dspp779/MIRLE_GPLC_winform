@@ -42,15 +42,7 @@ namespace MIRLE_GPLC
         }
         public static void Auth(GPLCAuthority auth)
         {
-            try
-            {
-                user.Authenticate(auth);
-            }
-            catch (UnauthorizedException ex)
-            {
-                MessageBox.Show(ex.Message, "Fatal Error");
-                Application.Exit();
-            }
+            user.Authenticate(auth);
         }
     }
 }

@@ -431,7 +431,7 @@ namespace MIRLE_GPLC
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
             ModelUtil.setPath(openFileDialog1.FileName);
-            loadProjects();
+            Refresh();
         }
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -475,7 +475,10 @@ namespace MIRLE_GPLC
                     {
                         ModelUtil.insertProject(name, addr, lat, lng);
                         markersOverlay.Markers.Remove(currMarker);
-                        currMarker.Dispose();
+                        if (currMarker != null)
+                        {
+                            currMarker.Dispose();
+                        }
                     }
                 }
                 catch (DbException ex)
@@ -491,7 +494,8 @@ namespace MIRLE_GPLC
             }
             catch (UnauthorizedException ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Fatal Error");
+                Application.Exit();
             }
         }
 
