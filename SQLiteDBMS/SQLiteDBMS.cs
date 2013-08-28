@@ -11,7 +11,7 @@ namespace MIRLE.GPLC.DB.SQLite
 {
     public class SQLiteDBMS
     {
-        private static string dataSource = "default.sql";
+        private static string dataSource = @"default.sql";
 
         public static void setDBPath(string path)
         {
@@ -35,7 +35,7 @@ namespace MIRLE.GPLC.DB.SQLite
             {
                 SQLiteConnection.CreateFile(path);
             }
-            return new SQLiteConnection("Data Source=" + path);
+            return new SQLiteConnection(@"Data Source=" + path);
         }
 
         public static DataTable execQuery(SQLiteCommand cmd)

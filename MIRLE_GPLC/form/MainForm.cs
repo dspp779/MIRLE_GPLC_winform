@@ -61,9 +61,6 @@ namespace MIRLE_GPLC
             // initial latlng
             this.gMap.Position = new PointLatLng(23.8, 121);
 
-            // initial Auth
-            authenticate("root", "1234567");
-
             // intialize marker overlay
             markersOverlay = new GMapOverlay("markers");
             gMap.Overlays.Add(markersOverlay);
@@ -72,6 +69,12 @@ namespace MIRLE_GPLC
              * and add markers onto map
              */
             loadProjects();
+        }
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            // initial Auth
+            //authenticate("root", "1234567");
+            authenticate();
         }
 
         private void loadProjects()
@@ -114,7 +117,7 @@ namespace MIRLE_GPLC
         private void authenticate()
         {
             GPLC.user = new GPLCUser();
-            RefreshAuthLabel();
+            RefreshAuthStatus();
         }
         private void authenticate(string id, string pass)
         {
@@ -128,7 +131,7 @@ namespace MIRLE_GPLC
             {
                 MessageBox.Show("使用者名稱不存在或密碼錯誤", "認證失敗");
             }
-            RefreshAuthLabel();
+            RefreshAuthStatus();
         }
 
         #endregion
@@ -265,19 +268,19 @@ namespace MIRLE_GPLC
         #region -- UI delegate --
 
         // status delegate
-        private void RefreshAuthLabel()
+        private void RefreshAuthStatus()
         {
             if (this.InvokeRequired)
             {
-                Invoke(new AuthStatusHandler(RefreshAuthLabel), new object[] { GPLC.user.authInfo() });
+                Invoke(new AuthStatusHandler(RefreshAuthStatus), new object[] { GPLC.user.authInfo() });
             }
             else
             {
-                RefreshAuthLabel(GPLC.user.authInfo());
+                RefreshAuthStatus(GPLC.user.authInfo());
             }
         }
         delegate void AuthStatusHandler(string status);
-        private void RefreshAuthLabel(string status)
+        private void RefreshAuthStatus(string status)
         {
             AuthStatusLabel.Text = status;
         }

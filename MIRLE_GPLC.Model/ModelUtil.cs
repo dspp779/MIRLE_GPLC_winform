@@ -107,37 +107,36 @@ namespace MIRLE_GPLC.Model
         {
             using (SQLiteConnection conn = SQLiteDBMS.getConnection())
             {
-                conn.Open();
-                SQLiteCommand cmd;
-
-                // optimize for bulk insert
-                using (cmd = new SQLiteCommand("begin", conn))
+                using (SQLiteTransaction transaction = conn.BeginTransaction())
                 {
-                    cmd.ExecuteNonQuery();
-                }
-
-                foreach (Tag r in list)
-                {
-                    string sql = "INSERT INTO Tag (id, start_addr, length, format, alias, plc_id) "
-                    + "values (@id, @start_addr, @length, @format, @alias, @plc_id)";
-                    using (cmd = new SQLiteCommand(sql, conn))
+                    using (SQLiteCommand cmd = conn.CreateCommand())
                     {
-                        cmd.Parameters.Add("@id", DbType.Int64).Value = r.id;
-                        cmd.Parameters.Add("@start_addr", DbType.Int32).Value = r.addr;
-                        cmd.Parameters.Add("@length", DbType.Int32).Value = r.length;
-                        cmd.Parameters.Add("@format", DbType.String).Value = r.format;
-                        cmd.Parameters.Add("@alias", DbType.String).Value = r.alias;
-                        cmd.Parameters.Add("@plc_id", DbType.Int64).Value = plc_id;
-                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = "INSERT INTO Tag (id, start_addr, length, format, alias, plc_id)"
+                            + " values (@id, @start_addr, @length, @format, @alias, @plc_id)";
+                        cmd.Parameters.Add("@id", DbType.Int64);
+                        cmd.Parameters.Add("@start_addr", DbType.Int32);
+                        cmd.Parameters.Add("@length", DbType.Int32);
+                        cmd.Parameters.Add("@format", DbType.String);
+                        cmd.Parameters.Add("@alias", DbType.String);
+                        cmd.Parameters.Add("@plc_id", DbType.Int64);
+                        foreach (Tag tag in list)
+                        {
+                            insertTag(cmd, tag, plc_id);
+                        }
                     }
-                }
-
-                // end of optimization for bulk insert
-                using (cmd = new SQLiteCommand("end", conn))
-                {
-                    cmd.ExecuteNonQuery();
+                    transaction.Commit();
                 }
             }
+        }
+        private static int insertTag(SQLiteCommand cmd, Tag tag, long id)
+        {
+            cmd.Parameters["@id"].Value = tag.id;
+            cmd.Parameters["@start_addr"].Value = tag.addr;
+            cmd.Parameters["@length"].Value = tag.length;
+            cmd.Parameters["@format"].Value = tag.format;
+            cmd.Parameters["@alias"].Value = tag.alias;
+            cmd.Parameters["@plc_id"].Value = id;
+            return cmd.ExecuteNonQuery();
         }
 
         #endregion
@@ -391,6 +390,8 @@ namespace MIRLE_GPLC.Model
 
         #endregion
 
+        #region -- db file operation --
+
         public static void setPath(string path)
         {
             SQLiteDBMS.setDBPath(path);
@@ -399,5 +400,7 @@ namespace MIRLE_GPLC.Model
         {
             SQLiteDBMS.copyTo(path);
         }
+        
+        #endregion
     }
 }
