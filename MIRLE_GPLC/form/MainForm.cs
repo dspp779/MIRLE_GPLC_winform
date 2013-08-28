@@ -65,16 +65,12 @@ namespace MIRLE_GPLC
             markersOverlay = new GMapOverlay("markers");
             gMap.Overlays.Add(markersOverlay);
 
-            /* load projects from database
-             * and add markers onto map
-             */
-            loadProjects();
         }
         private void MainForm_Shown(object sender, EventArgs e)
         {
             // initial Auth
-            //authenticate("root", "1234567");
             authenticate();
+            //authenticate("root", "1234567");
         }
 
         private void loadProjects()
@@ -106,6 +102,9 @@ namespace MIRLE_GPLC
                 currMarker.Dispose();
                 currMarker = null;
             }
+            /* load projects from database
+             * and add markers onto map
+             */
             loadProjects();
             base.Refresh();
         }
@@ -118,6 +117,7 @@ namespace MIRLE_GPLC
         {
             GPLC.user = new GPLCUser();
             RefreshAuthStatus();
+            Refresh();
         }
         private void authenticate(string id, string pass)
         {
@@ -132,6 +132,7 @@ namespace MIRLE_GPLC
                 MessageBox.Show("使用者名稱不存在或密碼錯誤", "認證失敗");
             }
             RefreshAuthStatus();
+            Refresh();
         }
 
         #endregion
@@ -230,9 +231,9 @@ namespace MIRLE_GPLC
                     {
                         ProjectData pd = (marker as ProjectMarker).ProjectData;
                         // set text box
-                        label_case_ID.Text = "ID:" + pd.id.ToString();
-                        textBox_case_Name.Text = pd.name;
-                        richTextBox_case_addr.Text = pd.addr;
+                        textBox_project_id.Text = pd.id.ToString();
+                        textBox_project_name.Text = pd.name;
+                        richTextBox_project_addr.Text = pd.addr;
                         // get marker local position
                         GPoint pos = gMap.FromLatLngToLocal(item.Position);
                         // set map center
@@ -465,8 +466,9 @@ namespace MIRLE_GPLC
                 // check authentication
                 GPLC.Auth(GPLCAuthority.Administrator);
 
-                string name = textBox_case_Name.Text;
-                string addr = richTextBox_case_addr.Text;
+                long id = long.Parse(textBox_project_id.Text);
+                string name = textBox_project_name.Text;
+                string addr = richTextBox_project_addr.Text;
                 double lat = double.Parse(textBox_latlng_lat.Text);
                 double lng = double.Parse(textBox_latlng_lng.Text);
                 if (lat > 90 || lat < -90 || lng > 180 || lat < -180)
@@ -479,12 +481,12 @@ namespace MIRLE_GPLC
                 {
                     if (InputButton.Text.Equals("Modify"))
                     {
-                        long id = (currMarker as ProjectMarker).ProjectData.id;
-                        ModelUtil.updateProject(id, name, addr, lat, lng);
+                        long oid = (currMarker as ProjectMarker).ProjectData.id;
+                        ModelUtil.updateProject(id, name, addr, lat, lng, oid);
                     }
                     else
                     {
-                        ModelUtil.insertProject(name, addr, lat, lng);
+                        ModelUtil.insertProject(id, name, addr, lat, lng);
                         markersOverlay.Markers.Remove(currMarker);
                         if (currMarker != null)
                         {

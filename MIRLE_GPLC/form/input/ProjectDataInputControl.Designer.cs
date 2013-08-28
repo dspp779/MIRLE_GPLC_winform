@@ -36,12 +36,14 @@
             this.DeleteButton = new System.Windows.Forms.Button();
             this.InputButton = new System.Windows.Forms.Button();
             this.groupBox_case = new System.Windows.Forms.GroupBox();
-            this.richTextBox_case_addr = new System.Windows.Forms.RichTextBox();
-            this.label_case_addr = new System.Windows.Forms.Label();
-            this.textBox_case_Name = new System.Windows.Forms.TextBox();
-            this.label_case_Name = new System.Windows.Forms.Label();
+            this.richTextBox_project_addr = new System.Windows.Forms.RichTextBox();
+            this.label_project_addr = new System.Windows.Forms.Label();
+            this.textBox_project_Name = new System.Windows.Forms.TextBox();
+            this.label_project_Name = new System.Windows.Forms.Label();
             this.label_project = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.textBox_project_id = new System.Windows.Forms.TextBox();
+            this.label_project_id = new System.Windows.Forms.Label();
             this.groupBox_location.SuspendLayout();
             this.groupBox_case.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -53,7 +55,7 @@
             this.groupBox_location.Controls.Add(this.textBox_latlng_lng);
             this.groupBox_location.Controls.Add(this.label_latlng_lat);
             this.groupBox_location.Controls.Add(this.textBox_latlng_lat);
-            this.groupBox_location.Location = new System.Drawing.Point(3, 197);
+            this.groupBox_location.Location = new System.Drawing.Point(3, 216);
             this.groupBox_location.Name = "groupBox_location";
             this.groupBox_location.Size = new System.Drawing.Size(243, 80);
             this.groupBox_location.TabIndex = 14;
@@ -117,50 +119,52 @@
             // 
             // groupBox_case
             // 
-            this.groupBox_case.Controls.Add(this.richTextBox_case_addr);
-            this.groupBox_case.Controls.Add(this.label_case_addr);
-            this.groupBox_case.Controls.Add(this.textBox_case_Name);
-            this.groupBox_case.Controls.Add(this.label_case_Name);
+            this.groupBox_case.Controls.Add(this.textBox_project_id);
+            this.groupBox_case.Controls.Add(this.label_project_id);
+            this.groupBox_case.Controls.Add(this.richTextBox_project_addr);
+            this.groupBox_case.Controls.Add(this.label_project_addr);
+            this.groupBox_case.Controls.Add(this.textBox_project_Name);
+            this.groupBox_case.Controls.Add(this.label_project_Name);
             this.groupBox_case.Location = new System.Drawing.Point(3, 40);
             this.groupBox_case.Name = "groupBox_case";
-            this.groupBox_case.Size = new System.Drawing.Size(243, 151);
+            this.groupBox_case.Size = new System.Drawing.Size(243, 170);
             this.groupBox_case.TabIndex = 11;
             this.groupBox_case.TabStop = false;
             this.groupBox_case.Text = "Case";
             // 
-            // richTextBox_case_addr
+            // richTextBox_project_addr
             // 
-            this.richTextBox_case_addr.Location = new System.Drawing.Point(6, 82);
-            this.richTextBox_case_addr.Name = "richTextBox_case_addr";
-            this.richTextBox_case_addr.Size = new System.Drawing.Size(223, 48);
-            this.richTextBox_case_addr.TabIndex = 11;
-            this.richTextBox_case_addr.Text = "";
+            this.richTextBox_project_addr.Location = new System.Drawing.Point(6, 117);
+            this.richTextBox_project_addr.Name = "richTextBox_project_addr";
+            this.richTextBox_project_addr.Size = new System.Drawing.Size(223, 48);
+            this.richTextBox_project_addr.TabIndex = 11;
+            this.richTextBox_project_addr.Text = "";
             // 
-            // label_case_addr
+            // label_project_addr
             // 
-            this.label_case_addr.AutoSize = true;
-            this.label_case_addr.Location = new System.Drawing.Point(4, 67);
-            this.label_case_addr.Name = "label_case_addr";
-            this.label_case_addr.Size = new System.Drawing.Size(29, 12);
-            this.label_case_addr.TabIndex = 11;
-            this.label_case_addr.Text = "地址";
+            this.label_project_addr.AutoSize = true;
+            this.label_project_addr.Location = new System.Drawing.Point(6, 102);
+            this.label_project_addr.Name = "label_project_addr";
+            this.label_project_addr.Size = new System.Drawing.Size(29, 12);
+            this.label_project_addr.TabIndex = 11;
+            this.label_project_addr.Text = "地址";
             // 
-            // textBox_case_Name
+            // textBox_project_Name
             // 
-            this.textBox_case_Name.Location = new System.Drawing.Point(6, 36);
-            this.textBox_case_Name.MaxLength = 100;
-            this.textBox_case_Name.Name = "textBox_case_Name";
-            this.textBox_case_Name.Size = new System.Drawing.Size(223, 22);
-            this.textBox_case_Name.TabIndex = 8;
+            this.textBox_project_Name.Location = new System.Drawing.Point(6, 77);
+            this.textBox_project_Name.MaxLength = 100;
+            this.textBox_project_Name.Name = "textBox_project_Name";
+            this.textBox_project_Name.Size = new System.Drawing.Size(223, 22);
+            this.textBox_project_Name.TabIndex = 8;
             // 
-            // label_case_Name
+            // label_project_Name
             // 
-            this.label_case_Name.AutoSize = true;
-            this.label_case_Name.Location = new System.Drawing.Point(6, 18);
-            this.label_case_Name.Name = "label_case_Name";
-            this.label_case_Name.Size = new System.Drawing.Size(29, 12);
-            this.label_case_Name.TabIndex = 9;
-            this.label_case_Name.Text = "案名";
+            this.label_project_Name.AutoSize = true;
+            this.label_project_Name.Location = new System.Drawing.Point(6, 59);
+            this.label_project_Name.Name = "label_project_Name";
+            this.label_project_Name.Size = new System.Drawing.Size(29, 12);
+            this.label_project_Name.TabIndex = 9;
+            this.label_project_Name.Text = "案名";
             // 
             // label_project
             // 
@@ -176,10 +180,27 @@
             // 
             this.panel1.Controls.Add(this.InputButton);
             this.panel1.Controls.Add(this.DeleteButton);
-            this.panel1.Location = new System.Drawing.Point(16, 283);
+            this.panel1.Location = new System.Drawing.Point(16, 302);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(216, 24);
             this.panel1.TabIndex = 16;
+            // 
+            // textBox_project_id
+            // 
+            this.textBox_project_id.Location = new System.Drawing.Point(6, 36);
+            this.textBox_project_id.MaxLength = 100;
+            this.textBox_project_id.Name = "textBox_project_id";
+            this.textBox_project_id.Size = new System.Drawing.Size(223, 22);
+            this.textBox_project_id.TabIndex = 14;
+            // 
+            // label_project_id
+            // 
+            this.label_project_id.AutoSize = true;
+            this.label_project_id.Location = new System.Drawing.Point(6, 18);
+            this.label_project_id.Name = "label_project_id";
+            this.label_project_id.Size = new System.Drawing.Size(29, 12);
+            this.label_project_id.TabIndex = 15;
+            this.label_project_id.Text = "案號";
             // 
             // ProjectDataInputControl
             // 
@@ -191,7 +212,7 @@
             this.Controls.Add(this.groupBox_location);
             this.Controls.Add(this.groupBox_case);
             this.Name = "ProjectDataInputControl";
-            this.Size = new System.Drawing.Size(249, 316);
+            this.Size = new System.Drawing.Size(249, 332);
             this.groupBox_location.ResumeLayout(false);
             this.groupBox_location.PerformLayout();
             this.groupBox_case.ResumeLayout(false);
@@ -212,11 +233,13 @@
         private System.Windows.Forms.Button DeleteButton;
         private System.Windows.Forms.Button InputButton;
         private System.Windows.Forms.GroupBox groupBox_case;
-        private System.Windows.Forms.RichTextBox richTextBox_case_addr;
-        private System.Windows.Forms.Label label_case_addr;
-        private System.Windows.Forms.TextBox textBox_case_Name;
-        private System.Windows.Forms.Label label_case_Name;
+        private System.Windows.Forms.RichTextBox richTextBox_project_addr;
+        private System.Windows.Forms.Label label_project_addr;
+        private System.Windows.Forms.TextBox textBox_project_Name;
+        private System.Windows.Forms.Label label_project_Name;
         private System.Windows.Forms.Label label_project;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TextBox textBox_project_id;
+        private System.Windows.Forms.Label label_project_id;
     }
 }

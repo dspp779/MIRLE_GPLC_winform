@@ -12,6 +12,7 @@ namespace MIRLE_GPLC.Model
         private string _ip;
         private int _port;
         private string _alias;
+        private int _polling_rate;
         private List<Tag> _tags;
 
         public long id
@@ -39,6 +40,11 @@ namespace MIRLE_GPLC.Model
             get { return _alias; }
         }
 
+        public int polling_rate
+        {
+            get { return _polling_rate; }
+        }
+
         public List<Tag> tags
         {
             get {
@@ -50,13 +56,14 @@ namespace MIRLE_GPLC.Model
             }
         }
 
-        public PLC(long id, int netid, string ip, int port, string alias, List<Tag> tags)
+        public PLC(long id, int netid, string ip, int port, string alias, int polling_rate, List<Tag> tags)
         {
             this._id = id;
             this._netid = netid;
             this._ip = ip;
             this._port = port;
             this._alias = alias;
+            this._polling_rate = polling_rate;
             this._tags = tags;
         }
 

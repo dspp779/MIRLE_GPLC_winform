@@ -194,6 +194,7 @@ namespace MIRLE_GPLC.form
             if (listView_plc.SelectedIndices.Count > 0)
             {
                 lastSelectedPLC = listView_plc.SelectedIndices[0];
+                listView_plc.HideSelection = false;
             }
         }
         private void listView_plc_DoubleClick(object sender, EventArgs e)
@@ -261,6 +262,7 @@ namespace MIRLE_GPLC.form
             if(listView_plc.Visible && listView_plc.SelectedIndices.Count <= 0)
             {
                 lastSelectedPLC = -1;
+                listView_plc.HideSelection = true;
             }
         }
 
@@ -323,6 +325,7 @@ namespace MIRLE_GPLC.form
         }
         private void modbusTCPWorker(PLC plc)
         {
+            int pollingRate = int.Parse(Setting.GPLCSetting.settingRead(@"Polling/Rate"));
             if (plc == null)
             {
                 return;
@@ -348,7 +351,7 @@ namespace MIRLE_GPLC.form
                         readData(Convert.ToByte(r.id), Convert.ToUInt16(r.addr), Convert.ToUInt16(r.length), i++);
                     }
                     // spin wait
-                    SpinWait.SpinUntil(() => false, 1000);
+                    SpinWait.SpinUntil(() => false, pollingRate);
                 }
                 catch (Exception)
                 {

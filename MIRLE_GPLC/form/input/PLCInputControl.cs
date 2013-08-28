@@ -57,13 +57,13 @@ namespace MIRLE_GPLC.form
                 if (plc != null)
                 {
                     plc = new PLC(plc.id, int.Parse(textBox_net_ID.Text), textBox_net_ip.Text,
-                        int.Parse(textBox_net_port.Text), textBox_name.Text, null);
+                        int.Parse(textBox_net_port.Text), textBox_name.Text, int.Parse(textBox_poll_rate.Text), null);
                     ModelUtil.inputPLC(plc, project.id);
                 }
                 else
                 {
                     ModelUtil.insertPLC(int.Parse(textBox_net_ID.Text), textBox_net_ip.Text,
-                        int.Parse(textBox_net_port.Text), textBox_name.Text, project.id);
+                        int.Parse(textBox_net_port.Text), textBox_name.Text, int.Parse(textBox_poll_rate.Text), project.id);
                 }
                 this.Parent.Refresh();
             }

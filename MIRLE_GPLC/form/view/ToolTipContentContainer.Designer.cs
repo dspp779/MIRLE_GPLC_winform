@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.button_close = new System.Windows.Forms.Button();
-            this.projectDataInputControl1 = new MIRLE_GPLC.form.ProjectDataInputControl();
+            this.projectDataInputControl = new MIRLE_GPLC.form.ProjectDataInputControl();
             this.projectDataView = new MIRLE_GPLC.form.ProjectDataView();
             this.SuspendLayout();
             // 
@@ -44,14 +44,14 @@
             this.button_close.UseVisualStyleBackColor = true;
             this.button_close.Click += new System.EventHandler(this.button_close_Click);
             // 
-            // projectDataInputControl1
+            // projectDataInputControl
             // 
-            this.projectDataInputControl1.AutoSize = true;
-            this.projectDataInputControl1.Location = new System.Drawing.Point(8, 8);
-            this.projectDataInputControl1.Name = "projectDataInputControl1";
-            this.projectDataInputControl1.Size = new System.Drawing.Size(289, 380);
-            this.projectDataInputControl1.TabIndex = 3;
-            this.projectDataInputControl1.Visible = false;
+            this.projectDataInputControl.AutoSize = true;
+            this.projectDataInputControl.Location = new System.Drawing.Point(8, 8);
+            this.projectDataInputControl.Name = "projectDataInputControl";
+            this.projectDataInputControl.Size = new System.Drawing.Size(289, 383);
+            this.projectDataInputControl.TabIndex = 3;
+            this.projectDataInputControl.Visible = false;
             // 
             // projectDataView
             // 
@@ -65,7 +65,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.projectDataInputControl1);
+            this.Controls.Add(this.projectDataInputControl);
             this.Controls.Add(this.button_close);
             this.Controls.Add(this.projectDataView);
             this.Name = "ToolTipContentContainer";
@@ -80,6 +80,6 @@
 
         private ProjectDataView projectDataView;
         private System.Windows.Forms.Button button_close;
-        private ProjectDataInputControl projectDataInputControl1;
+        private ProjectDataInputControl projectDataInputControl;
     }
 }

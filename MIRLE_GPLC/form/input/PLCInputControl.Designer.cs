@@ -40,6 +40,8 @@
             this.textBox_net_port = new System.Windows.Forms.TextBox();
             this.textBox_net_ID = new System.Windows.Forms.TextBox();
             this.label_net_ID = new System.Windows.Forms.Label();
+            this.textBox_poll_rate = new System.Windows.Forms.TextBox();
+            this.label_poll_rate = new System.Windows.Forms.Label();
             this.groupBox_addr.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -72,7 +74,7 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(222, 74);
+            this.btnCancel.Location = new System.Drawing.Point(213, 100);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 17;
@@ -83,7 +85,7 @@
             // btnOK
             // 
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(222, 31);
+            this.btnOK.Location = new System.Drawing.Point(213, 71);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 16;
@@ -158,10 +160,28 @@
             this.label_net_ID.TabIndex = 0;
             this.label_net_ID.Text = "ID";
             // 
+            // textBox_poll_rate
+            // 
+            this.textBox_poll_rate.Location = new System.Drawing.Point(213, 43);
+            this.textBox_poll_rate.Name = "textBox_poll_rate";
+            this.textBox_poll_rate.Size = new System.Drawing.Size(75, 22);
+            this.textBox_poll_rate.TabIndex = 18;
+            // 
+            // label_poll_rate
+            // 
+            this.label_poll_rate.AutoSize = true;
+            this.label_poll_rate.Location = new System.Drawing.Point(211, 26);
+            this.label_poll_rate.Name = "label_poll_rate";
+            this.label_poll_rate.Size = new System.Drawing.Size(58, 12);
+            this.label_poll_rate.TabIndex = 19;
+            this.label_poll_rate.Text = "Polling rate";
+            // 
             // PLCInputControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label_poll_rate);
+            this.Controls.Add(this.textBox_poll_rate);
             this.Controls.Add(this.textBox_name);
             this.Controls.Add(this.label_name);
             this.Controls.Add(this.label_project);
@@ -191,6 +211,8 @@
         private System.Windows.Forms.TextBox textBox_net_port;
         private System.Windows.Forms.TextBox textBox_net_ID;
         private System.Windows.Forms.Label label_net_ID;
+        private System.Windows.Forms.TextBox textBox_poll_rate;
+        private System.Windows.Forms.Label label_poll_rate;
 
     }
 }

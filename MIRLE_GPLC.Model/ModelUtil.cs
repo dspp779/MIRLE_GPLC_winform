@@ -25,22 +25,25 @@ namespace MIRLE_GPLC.Model
 
         private static void createProjectTable()
         {
-            string schema = "CREATE TABLE Project ( id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "name TEXT, addr TEXT, lat REAL, lng REAL)";
+            string schema =
+                "CREATE TABLE Project ( id INTEGER, name TEXT, addr TEXT, lat REAL, lng REAL )";
             executeUpdate(schema);
         }
 
         private static void createPLCTable()
         {
-            string schema = "CREATE TABLE PLC ( id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "net_id INT, net_ip VARCHAR(15), net_port INT, alias VARCHAR(20), project_id INTEGER)";
+            string schema = "CREATE TABLE PLC ( id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + " alias VARCHAR(20),net_id INT, net_ip VARCHAR(15), net_port INT, "
+                + " polling_rate INT, project_id INTEGER )";
             executeUpdate(schema);
         }
 
         private static void createTagTable()
         {
-            string schema = "CREATE TABLE Tag ( id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + "start_addr INT, length INT, format VARCHAR(10), alias VARCHAR(20), plc_id INTEGER)";
+            string schema = "CREATE TABLE Tag ( id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + " alias VARCHAR(20), addr INT, data_type VARCHAR(10), format VARCHAR(5), unit VARCHAR(10),"
+                + " raw_hi REAL, raq_lo REAL, scale_type VARCHAR(10), scale_hi REAL, scale_lo REAL,"
+                + " plc_id INTEGER )";
             executeUpdate(schema);
         }
 
@@ -50,13 +53,14 @@ namespace MIRLE_GPLC.Model
 
         public static int insertProject(ProjectData p)
         {
-            return insertProject(p.name, p.addr, p.lat, p.lng);
+            return insertProject(p.id, p.name, p.addr, p.lat, p.lng);
         }
-        public static int insertProject(string name, string addr, double lat, double lng)
+        public static int insertProject(long id, string name, string addr, double lat, double lng)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "INSERT INTO Project (name, addr, lat, lng) values (@name, @addr, @lat, @lng)"))
+                "INSERT INTO Project values (@id, @name, @addr, @lat, @lng)"))
             {
+                cmd.Parameters.Add("@id", DbType.Int64).Value = id;
                 cmd.Parameters.Add("@name", DbType.String).Value = name;
                 cmd.Parameters.Add("@addr", DbType.String).Value = addr;
                 cmd.Parameters.Add("@lat", DbType.Double).Value = lat;
@@ -67,18 +71,19 @@ namespace MIRLE_GPLC.Model
 
         public static int insertPLC(PLC plc, long project_id)
         {
-            return insertPLC(plc.netid, plc.ip, plc.port, plc.alias, project_id);
+            return insertPLC(plc.netid, plc.ip, plc.port, plc.alias, plc.polling_rate, project_id);
         }
-        public static int insertPLC(int netid, string ip, int port, string alias, long project_id)
+        public static int insertPLC(int netid, string ip, int port, string alias, int polling_rate, long project_id)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "INSERT INTO PLC (net_id, net_ip, net_port, alias, project_id) "
-                + "values (@net_id, @net_ip, @net_port, @alias, @project_id)"))
+                "INSERT INTO PLC (net_id, net_ip, net_port, alias, polling_rate, project_id) "
+                + "values (@net_id, @net_ip, @net_port, @alias, @polling_rate, @project_id)"))
             {
                 cmd.Parameters.Add("@net_id", DbType.Int32).Value = netid;
                 cmd.Parameters.Add("@net_ip", DbType.String).Value = ip;
                 cmd.Parameters.Add("@net_port", DbType.Int32).Value = port;
                 cmd.Parameters.Add("@alias", DbType.String).Value = alias;
+                cmd.Parameters.Add("@polling_rate", DbType.Int32).Value = polling_rate;
                 cmd.Parameters.Add("@project_id", DbType.Int64).Value = project_id;
                 return SQLiteDBMS.execUpdate(cmd);
             }
@@ -193,7 +198,7 @@ namespace MIRLE_GPLC.Model
                             long id = reader.GetInt64(0);
                             PLC p = new PLC(id, reader.GetInt32(1),
                                 reader.GetString(2), reader.GetInt32(3),
-                                reader.GetString(4), null);
+                                reader.GetString(4), reader.GetInt32(5), null);
                             pList.Add(p);
                         }
                     }
@@ -249,34 +254,37 @@ namespace MIRLE_GPLC.Model
 
         #region -- update model --
 
-        public static int updateProject(long id, string name, string addr, double lat, double lng)
+        public static int updateProject(long id, string name, string addr, double lat, double lng, long oid)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "UPDATE Project SET name=@name, addr=@addr, lat=@lat, lng=@lng WHERE id=@id"))
+                "UPDATE Project SET id=@id, name=@name, addr=@addr, lat=@lat, lng=@lng WHERE id=@oid"))
             {
                 cmd.Parameters.Add("@id", DbType.Int64).Value = id;
                 cmd.Parameters.Add("@name", DbType.String).Value = name;
                 cmd.Parameters.Add("@addr", DbType.String).Value = addr;
                 cmd.Parameters.Add("@lat", DbType.Double).Value = lat;
                 cmd.Parameters.Add("@lng", DbType.Double).Value = lng;
+                cmd.Parameters.Add("@oid", DbType.Int64).Value = oid;
                 return SQLiteDBMS.execUpdate(cmd);
             }
         }
 
         public static int updatePLC(PLC plc)
         {
-            return updatePLC(plc.id, plc.netid, plc.ip, plc.port, plc.alias);
+            return updatePLC(plc.id, plc.netid, plc.ip, plc.port, plc.alias, plc.polling_rate);
         }
-        public static int updatePLC(long id, int netid, string ip, int port, string alias)
+        public static int updatePLC(long id, int netid, string ip, int port, string alias, int polling_rate)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "UPDATE PLC SET net_id=@net_id, net_ip=@net_ip, net_port=@net_port, alias=@alias WHERE id=@id"))
+                "UPDATE PLC SET net_id=@net_id, net_ip=@net_ip, net_port=@net_port, alias=@alias,"
+                + " polling_rate=@polling_rate WHERE id=@id"))
             {
                 cmd.Parameters.Add("@id", DbType.Int64).Value = id;
                 cmd.Parameters.Add("@net_id", DbType.Int32).Value = netid;
                 cmd.Parameters.Add("@net_ip", DbType.String).Value = ip;
                 cmd.Parameters.Add("@net_port", DbType.Int32).Value = port;
                 cmd.Parameters.Add("@alias", DbType.String).Value = alias;
+                cmd.Parameters.Add("@polling_rate", DbType.Int32).Value = polling_rate;
                 return SQLiteDBMS.execUpdate(cmd);
             }
         }

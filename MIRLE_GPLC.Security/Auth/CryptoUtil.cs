@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MIRLE_GPLC.Security
 {
-    internal class CryptoUtil
+    internal static class CryptoUtil
     {
 
         internal static string encryptSHA1(string str)

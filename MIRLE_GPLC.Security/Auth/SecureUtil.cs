@@ -8,7 +8,7 @@ using System.Text;
 
 namespace MIRLE_GPLC.Security
 {
-    internal class SecureUtil
+    internal static class SecureUtil
     {
         internal static GPLCAuthority Authenticate(string id, string pass)
         {

@@ -33,22 +33,26 @@ namespace MIRLE_GPLC.form
                 ProjectData p = (marker as ProjectMarker).ProjectData;
                 label_project.Text = "設定專案";
                 InputButton.Text = "Modify";
-                setInput(p.name, p.addr, p.lat, p.lng);
+                setInput(p.id, p.name, p.addr, p.lat, p.lng);
                 DeleteButton.Visible = true;
             }
             else
             {
                 label_project.Text = "新增專案";
-                setInput("", "", marker.Position.Lat, marker.Position.Lng);
+                setInput(null, "", "", marker.Position.Lat, marker.Position.Lng);
                 InputButton.Dock = DockStyle.Fill;
             }
             this.Show();
         }
 
-        private void setInput(string name, string addr, double lat, double lng)
+        private void setInput(long? id, string name, string addr, double lat, double lng)
         {
-            textBox_case_Name.Text = name;
-            richTextBox_case_addr.Text = addr;
+            if (id != null)
+            {
+                textBox_project_id.Text = id.ToString();
+            }
+            textBox_project_Name.Text = name;
+            richTextBox_project_addr.Text = addr;
             textBox_latlng_lat.Text = lat.ToString();
             textBox_latlng_lng.Text = lng.ToString();
         }
@@ -57,8 +61,9 @@ namespace MIRLE_GPLC.form
         {
             try
             {
-                string name = textBox_case_Name.Text.Trim();
-                string addr = richTextBox_case_addr.Text.Trim();
+                long id = long.Parse(textBox_project_id.Text);
+                string name = textBox_project_Name.Text.Trim();
+                string addr = richTextBox_project_addr.Text.Trim();
                 double lat = double.Parse(textBox_latlng_lat.Text.Trim());
                 double lng = double.Parse(textBox_latlng_lng.Text.Trim());
                 // check name
@@ -78,12 +83,12 @@ namespace MIRLE_GPLC.form
                 // update database
                 if (InputButton.Text.Equals("Modify"))
                 {
-                    long id = (marker as ProjectMarker).ProjectData.id;
-                    ModelUtil.updateProject(id, name, addr, lat, lng);
+                    long oid = (marker as ProjectMarker).ProjectData.id;
+                    ModelUtil.updateProject(id, name, addr, lat, lng, oid);
                 }
                 else
                 {
-                    ModelUtil.insertProject(name, addr, lat, lng);
+                    ModelUtil.insertProject(id, name, addr, lat, lng);
                 }
 
                 //refresh map

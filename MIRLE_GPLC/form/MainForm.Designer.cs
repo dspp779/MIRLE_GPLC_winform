@@ -58,11 +58,12 @@
             this.textBox_latlng_lat = new System.Windows.Forms.TextBox();
             this.InputButton = new System.Windows.Forms.Button();
             this.groupBox_case = new System.Windows.Forms.GroupBox();
-            this.richTextBox_case_addr = new System.Windows.Forms.RichTextBox();
-            this.label_case_addr = new System.Windows.Forms.Label();
-            this.textBox_case_Name = new System.Windows.Forms.TextBox();
-            this.label_case_Name = new System.Windows.Forms.Label();
-            this.label_case_ID = new System.Windows.Forms.Label();
+            this.textBox_project_id = new System.Windows.Forms.TextBox();
+            this.label_project_id = new System.Windows.Forms.Label();
+            this.richTextBox_project_addr = new System.Windows.Forms.RichTextBox();
+            this.label_project_addr = new System.Windows.Forms.Label();
+            this.textBox_project_name = new System.Windows.Forms.TextBox();
+            this.label_project_name = new System.Windows.Forms.Label();
             this.gMap = new GMap.NET.WindowsForms.GMapControl();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.檔案ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -128,7 +129,7 @@
             this.groupBox_location.Controls.Add(this.textBox_latlng_lng);
             this.groupBox_location.Controls.Add(this.label_latlng_lat);
             this.groupBox_location.Controls.Add(this.textBox_latlng_lat);
-            this.groupBox_location.Location = new System.Drawing.Point(3, 207);
+            this.groupBox_location.Location = new System.Drawing.Point(4, 193);
             this.groupBox_location.Name = "groupBox_location";
             this.groupBox_location.Size = new System.Drawing.Size(243, 80);
             this.groupBox_location.TabIndex = 10;
@@ -171,7 +172,7 @@
             // 
             // InputButton
             // 
-            this.InputButton.Location = new System.Drawing.Point(86, 293);
+            this.InputButton.Location = new System.Drawing.Point(87, 279);
             this.InputButton.Name = "InputButton";
             this.InputButton.Size = new System.Drawing.Size(75, 23);
             this.InputButton.TabIndex = 8;
@@ -181,60 +182,69 @@
             // 
             // groupBox_case
             // 
-            this.groupBox_case.Controls.Add(this.richTextBox_case_addr);
-            this.groupBox_case.Controls.Add(this.label_case_addr);
-            this.groupBox_case.Controls.Add(this.textBox_case_Name);
-            this.groupBox_case.Controls.Add(this.label_case_Name);
-            this.groupBox_case.Controls.Add(this.label_case_ID);
+            this.groupBox_case.Controls.Add(this.textBox_project_id);
+            this.groupBox_case.Controls.Add(this.label_project_id);
+            this.groupBox_case.Controls.Add(this.richTextBox_project_addr);
+            this.groupBox_case.Controls.Add(this.label_project_addr);
+            this.groupBox_case.Controls.Add(this.textBox_project_name);
+            this.groupBox_case.Controls.Add(this.label_project_name);
             this.groupBox_case.Location = new System.Drawing.Point(3, 10);
             this.groupBox_case.Name = "groupBox_case";
-            this.groupBox_case.Size = new System.Drawing.Size(243, 191);
+            this.groupBox_case.Size = new System.Drawing.Size(243, 177);
             this.groupBox_case.TabIndex = 7;
             this.groupBox_case.TabStop = false;
             this.groupBox_case.Text = "Case";
             // 
-            // richTextBox_case_addr
+            // textBox_project_id
             // 
-            this.richTextBox_case_addr.Location = new System.Drawing.Point(6, 105);
-            this.richTextBox_case_addr.Name = "richTextBox_case_addr";
-            this.richTextBox_case_addr.Size = new System.Drawing.Size(223, 48);
-            this.richTextBox_case_addr.TabIndex = 11;
-            this.richTextBox_case_addr.Text = "";
+            this.textBox_project_id.Location = new System.Drawing.Point(6, 36);
+            this.textBox_project_id.MaxLength = 100;
+            this.textBox_project_id.Name = "textBox_project_id";
+            this.textBox_project_id.Size = new System.Drawing.Size(223, 22);
+            this.textBox_project_id.TabIndex = 12;
             // 
-            // label_case_addr
+            // label_project_id
             // 
-            this.label_case_addr.AutoSize = true;
-            this.label_case_addr.Location = new System.Drawing.Point(4, 90);
-            this.label_case_addr.Name = "label_case_addr";
-            this.label_case_addr.Size = new System.Drawing.Size(29, 12);
-            this.label_case_addr.TabIndex = 11;
-            this.label_case_addr.Text = "地址";
+            this.label_project_id.AutoSize = true;
+            this.label_project_id.Location = new System.Drawing.Point(6, 18);
+            this.label_project_id.Name = "label_project_id";
+            this.label_project_id.Size = new System.Drawing.Size(29, 12);
+            this.label_project_id.TabIndex = 13;
+            this.label_project_id.Text = "案號";
             // 
-            // textBox_case_Name
+            // richTextBox_project_addr
             // 
-            this.textBox_case_Name.Location = new System.Drawing.Point(6, 59);
-            this.textBox_case_Name.MaxLength = 100;
-            this.textBox_case_Name.Name = "textBox_case_Name";
-            this.textBox_case_Name.Size = new System.Drawing.Size(223, 22);
-            this.textBox_case_Name.TabIndex = 8;
+            this.richTextBox_project_addr.Location = new System.Drawing.Point(6, 119);
+            this.richTextBox_project_addr.Name = "richTextBox_project_addr";
+            this.richTextBox_project_addr.Size = new System.Drawing.Size(223, 48);
+            this.richTextBox_project_addr.TabIndex = 11;
+            this.richTextBox_project_addr.Text = "";
             // 
-            // label_case_Name
+            // label_project_addr
             // 
-            this.label_case_Name.AutoSize = true;
-            this.label_case_Name.Location = new System.Drawing.Point(6, 41);
-            this.label_case_Name.Name = "label_case_Name";
-            this.label_case_Name.Size = new System.Drawing.Size(29, 12);
-            this.label_case_Name.TabIndex = 9;
-            this.label_case_Name.Text = "案名";
+            this.label_project_addr.AutoSize = true;
+            this.label_project_addr.Location = new System.Drawing.Point(6, 104);
+            this.label_project_addr.Name = "label_project_addr";
+            this.label_project_addr.Size = new System.Drawing.Size(29, 12);
+            this.label_project_addr.TabIndex = 11;
+            this.label_project_addr.Text = "地址";
             // 
-            // label_case_ID
+            // textBox_project_name
             // 
-            this.label_case_ID.AutoSize = true;
-            this.label_case_ID.Location = new System.Drawing.Point(6, 19);
-            this.label_case_ID.Name = "label_case_ID";
-            this.label_case_ID.Size = new System.Drawing.Size(17, 12);
-            this.label_case_ID.TabIndex = 7;
-            this.label_case_ID.Text = "ID";
+            this.textBox_project_name.Location = new System.Drawing.Point(6, 79);
+            this.textBox_project_name.MaxLength = 100;
+            this.textBox_project_name.Name = "textBox_project_name";
+            this.textBox_project_name.Size = new System.Drawing.Size(223, 22);
+            this.textBox_project_name.TabIndex = 8;
+            // 
+            // label_project_name
+            // 
+            this.label_project_name.AutoSize = true;
+            this.label_project_name.Location = new System.Drawing.Point(6, 61);
+            this.label_project_name.Name = "label_project_name";
+            this.label_project_name.Size = new System.Drawing.Size(29, 12);
+            this.label_project_name.TabIndex = 9;
+            this.label_project_name.Text = "案名";
             // 
             // gMap
             // 
@@ -382,12 +392,11 @@
         private System.Windows.Forms.TextBox textBox_latlng_lat;
         private System.Windows.Forms.Button InputButton;
         private System.Windows.Forms.GroupBox groupBox_case;
-        private System.Windows.Forms.Label label_case_addr;
-        private System.Windows.Forms.TextBox textBox_case_Name;
-        private System.Windows.Forms.Label label_case_Name;
-        private System.Windows.Forms.Label label_case_ID;
+        private System.Windows.Forms.Label label_project_addr;
+        private System.Windows.Forms.TextBox textBox_project_name;
+        private System.Windows.Forms.Label label_project_name;
         private System.Windows.Forms.ToolStripStatusLabel AuthStatusLabel;
-        private System.Windows.Forms.RichTextBox richTextBox_case_addr;
+        private System.Windows.Forms.RichTextBox richTextBox_project_addr;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 檔案ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem OpenToolStripMenuItem;
@@ -397,6 +406,8 @@
         private System.Windows.Forms.ToolStripMenuItem 權限ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_anonymous;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_auth;
+        private System.Windows.Forms.TextBox textBox_project_id;
+        private System.Windows.Forms.Label label_project_id;
     }
 }
 

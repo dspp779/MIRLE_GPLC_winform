@@ -58,6 +58,7 @@ namespace MIRLE_GPLC.form
             this.item,
             this.value});
             this.listView_tag.FullRowSelect = true;
+            this.listView_tag.HideSelection = false;
             this.listView_tag.Location = new System.Drawing.Point(261, 48);
             this.listView_tag.Name = "listView_tag";
             this.listView_tag.Size = new System.Drawing.Size(184, 255);
@@ -89,6 +90,7 @@ namespace MIRLE_GPLC.form
             this.ip,
             this.port});
             this.listView_plc.FullRowSelect = true;
+            this.listView_plc.HideSelection = false;
             this.listView_plc.Location = new System.Drawing.Point(1, 48);
             this.listView_plc.Name = "listView_plc";
             this.listView_plc.Size = new System.Drawing.Size(254, 255);
