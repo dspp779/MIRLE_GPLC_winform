@@ -12,7 +12,7 @@ namespace MIRLE_GPLC.Model
         private string _ip;
         private int _port;
         private string _alias;
-        private List<Record> _dataFields;
+        private List<Tag> _tags;
 
         public long id
         {
@@ -39,25 +39,25 @@ namespace MIRLE_GPLC.Model
             get { return _alias; }
         }
 
-        public List<Record> dataFields
+        public List<Tag> tags
         {
             get {
-                if (_dataFields == null)
+                if (_tags == null)
                 {
                     reload();
                 }
-                return _dataFields;
+                return _tags;
             }
         }
 
-        public PLC(long id, int netid, string ip, int port, string alias, List<Record> dataFields)
+        public PLC(long id, int netid, string ip, int port, string alias, List<Tag> tags)
         {
             this._id = id;
             this._netid = netid;
             this._ip = ip;
             this._port = port;
             this._alias = alias;
-            this._dataFields = dataFields;
+            this._tags = tags;
         }
 
         public override string ToString()
@@ -67,7 +67,7 @@ namespace MIRLE_GPLC.Model
 
         public void reload()
         {
-            _dataFields = ModelUtil.getItemList(_id);
+            _tags = ModelUtil.getTagList(_id);
         }
 
     }

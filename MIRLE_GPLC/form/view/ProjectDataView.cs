@@ -81,7 +81,7 @@ namespace MIRLE_GPLC.form
 
                 Debug.Assert(_lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count);
 
-                refreshItemList();
+                refreshTagList();
             }
         }
 
@@ -121,8 +121,8 @@ namespace MIRLE_GPLC.form
         {
             // hide input control
             plcInputControl.Hide();
-            dataFieldInputControl1.Hide();
-            this.listView_data.Show();
+            tagInputControl1.Hide();
+            this.listView_tag.Show();
             this.listView_plc.Show();
             refreshPLCList();
             base.Refresh();
@@ -133,7 +133,7 @@ namespace MIRLE_GPLC.form
             project.reload();
 
             listView_plc.Items.Clear();
-            listView_data.Items.Clear();
+            listView_tag.Items.Clear();
             foreach (PLC plc in project.plcs)
             {
                 ListViewItem item = new ListViewItem(plc.alias);
@@ -147,9 +147,9 @@ namespace MIRLE_GPLC.form
                 listView_plc.Items[lastSelectedPLC].Selected = true;
             }
         }
-        private void refreshItemList()
+        private void refreshTagList()
         {
-            listView_data.Items.Clear();
+            listView_tag.Items.Clear();
             if (lastSelectedPLC < 0)
             {
                 return;
@@ -159,11 +159,11 @@ namespace MIRLE_GPLC.form
 
             PLC plc = markers[_shownMarker].ProjectData.plcs[lastSelectedPLC];
             plc.reload();
-            foreach (Record r in plc.dataFields)
+            foreach (Tag r in plc.tags)
             {
                 ListViewItem item = new ListViewItem(r.alias);
                 item.SubItems.Add("????");
-                listView_data.Items.Add(item);
+                listView_tag.Items.Add(item);
             }
 
             // modbus worker
@@ -198,18 +198,18 @@ namespace MIRLE_GPLC.form
         }
         private void listView_plc_DoubleClick(object sender, EventArgs e)
         {
-            if (GPLC.Authendtic(Security.GPLCAuthority.Administrator))
+            if (GPLC.AuthVerify(Security.GPLCAuthority.Administrator))
             {
                 int index = listView_plc.SelectedIndices.Count > 0 ? listView_plc.SelectedIndices[0] : -1;
                 PLCEditControl(index);
             }
         }
-        private void listView_data_DoubleClick(object sender, EventArgs e)
+        private void listView_tag_DoubleClick(object sender, EventArgs e)
         {
-            if (GPLC.Authendtic(Security.GPLCAuthority.Administrator))
+            if (GPLC.AuthVerify(Security.GPLCAuthority.Administrator))
             {
-                int index = listView_data.SelectedIndices.Count > 0 ? listView_data.SelectedIndices[0] : -1;
-                DataFieldControl(index);
+                int index = listView_tag.SelectedIndices.Count > 0 ? listView_tag.SelectedIndices[0] : -1;
+                TagControl(index);
             }
         }
 
@@ -223,17 +223,17 @@ namespace MIRLE_GPLC.form
                 refreshPLCList();
             }
         }
-        private void listView_data_KeyDown(object sender, KeyEventArgs e)
+        private void listView_tag_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete && lastSelectedPLC >= 0)
             {
                 Debug.Assert(lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count);
-                if (listView_data.SelectedIndices.Count > 0)
+                if (listView_tag.SelectedIndices.Count > 0)
                 {
-                    int index = listView_data.SelectedIndices[0];
+                    int index = listView_tag.SelectedIndices[0];
                     PLC plc = markers[_shownMarker].ProjectData.plcs[lastSelectedPLC];
-                    ModelUtil.deleteItem(plc.dataFields[index].id);
-                    refreshItemList();
+                    ModelUtil.deleteTag(plc.tags[index].id);
+                    refreshTagList();
                 }
             }
         }
@@ -253,7 +253,7 @@ namespace MIRLE_GPLC.form
         {
             if (e.Clicks == 2)
             {
-                listView_data_DoubleClick(sender, e);
+                listView_tag_DoubleClick(sender, e);
             }
         }
         private void listView_plc_MouseUp(object sender, MouseEventArgs e)
@@ -270,7 +270,7 @@ namespace MIRLE_GPLC.form
         
         private void PLCEditControl(int index)
         {
-            this.listView_data.Hide();
+            this.listView_tag.Hide();
             this.listView_plc.Hide();
 
             ProjectData project = markers[ShownMarker].ProjectData;
@@ -284,21 +284,26 @@ namespace MIRLE_GPLC.form
                 plcInputControl.init(project, project.plcs[index]);
             }
         }
-        private void DataFieldControl(int index)
+        private void TagControl(int index)
         {
-            this.listView_data.Hide();
+            if (lastSelectedPLC < 0)
+            {
+                return;
+            }
+
+            this.listView_tag.Hide();
             this.listView_plc.Hide();
 
             PLC plc = markers[ShownMarker].ProjectData.plcs[lastSelectedPLC];
 
             if (index < 0)
             {
-                dataFieldInputControl1.init(plc.id);
+                tagInputControl1.init(plc.id);
             }
             else
             {
-                Debug.Assert(index < plc.dataFields.Count);
-                dataFieldInputControl1.init(plc.id, plc.dataFields[index]);
+                Debug.Assert(index < plc.tags.Count);
+                tagInputControl1.init(plc.id, plc.tags[index]);
             }
         }
 
@@ -338,7 +343,7 @@ namespace MIRLE_GPLC.form
                 try
                 {
                     int i = 0;
-                    foreach (Record r in plc.dataFields)
+                    foreach (Tag r in plc.tags)
                     {
                         readData(Convert.ToByte(r.id), Convert.ToUInt16(r.addr), Convert.ToUInt16(r.length), i++);
                     }
@@ -357,14 +362,13 @@ namespace MIRLE_GPLC.form
             {
                 // modbus read
                 long val = modbusRead(id, addr, length);
-                Invoke(new DataFieldHandler(RefreshDataField), new Object[] { index, val.ToString() });
+                Invoke(new TagHandler(RefreshTag), new Object[] { index, val.ToString() });
             }
             catch (Exception)
             {
                 //Invoke(new DataFieldHandler(RefreshDataField), new Object[] { index, "????" });
             }
         }
-
         private long modbusRead(byte id, ushort addr, ushort length)
         {
             // get the most significant digit
@@ -397,12 +401,12 @@ namespace MIRLE_GPLC.form
         #endregion
 
         // status delegate
-        delegate void DataFieldHandler(int i, string str);
-        private void RefreshDataField(int i, string str)
+        delegate void TagHandler(int i, string str);
+        private void RefreshTag(int i, string str)
         {
-            if (listView_data.Items.Count > i)
+            if (listView_tag.Items.Count > i)
             {
-                listView_data.Items[i].SubItems[1].Text = str;
+                listView_tag.Items[i].SubItems[1].Text = str;
             }
         }
 

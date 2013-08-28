@@ -28,7 +28,7 @@ namespace MIRLE_GPLC
             mainForm.Refresh();
         }
 
-        public static bool Authendtic(GPLCAuthority auth)
+        public static bool AuthVerify(GPLCAuthority auth)
         {
             try
             {

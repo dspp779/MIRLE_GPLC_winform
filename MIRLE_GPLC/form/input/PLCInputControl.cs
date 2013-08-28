@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using MIRLE_GPLC.Model;
+using MIRLE_GPLC.Security;
 
 namespace MIRLE_GPLC.form
 {
@@ -50,6 +51,9 @@ namespace MIRLE_GPLC.form
         {
             try
             {
+                // check authentication
+                GPLC.Auth(GPLCAuthority.Administrator);
+
                 if (plc != null)
                 {
                     plc = new PLC(plc.id, int.Parse(textBox_net_ID.Text), textBox_net_ip.Text,
@@ -66,6 +70,11 @@ namespace MIRLE_GPLC.form
             catch (FormatException)
             {
                 //MessageBox.Show(ex.Message);
+            }
+            catch (UnauthorizedException ex)
+            {
+                MessageBox.Show(ex.Message, "Fatal Error");
+                Application.Exit();
             }
         }
 

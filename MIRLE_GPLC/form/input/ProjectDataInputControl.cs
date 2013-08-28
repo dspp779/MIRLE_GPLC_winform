@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using MIRLE_GPLC.Model;
 using GMap.NET.WindowsForms;
 using MIRLE_GPLC.form.marker;
+using MIRLE_GPLC.Security;
 
 namespace MIRLE_GPLC.form
 {
@@ -23,6 +24,9 @@ namespace MIRLE_GPLC.form
 
         public void init(GMapMarker marker)
         {
+            // check authentication
+            GPLC.Auth(GPLCAuthority.Administrator);
+
             this.marker = marker;
             if (marker is ProjectMarker)
             {
@@ -68,6 +72,9 @@ namespace MIRLE_GPLC.form
                     throw new FormatException("Latlng value out of bound");
                 }
 
+                // check authentication
+                GPLC.Auth(GPLCAuthority.Administrator);
+
                 // update database
                 if (InputButton.Text.Equals("Modify"))
                 {
@@ -87,10 +94,18 @@ namespace MIRLE_GPLC.form
             {
                 this.Parent.Dispose();
             }
+            catch (UnauthorizedException ex)
+            {
+                MessageBox.Show(ex.Message, "Fatal Error");
+                Application.Exit();
+            }
         }
 
         private void DeleteButton_Click(object sender, EventArgs e)
         {
+            // check authentication
+            GPLC.Auth(GPLCAuthority.Administrator);
+
             ModelUtil.deleteProject((marker as ProjectMarker).ProjectData.id);
             //refresh map
             GPLC.Refresh();

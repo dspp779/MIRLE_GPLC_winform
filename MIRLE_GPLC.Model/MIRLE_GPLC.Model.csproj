@@ -70,16 +70,12 @@
   <ItemGroup>
     <Compile Include="ModelUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\model\PLC.cs" />
-    <Compile Include="src\model\ProjectData.cs" />
-    <Compile Include="src\model\Record.cs" />
+    <Compile Include="model\PLC.cs" />
+    <Compile Include="model\ProjectData.cs" />
+    <Compile Include="model\Tag.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\MIRLE_GPLC.Security\MIRLE_GPLC.Security.csproj">
-      <Project>{7a390cfe-d761-414f-98fb-2f40ffd72a06}</Project>
-      <Name>MIRLE_GPLC.Security</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SQLiteDBMS\SQLiteDBMS.csproj">
       <Project>{c0d6d150-b314-4471-aa12-d6a75d79aba7}</Project>
       <Name>SQLiteDBMS</Name>

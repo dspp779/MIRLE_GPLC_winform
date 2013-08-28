@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MIRLE_GPLC.Model
 {
-    public class Record
+    public class Tag
     {
         private long _id;
         private int _addr;
@@ -44,7 +44,7 @@ namespace MIRLE_GPLC.Model
             get { return _plcid; }
         }
 
-        public Record(long id, int addr, int length, string format, string alias, long plcid)
+        public Tag(long id, int addr, int length, string format, string alias, long plcid)
         {
             this._id = id;
             this._addr = addr;

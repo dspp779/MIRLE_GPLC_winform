@@ -89,11 +89,11 @@
     <Compile Include="form\input\AuthForm.Designer.cs">
       <DependentUpon>AuthForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="form\input\DataFieldInputControl.cs">
+    <Compile Include="form\input\TagInputControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="form\input\DataFieldInputControl.Designer.cs">
-      <DependentUpon>DataFieldInputControl.cs</DependentUpon>
+    <Compile Include="form\input\TagInputControl.Designer.cs">
+      <DependentUpon>TagInputControl.cs</DependentUpon>
     </Compile>
     <Compile Include="form\MainForm.cs">
       <SubType>Form</SubType>
@@ -128,12 +128,12 @@
       <DependentUpon>ProjectDataView.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\modbusTCP.cs" />
+    <Compile Include="utility\modbusTCP.cs" />
     <EmbeddedResource Include="form\input\AuthForm.resx">
       <DependentUpon>AuthForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="form\input\DataFieldInputControl.resx">
-      <DependentUpon>DataFieldInputControl.cs</DependentUpon>
+    <EmbeddedResource Include="form\input\TagInputControl.resx">
+      <DependentUpon>TagInputControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="form\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

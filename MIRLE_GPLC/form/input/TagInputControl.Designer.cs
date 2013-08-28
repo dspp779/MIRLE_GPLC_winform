@@ -1,6 +1,6 @@
 ﻿namespace MIRLE_GPLC.form
 {
-    partial class DataFieldInputControl
+    partial class TagInputControl
     {
         /// <summary> 
         /// 設計工具所需的變數。

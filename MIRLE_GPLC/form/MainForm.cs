@@ -184,7 +184,7 @@ namespace MIRLE_GPLC
                 currMarker = mouseOveredMarkers.Last();
             }
             // add new marker while right mouse button downed
-            else if (e.Button == MouseButtons.Right && GPLC.Authendtic(GPLCAuthority.Administrator))
+            else if (e.Button == MouseButtons.Right && GPLC.AuthVerify(GPLCAuthority.Administrator))
             {
                 setCurrMarker(gMap.FromLocalToLatLng(e.X, e.Y));
             }
@@ -212,7 +212,7 @@ namespace MIRLE_GPLC
 
         #endregion
 
-        #region -- Marker Event --
+        #region -- Marker Events --
 
         private void gMap_OnMarkerClick(GMapMarker item, MouseEventArgs e)
         {
@@ -237,12 +237,12 @@ namespace MIRLE_GPLC
 
                         viewProject(item);
                     }
-                    else if (GPLC.Authendtic(GPLCAuthority.Administrator))
+                    else if (GPLC.AuthVerify(GPLCAuthority.Administrator))
                     {
                         inputProject(item);
                     }
                 }
-                else if (e.Button == MouseButtons.Right && GPLC.Authendtic(GPLCAuthority.Administrator))
+                else if (e.Button == MouseButtons.Right && GPLC.AuthVerify(GPLCAuthority.Administrator))
                 {
                     if (item is ProjectMarker)
                     {
@@ -356,6 +356,8 @@ namespace MIRLE_GPLC
 
         #endregion
 
+        #region -- Zooming Event --
+
         // spot detail is determined by map zoom
         private void gMap_OnMapZoomChanged()
         {
@@ -373,6 +375,10 @@ namespace MIRLE_GPLC
                 marker.ToolTipMode = mode;
             }
         }
+
+        #endregion
+
+        #region -- context menu --
 
         private void viewProject(GMapMarker item)
         {
@@ -421,6 +427,8 @@ namespace MIRLE_GPLC
             PoperContainer ttcContainer = new PoperContainer(ttc);
             ttcContainer.Show(this, p);
         }
+
+        #endregion
 
         #region -- File Operation --
 
@@ -503,7 +511,6 @@ namespace MIRLE_GPLC
         {
             authenticate();
         }
-
         private void ToolStripMenuItem_auth_Click(object sender, EventArgs e)
         {
             AuthForm authform = new AuthForm();

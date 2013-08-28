@@ -37,6 +37,7 @@ namespace MIRLE_GPLC.Security
             Authenticate();
         }
 
+        // check if the user has the authority equal to or higher than a specific auth
         public void Authenticate(GPLCAuthority auth)
         {
             if (authority > auth)
@@ -45,6 +46,7 @@ namespace MIRLE_GPLC.Security
             }
         }
 
+        // get auth by id and password
         private void Authenticate()
         {
             try
@@ -58,6 +60,7 @@ namespace MIRLE_GPLC.Security
             }
         }
 
+        // auth information string
         public string authInfo()
         {
             switch (authority)

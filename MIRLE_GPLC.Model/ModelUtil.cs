@@ -37,9 +37,9 @@ namespace MIRLE_GPLC.Model
             executeUpdate(schema);
         }
 
-        private static void createItemTable()
+        private static void createTagTable()
         {
-            string schema = "CREATE TABLE Item ( id INTEGER PRIMARY KEY AUTOINCREMENT, "
+            string schema = "CREATE TABLE Tag ( id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "start_addr INT, length INT, format VARCHAR(10), alias VARCHAR(20), plc_id INTEGER)";
             executeUpdate(schema);
         }
@@ -84,14 +84,14 @@ namespace MIRLE_GPLC.Model
             }
         }
 
-        public static int insertItem(Record r, long plc_id)
+        public static int insertTag(Tag r, long plc_id)
         {
-            return insertItem(r.addr, r.length, r.format, r.alias,  plc_id);
+            return insertTag(r.addr, r.length, r.format, r.alias,  plc_id);
         }
-        public static int insertItem(int start_addr, int length, string format, string alias, long plc_id)
+        public static int insertTag(int start_addr, int length, string format, string alias, long plc_id)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "INSERT INTO Item (start_addr, length, format, alias, plc_id) "
+                "INSERT INTO Tag (start_addr, length, format, alias, plc_id) "
                 + "values (@start_addr, @length, @format, @alias, @plc_id)"))
             {
                 cmd.Parameters.Add("@start_addr", DbType.Int32).Value = start_addr;
@@ -103,7 +103,7 @@ namespace MIRLE_GPLC.Model
             }
 
         }
-        public static void insertItem(List<Record> list, long plc_id)
+        public static void insertTag(List<Tag> list, long plc_id)
         {
             using (SQLiteConnection conn = SQLiteDBMS.getConnection())
             {
@@ -116,9 +116,9 @@ namespace MIRLE_GPLC.Model
                     cmd.ExecuteNonQuery();
                 }
 
-                foreach (Record r in list)
+                foreach (Tag r in list)
                 {
-                    string sql = "INSERT INTO Item (id, start_addr, length, format, alias, plc_id) "
+                    string sql = "INSERT INTO Tag (id, start_addr, length, format, alias, plc_id) "
                     + "values (@id, @start_addr, @length, @format, @alias, @plc_id)";
                     using (cmd = new SQLiteCommand(sql, conn))
                     {
@@ -212,7 +212,7 @@ namespace MIRLE_GPLC.Model
             }
         }
 
-        public static List<Record> getItemList(long plc_id)
+        public static List<Tag> getTagList(long plc_id)
         {
             try
             {
@@ -220,13 +220,13 @@ namespace MIRLE_GPLC.Model
                 {
                     conn.Open();
                     SQLiteCommand cmd = new SQLiteCommand(
-                        "SELECT * FROM Item WHERE plc_id =" + plc_id, conn);
-                    List<Record> list = new List<Record>();
+                        "SELECT * FROM Tag WHERE plc_id =" + plc_id, conn);
+                    List<Tag> list = new List<Tag>();
                     using (SQLiteDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            list.Add(new Record(reader.GetInt64(0),
+                            list.Add(new Tag(reader.GetInt64(0),
                                 reader.GetInt32(1), reader.GetInt32(2),
                                 reader.GetString(3), reader.GetString(4),
                                 reader.GetInt64(5)));
@@ -237,12 +237,12 @@ namespace MIRLE_GPLC.Model
             }
             catch (SQLiteException)
             {
-                createItemTable();
-                return new List<Record>();
+                createTagTable();
+                return new List<Tag>();
             }
             catch (Exception)
             {
-                return new List<Record>();
+                return new List<Tag>();
             }
         }
 
@@ -282,14 +282,14 @@ namespace MIRLE_GPLC.Model
             }
         }
 
-        public static int updateItem(Record r)
+        public static int updateTag(Tag r)
         {
-            return updateItem(r.id, r.addr, r.length, r.format, r.alias);
+            return updateTag(r.id, r.addr, r.length, r.format, r.alias);
         }
-        public static int updateItem(long id, int start_addr, int length, string format, string alias)
+        public static int updateTag(long id, int start_addr, int length, string format, string alias)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "UPDATE Item SET start_addr=@start_addr, length=@length, format=@format, alias=@alias"
+                "UPDATE Tag SET start_addr=@start_addr, length=@length, format=@format, alias=@alias"
                 + " WHERE id=@id"))
             {
                 cmd.Parameters.Add("@id", DbType.Int64).Value = id;
@@ -319,7 +319,7 @@ namespace MIRLE_GPLC.Model
 
         public static int deletePLC(long id)
         {
-            deleteItems(id);
+            deleteTags(id);
             using (SQLiteCommand cmd = new SQLiteCommand(
                 "delete FROM PLC WHERE id=@id"))    
             {
@@ -331,7 +331,7 @@ namespace MIRLE_GPLC.Model
         {
             foreach (PLC plc in getPLCList(project_id))
             {
-                deleteItems(plc.id);
+                deleteTags(plc.id);
             }
             using (SQLiteCommand cmd = new SQLiteCommand(
                 "delete FROM PLC WHERE project_id=@project_id"))
@@ -341,20 +341,20 @@ namespace MIRLE_GPLC.Model
             }
         }
 
-        public static int deleteItem(long id)
+        public static int deleteTag(long id)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "delete FROM Item WHERE id=@id"))
+                "delete FROM Tag WHERE id=@id"))
             {
                 cmd.Parameters.Add("@id", DbType.Int64).Value = id;
                 return SQLiteDBMS.execUpdate(cmd);
             }
         }
-        private static int deleteItems(long plc_id)
+        private static int deleteTags(long plc_id)
         {
             // delete items belonging to the plc
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "delete FROM Item WHERE plc_id=@plcid"))
+                "delete FROM Tag WHERE plc_id=@plcid"))
             {
                 cmd.Parameters.Add("@plcid", DbType.Int64).Value = plc_id;
                 return SQLiteDBMS.execUpdate(cmd);
@@ -377,15 +377,15 @@ namespace MIRLE_GPLC.Model
             }
         }
 
-        public static void inputItem(Record record)
+        public static void inputTag(Tag tag)
         {
             try
             {
-                updateItem(record);
+                updateTag(tag);
             }
             catch (SQLiteException)
             {
-                insertItem(record, record.plc_id);
+                insertTag(tag, tag.plc_id);
             }
         }
 

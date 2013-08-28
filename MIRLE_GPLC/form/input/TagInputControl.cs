@@ -7,15 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using MIRLE_GPLC.Model;
+using MIRLE_GPLC.Security;
 
 namespace MIRLE_GPLC.form
 {
-    public partial class DataFieldInputControl : UserControl
+    public partial class TagInputControl : UserControl
     {
         public long plcid = 0;
-        public Record record = null;
+        public Tag tag = null;
 
-        public DataFieldInputControl()
+        public TagInputControl()
         {
             InitializeComponent();
         }
@@ -23,7 +24,7 @@ namespace MIRLE_GPLC.form
         public void init(long plcid)
         {
             this.plcid = plcid;
-            this.record = null;
+            this.tag = null;
             // ui
             label_field.Text = "新增資料項";
             textBox_name.Text = "";
@@ -33,16 +34,16 @@ namespace MIRLE_GPLC.form
             this.Show();
         }
 
-        public void init(long plcid, Record record)
+        public void init(long plcid, Tag tag)
         {
             this.plcid = plcid;
-            this.record = record;
+            this.tag = tag;
             // ui
             label_field.Text = "修改資料項";
-            textBox_name.Text = record.alias;
-            textBox_addr.Text = record.addr.ToString();
-            textBox_length.Text = record.length.ToString();
-            comboBox_format.Text = record.format;
+            textBox_name.Text = tag.alias;
+            textBox_addr.Text = tag.addr.ToString();
+            textBox_length.Text = tag.length.ToString();
+            comboBox_format.Text = tag.format;
             this.Show();
         }
 
@@ -50,21 +51,29 @@ namespace MIRLE_GPLC.form
         {
             try
             {
-                if (record != null)
+                // check authentication
+                GPLC.Auth(GPLCAuthority.Administrator);
+
+                if (tag != null)
                 {
-                    record = new Record(record.id, int.Parse(textBox_addr.Text), int.Parse(textBox_length.Text),
+                    tag = new Tag(tag.id, int.Parse(textBox_addr.Text), int.Parse(textBox_length.Text),
                         comboBox_format.Text, textBox_name.Text, plcid);
-                    ModelUtil.inputItem(record);
+                    ModelUtil.inputTag(tag);
                 }
                 else
                 {
-                    ModelUtil.insertItem(int.Parse(textBox_addr.Text), int.Parse(textBox_length.Text),
+                    ModelUtil.insertTag(int.Parse(textBox_addr.Text), int.Parse(textBox_length.Text),
                     comboBox_format.Text, textBox_name.Text, plcid);
                 }
                 this.Parent.Refresh();
             }
             catch (FormatException)
             {
+            }
+            catch (UnauthorizedException ex)
+            {
+                MessageBox.Show(ex.Message, "Fatal Error");
+                Application.Exit();
             }
         }
 
