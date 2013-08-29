@@ -29,7 +29,7 @@ namespace MIRLE_GPLC.form
             label_field.Text = "新增資料項";
             textBox_name.Text = "";
             textBox_addr.Text = "";
-            textBox_length.Text = "";
+            comboBox_type.Text = "";
             comboBox_format.Text = "";
             this.Show();
         }
@@ -42,8 +42,8 @@ namespace MIRLE_GPLC.form
             label_field.Text = "修改資料項";
             textBox_name.Text = tag.alias;
             textBox_addr.Text = tag.addr.ToString();
-            textBox_length.Text = tag.length.ToString();
-            comboBox_format.Text = tag.format;
+            comboBox_type.SelectedText = tag.type.ToString();
+            comboBox_format.SelectedText = tag.format;
             this.Show();
         }
 
@@ -56,14 +56,14 @@ namespace MIRLE_GPLC.form
 
                 if (tag != null)
                 {
-                    tag = new Tag(tag.id, int.Parse(textBox_addr.Text), int.Parse(textBox_length.Text),
-                        comboBox_format.Text, textBox_name.Text, plcid);
+                    tag = new Tag(tag.id, textBox_name.Text, int.Parse(textBox_addr.Text), comboBox_type.Text,
+                        comboBox_format.Text, textBox_unit.Text, plcid);
                     ModelUtil.inputTag(tag);
                 }
                 else
                 {
-                    ModelUtil.insertTag(int.Parse(textBox_addr.Text), int.Parse(textBox_length.Text),
-                    comboBox_format.Text, textBox_name.Text, plcid);
+                    ModelUtil.insertTag(textBox_name.Text, int.Parse(textBox_addr.Text), comboBox_type.Text,
+                    comboBox_format.Text, textBox_unit.Text, plcid);
                 }
                 this.Parent.Refresh();
             }
@@ -80,6 +80,13 @@ namespace MIRLE_GPLC.form
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Parent.Refresh();
+        }
+
+        private void checkBox_scale_linear_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBox_type.Enabled = textBox_raw_hi.Enabled = textBox_raw_lo.Enabled
+                = textBox_scale_hi.Enabled = textBox_scale_lo.Enabled
+                = checkBox_scale_linear.Checked;
         }
 
     }

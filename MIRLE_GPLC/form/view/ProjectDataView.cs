@@ -273,7 +273,7 @@ namespace MIRLE_GPLC.form
         private void PLCEditControl(int index)
         {
             this.listView_tag.Hide();
-            this.listView_plc.Hide();
+            //this.listView_plc.Hide();
 
             ProjectData project = markers[ShownMarker].ProjectData;
 
@@ -293,7 +293,7 @@ namespace MIRLE_GPLC.form
                 return;
             }
 
-            this.listView_tag.Hide();
+            //this.listView_tag.Hide();
             this.listView_plc.Hide();
 
             PLC plc = markers[ShownMarker].ProjectData.plcs[lastSelectedPLC];
@@ -348,7 +348,7 @@ namespace MIRLE_GPLC.form
                     int i = 0;
                     foreach (Tag r in plc.tags)
                     {
-                        readData(Convert.ToByte(r.id), Convert.ToUInt16(r.addr), Convert.ToUInt16(r.length), i++);
+                        readData(Convert.ToByte(r.id), Convert.ToUInt16(r.addr), DataTypeUtil.size(r.type), i++);
                     }
                     // spin wait
                     SpinWait.SpinUntil(() => false, pollingRate);

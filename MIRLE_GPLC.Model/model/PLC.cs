@@ -56,7 +56,7 @@ namespace MIRLE_GPLC.Model
             }
         }
 
-        public PLC(long id, int netid, string ip, int port, string alias, int polling_rate, List<Tag> tags)
+        public PLC(long id, string alias, int netid, string ip, int port, int polling_rate, List<Tag> tags)
         {
             this._id = id;
             this._netid = netid;

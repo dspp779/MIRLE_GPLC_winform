@@ -49,7 +49,7 @@
             this.projectDataInputControl.AutoSize = true;
             this.projectDataInputControl.Location = new System.Drawing.Point(8, 8);
             this.projectDataInputControl.Name = "projectDataInputControl";
-            this.projectDataInputControl.Size = new System.Drawing.Size(289, 383);
+            this.projectDataInputControl.Size = new System.Drawing.Size(295, 383);
             this.projectDataInputControl.TabIndex = 3;
             this.projectDataInputControl.Visible = false;
             // 

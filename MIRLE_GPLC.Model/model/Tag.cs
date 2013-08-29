@@ -9,54 +9,57 @@ namespace MIRLE_GPLC.Model
     {
         private long _id;
         private int _addr;
-        private int _length;
+        private DataType _type;
         private string _format;
+        private string _unit;
         private string _alias;
         private long _plcid;
+
+        public Scaling scale;
 
         public long id
         {
             get { return _id; }
         }
-
         public int addr
         {
             get { return _addr; }
         }
-
-        public int length
+        public DataType type
         {
-            get { return _length; }
+            get { return _type; }
         }
-
         public string format
         {
             get { return _format; }
         }
-
+        public string unit
+        {
+            get { return _unit; }
+        }
         public string alias
         {
             get { return _alias; }
         }
-
         public long plc_id
         {
             get { return _plcid; }
         }
 
-        public Tag(long id, int addr, int length, string format, string alias, long plcid)
+        public Tag(long id, string alias, int addr, DataType type, string format, string unit, long plcid)
         {
             this._id = id;
             this._addr = addr;
-            this._length = length;
+            this._type = type;
             this._format = format;
+            this._unit = unit;
             this._alias = alias;
             this._plcid = plcid;
         }
 
-        public string getVal()
+        public Tag(long id, string alias, int addr, string type, string format, string unit, long plcid)
+            : this(id, alias, addr, (DataType)System.Enum.Parse(typeof(DataType), type), format, unit, plcid)
         {
-            return _format;
         }
     }
 }

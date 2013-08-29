@@ -9,7 +9,7 @@ namespace MIRLE_GPLC
 {
     static class GPLC
     {
-        internal static GPLCUser user;
+        internal static GPLCUser user = new GPLCUser();
         private static MainForm mainForm;
         /// <summary>
         /// 應用程式的主要進入點。

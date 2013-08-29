@@ -29,7 +29,7 @@ namespace MIRLE_GPLC.form
             textBox_name.Text = "";
             textBox_net_ID.Text = "";
             textBox_net_ip.Text = "";
-            label_project.Text = "新增PLC";
+            label_plc.Text = "新增PLC";
             this.Show();
         }
 
@@ -43,7 +43,7 @@ namespace MIRLE_GPLC.form
             textBox_net_ID.Text = plc.netid.ToString();
             textBox_net_ip.Text = plc.ip;
             textBox_net_port.Text = plc.port.ToString();
-            label_project.Text = "設定PLC";
+            label_plc.Text = "設定PLC";
             this.Show();
         }
 
@@ -56,8 +56,8 @@ namespace MIRLE_GPLC.form
 
                 if (plc != null)
                 {
-                    plc = new PLC(plc.id, int.Parse(textBox_net_ID.Text), textBox_net_ip.Text,
-                        int.Parse(textBox_net_port.Text), textBox_name.Text, int.Parse(textBox_poll_rate.Text), null);
+                    plc = new PLC(plc.id, textBox_name.Text, int.Parse(textBox_net_ID.Text), textBox_net_ip.Text,
+                        int.Parse(textBox_net_port.Text), int.Parse(textBox_poll_rate.Text), null);
                     ModelUtil.inputPLC(plc, project.id);
                 }
                 else

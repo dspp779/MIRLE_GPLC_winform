@@ -33,7 +33,7 @@ namespace MIRLE_GPLC.Model
         private static void createPLCTable()
         {
             string schema = "CREATE TABLE PLC ( id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + " alias VARCHAR(20),net_id INT, net_ip VARCHAR(15), net_port INT, "
+                + " alias VARCHAR(20), net_id INT, net_ip VARCHAR(15), net_port INT, "
                 + " polling_rate INT, project_id INTEGER )";
             executeUpdate(schema);
         }
@@ -42,8 +42,14 @@ namespace MIRLE_GPLC.Model
         {
             string schema = "CREATE TABLE Tag ( id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + " alias VARCHAR(20), addr INT, data_type VARCHAR(10), format VARCHAR(5), unit VARCHAR(10),"
-                + " raw_hi REAL, raq_lo REAL, scale_type VARCHAR(10), scale_hi REAL, scale_lo REAL,"
                 + " plc_id INTEGER )";
+            executeUpdate(schema);
+        }
+
+        private static void createScalingTable()
+        {
+            string schema = "CREATE TABLE Scaling ( scale_type VARCHAR(10), raw_hi REAL, raq_lo REAL,"
+                + " scale_hi REAL, scale_lo REAL, tag_id INTEGER )";
             executeUpdate(schema);
         }
 
@@ -91,18 +97,26 @@ namespace MIRLE_GPLC.Model
 
         public static int insertTag(Tag r, long plc_id)
         {
-            return insertTag(r.addr, r.length, r.format, r.alias,  plc_id);
+            return insertTag(r.alias, r.addr, r.type, r.format, r.unit, plc_id);
         }
-        public static int insertTag(int start_addr, int length, string format, string alias, long plc_id)
+        public static int insertTag(string alias, int addr, string type, string format, string unit, long plc_id)
+        {
+            DataType t = DataType.NONE;
+            System.Enum.TryParse<DataType>(type, out t);
+            return insertTag(alias, addr, t, format, unit, plc_id);
+        }
+        public static int insertTag(string alias, int addr, DataType type, string format, string unit, long plc_id)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "INSERT INTO Tag (start_addr, length, format, alias, plc_id) "
-                + "values (@start_addr, @length, @format, @alias, @plc_id)"))
+                "INSERT INTO Tag (alias, addr, data_type, format, unit, plc_id) "
+                + "values (@alias, @addr, @data_type, @format, @unit, @plc_id)"))
             {
-                cmd.Parameters.Add("@start_addr", DbType.Int32).Value = start_addr;
-                cmd.Parameters.Add("@length", DbType.Int32).Value = length;
-                cmd.Parameters.Add("@format", DbType.String).Value = format;
                 cmd.Parameters.Add("@alias", DbType.String).Value = alias;
+                cmd.Parameters.Add("@addr", DbType.Int32).Value = addr;
+                cmd.Parameters.Add("@data_type", DbType.String).Value = type.ToString();
+                cmd.Parameters.Add("@format", DbType.String).Value = format;
+                cmd.Parameters.Add("@unit", DbType.String).Value = unit;
+                // foreigh
                 cmd.Parameters.Add("@plc_id", DbType.Int64).Value = plc_id;
                 return SQLiteDBMS.execUpdate(cmd);
             }
@@ -116,13 +130,21 @@ namespace MIRLE_GPLC.Model
                 {
                     using (SQLiteCommand cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = "INSERT INTO Tag (id, start_addr, length, format, alias, plc_id)"
-                            + " values (@id, @start_addr, @length, @format, @alias, @plc_id)";
-                        cmd.Parameters.Add("@id", DbType.Int64);
-                        cmd.Parameters.Add("@start_addr", DbType.Int32);
-                        cmd.Parameters.Add("@length", DbType.Int32);
-                        cmd.Parameters.Add("@format", DbType.String);
+                        cmd.CommandText =
+                            "INSERT INTO Tag (alias, addr, data_type, format, unit, raw_hi, raw_lo, scale_type, scale_hi, scale_lo, plc_id)"
+                            + " values (@alias, @addr, @data_type, @format, @unit, @raw_hi, @raw_lo, @scale_type, @scale_hi, @scale_lo, @plc_id)";
                         cmd.Parameters.Add("@alias", DbType.String);
+                        cmd.Parameters.Add("@addr", DbType.Int32);
+                        cmd.Parameters.Add("@data_type", DbType.String);
+                        cmd.Parameters.Add("@format", DbType.String);
+                        cmd.Parameters.Add("@unit", DbType.String);
+                        // scale
+                        cmd.Parameters.Add("@scale_type", DbType.String);
+                        cmd.Parameters.Add("@raw_hi", DbType.Double);
+                        cmd.Parameters.Add("@raw_lo", DbType.Double);
+                        cmd.Parameters.Add("@scale_hi", DbType.Double);
+                        cmd.Parameters.Add("@scale_lo", DbType.Double);
+                        // foreigh
                         cmd.Parameters.Add("@plc_id", DbType.Int64);
                         foreach (Tag tag in list)
                         {
@@ -135,13 +157,30 @@ namespace MIRLE_GPLC.Model
         }
         private static int insertTag(SQLiteCommand cmd, Tag tag, long id)
         {
-            cmd.Parameters["@id"].Value = tag.id;
-            cmd.Parameters["@start_addr"].Value = tag.addr;
-            cmd.Parameters["@length"].Value = tag.length;
-            cmd.Parameters["@format"].Value = tag.format;
             cmd.Parameters["@alias"].Value = tag.alias;
+            cmd.Parameters["@addr"].Value = tag.addr;
+            cmd.Parameters["@data_type"].Value = tag.type.ToString();
+            cmd.Parameters["@format"].Value = tag.format;
+            cmd.Parameters["@unit"].Value = tag.unit;
+            // foreigh
             cmd.Parameters["@plc_id"].Value = id;
             return cmd.ExecuteNonQuery();
+        }
+
+        public static void insertScaling(string scale_type, double raw_hi, double raw_lo, double scale_hi, double scale_lo, long tag_id)
+        {
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "INSERT INTO Scaling (raw_hi, raw_lo, scale_type, scale_hi, scale_lo, tag_id) "
+                + "values (@raw_hi, @raw_lo, @scale_type, @scale_hi, @scale_lo, @tag_id)"))
+            {
+                // scale
+                cmd.Parameters.Add("@scale_type", DbType.String).Value = scale_type.ToString();
+                cmd.Parameters.Add("@raw_hi", DbType.Double).Value = raw_hi;
+                cmd.Parameters.Add("@raw_lo", DbType.Double).Value = raw_lo;
+                cmd.Parameters.Add("@scale_hi", DbType.Double).Value = scale_hi;
+                cmd.Parameters.Add("@scale_lo", DbType.Double).Value = scale_lo;
+                cmd.Parameters.Add("@tag_id", DbType.Int64).Value = tag_id;
+            }
         }
 
         #endregion
@@ -196,9 +235,9 @@ namespace MIRLE_GPLC.Model
                         while (reader.Read())
                         {
                             long id = reader.GetInt64(0);
-                            PLC p = new PLC(id, reader.GetInt32(1),
-                                reader.GetString(2), reader.GetInt32(3),
-                                reader.GetString(4), reader.GetInt32(5), null);
+                            PLC p = new PLC(id, reader.GetString(1),
+                                reader.GetInt32(2), reader.GetString(3),
+                                reader.GetInt32(4), reader.GetInt32(5), null);
                             pList.Add(p);
                         }
                     }
@@ -230,10 +269,10 @@ namespace MIRLE_GPLC.Model
                     {
                         while (reader.Read())
                         {
-                            list.Add(new Tag(reader.GetInt64(0),
-                                reader.GetInt32(1), reader.GetInt32(2),
-                                reader.GetString(3), reader.GetString(4),
-                                reader.GetInt64(5)));
+                            list.Add(new Tag(reader.GetInt64(0), reader.GetString(1),
+                                reader.GetInt32(2), reader.GetString(3), reader.GetString(4),
+                                reader.GetString(5), reader.GetInt64(6)
+                            ));
                         }
                     }
                     return list;
@@ -242,12 +281,35 @@ namespace MIRLE_GPLC.Model
             catch (SQLiteException)
             {
                 createTagTable();
-                return new List<Tag>();
             }
-            catch (Exception)
+            return new List<Tag>();
+        }
+
+        public static Scaling getScaling(long tag_id)
+        {
+            try
             {
-                return new List<Tag>();
+                using (SQLiteConnection conn = SQLiteDBMS.getConnection())
+                {
+                    conn.Open();
+                    SQLiteCommand cmd = new SQLiteCommand(
+                        "SELECT * FROM Scaling WHERE tag_id =" + tag_id, conn);
+                    List<Tag> list = new List<Tag>();
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Scaling(reader.GetString(0), reader.GetDouble(1),
+                                reader.GetDouble(2), reader.GetDouble(3), reader.GetDouble(4));
+                        }
+                    }
+                }
             }
+            catch (SQLiteException)
+            {
+                createScalingTable();
+            }
+            return null;
         }
 
         #endregion
@@ -291,19 +353,39 @@ namespace MIRLE_GPLC.Model
 
         public static int updateTag(Tag r)
         {
-            return updateTag(r.id, r.addr, r.length, r.format, r.alias);
+            return updateTag(r.id, r.alias, r.addr, r.type, r.format, r.unit);
         }
-        public static int updateTag(long id, int start_addr, int length, string format, string alias)
+        public static int updateTag(long id, string alias, int addr, string type, string format, string unit)
+        {
+            return updateTag(id, alias, addr, (DataType)System.Enum.Parse(typeof(DataType), type), format, unit);
+        }
+        public static int updateTag(long id, string alias, int addr, DataType type, string format, string unit)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
-                "UPDATE Tag SET start_addr=@start_addr, length=@length, format=@format, alias=@alias"
+                "UPDATE Tag SET alias=@alias, addr=@addr, type=@type, format=@format, unit=@unit"
                 + " WHERE id=@id"))
             {
-                cmd.Parameters.Add("@id", DbType.Int64).Value = id;
-                cmd.Parameters.Add("@start_addr", DbType.Int32).Value = start_addr;
-                cmd.Parameters.Add("@length", DbType.Int32).Value = length;
-                cmd.Parameters.Add("@format", DbType.String).Value = format;
                 cmd.Parameters.Add("@alias", DbType.String).Value = alias;
+                cmd.Parameters.Add("@addr", DbType.Int32).Value = addr;
+                cmd.Parameters.Add("@data_type", DbType.String).Value = type.ToString();
+                cmd.Parameters.Add("@format", DbType.String).Value = format;
+                cmd.Parameters.Add("@unit", DbType.String).Value = unit;
+                return SQLiteDBMS.execUpdate(cmd);
+            }
+        }
+
+        public static int updateScaling(string scale_type, double raw_hi, double raw_lo, double scale_hi, double scale_lo, long tag_id)
+        {
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "UPDATE Tag SET raw_hi=@raw_hi, raw_lo=@raw_lo, scale_hi=@scale_hi, scale_lo=@scale_lo"
+                + " WHERE tag_id=@tag_id"))
+            {
+                cmd.Parameters.Add("@scale_type", DbType.String).Value = scale_type.ToString();
+                cmd.Parameters.Add("@raw_hi", DbType.Double).Value = raw_hi;
+                cmd.Parameters.Add("@raw_lo", DbType.Double).Value = raw_lo;
+                cmd.Parameters.Add("@scale_hi", DbType.Double).Value = scale_hi;
+                cmd.Parameters.Add("@scale_lo", DbType.Double).Value = scale_lo;
+                cmd.Parameters.Add("@tag_id", DbType.Int64).Value = tag_id;
                 return SQLiteDBMS.execUpdate(cmd);
             }
         }
@@ -311,7 +393,6 @@ namespace MIRLE_GPLC.Model
         #endregion
 
         #region -- delete model --
-
 
         public static int deleteProject(long id)
         {
@@ -350,6 +431,7 @@ namespace MIRLE_GPLC.Model
 
         public static int deleteTag(long id)
         {
+            deleteScaling(id);
             using (SQLiteCommand cmd = new SQLiteCommand(
                 "delete FROM Tag WHERE id=@id"))
             {
@@ -359,6 +441,10 @@ namespace MIRLE_GPLC.Model
         }
         private static int deleteTags(long plc_id)
         {
+            foreach (Tag tag in getTagList(plc_id))
+            {
+                deleteScaling(tag.id);
+            }
             // delete items belonging to the plc
             using (SQLiteCommand cmd = new SQLiteCommand(
                 "delete FROM Tag WHERE plc_id=@plcid"))
@@ -367,7 +453,15 @@ namespace MIRLE_GPLC.Model
                 return SQLiteDBMS.execUpdate(cmd);
             }
         }
-
+        public static int deleteScaling(long tag_id)
+        {
+            using (SQLiteCommand cmd = new SQLiteCommand(
+                "delete FROM Scaling WHERE tag_id=@tag_id"))
+            {
+                cmd.Parameters.Add("@tag_id", DbType.Int64).Value = tag_id;
+                return SQLiteDBMS.execUpdate(cmd);
+            }
+        }
         #endregion
 
         #region -- input method --
@@ -393,6 +487,18 @@ namespace MIRLE_GPLC.Model
             catch (SQLiteException)
             {
                 insertTag(tag, tag.plc_id);
+            }
+        }
+
+        public static void inputScaling(string scale_type, double raw_hi, double raw_lo, double scale_hi, double scale_lo, long tag_id)
+        {
+            try
+            {
+                updateScaling(scale_type, raw_hi, raw_lo, scale_hi, scale_lo, tag_id);
+            }
+            catch (SQLiteException)
+            {
+                insertScaling(scale_type, raw_hi, raw_lo, scale_hi, scale_lo, tag_id);
             }
         }
 

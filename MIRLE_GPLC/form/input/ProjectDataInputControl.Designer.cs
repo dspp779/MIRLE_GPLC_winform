@@ -36,17 +36,20 @@
             this.DeleteButton = new System.Windows.Forms.Button();
             this.InputButton = new System.Windows.Forms.Button();
             this.groupBox_case = new System.Windows.Forms.GroupBox();
+            this.textBox_project_id = new System.Windows.Forms.TextBox();
+            this.label_project_id = new System.Windows.Forms.Label();
             this.richTextBox_project_addr = new System.Windows.Forms.RichTextBox();
             this.label_project_addr = new System.Windows.Forms.Label();
             this.textBox_project_Name = new System.Windows.Forms.TextBox();
             this.label_project_Name = new System.Windows.Forms.Label();
             this.label_project = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.textBox_project_id = new System.Windows.Forms.TextBox();
-            this.label_project_id = new System.Windows.Forms.Label();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.label_info = new System.Windows.Forms.Label();
             this.groupBox_location.SuspendLayout();
             this.groupBox_case.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox_location
@@ -132,6 +135,23 @@
             this.groupBox_case.TabStop = false;
             this.groupBox_case.Text = "Case";
             // 
+            // textBox_project_id
+            // 
+            this.textBox_project_id.Location = new System.Drawing.Point(6, 36);
+            this.textBox_project_id.MaxLength = 100;
+            this.textBox_project_id.Name = "textBox_project_id";
+            this.textBox_project_id.Size = new System.Drawing.Size(223, 22);
+            this.textBox_project_id.TabIndex = 14;
+            // 
+            // label_project_id
+            // 
+            this.label_project_id.AutoSize = true;
+            this.label_project_id.Location = new System.Drawing.Point(6, 18);
+            this.label_project_id.Name = "label_project_id";
+            this.label_project_id.Size = new System.Drawing.Size(29, 12);
+            this.label_project_id.TabIndex = 15;
+            this.label_project_id.Text = "案號";
+            // 
             // richTextBox_project_addr
             // 
             this.richTextBox_project_addr.Location = new System.Drawing.Point(6, 117);
@@ -185,28 +205,33 @@
             this.panel1.Size = new System.Drawing.Size(216, 24);
             this.panel1.TabIndex = 16;
             // 
-            // textBox_project_id
+            // flowLayoutPanel1
             // 
-            this.textBox_project_id.Location = new System.Drawing.Point(6, 36);
-            this.textBox_project_id.MaxLength = 100;
-            this.textBox_project_id.Name = "textBox_project_id";
-            this.textBox_project_id.Size = new System.Drawing.Size(223, 22);
-            this.textBox_project_id.TabIndex = 14;
+            this.flowLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.flowLayoutPanel1.Controls.Add(this.label_info);
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(67, 20);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(127, 24);
+            this.flowLayoutPanel1.TabIndex = 17;
             // 
-            // label_project_id
+            // label_info
             // 
-            this.label_project_id.AutoSize = true;
-            this.label_project_id.Location = new System.Drawing.Point(6, 18);
-            this.label_project_id.Name = "label_project_id";
-            this.label_project_id.Size = new System.Drawing.Size(29, 12);
-            this.label_project_id.TabIndex = 15;
-            this.label_project_id.Text = "案號";
+            this.label_info.AutoSize = true;
+            this.label_info.BackColor = System.Drawing.SystemColors.Control;
+            this.label_info.ForeColor = System.Drawing.Color.Red;
+            this.label_info.Location = new System.Drawing.Point(91, 0);
+            this.label_info.Name = "label_info";
+            this.label_info.Size = new System.Drawing.Size(33, 12);
+            this.label_info.TabIndex = 0;
+            this.label_info.Text = "label1";
             // 
             // ProjectDataInputControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
+            this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.label_project);
             this.Controls.Add(this.groupBox_location);
@@ -218,6 +243,8 @@
             this.groupBox_case.ResumeLayout(false);
             this.groupBox_case.PerformLayout();
             this.panel1.ResumeLayout(false);
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -241,5 +268,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox textBox_project_id;
         private System.Windows.Forms.Label label_project_id;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Label label_info;
     }
 }

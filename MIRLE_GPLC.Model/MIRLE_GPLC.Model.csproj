@@ -69,6 +69,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ModelUtil.cs" />
+    <Compile Include="model\DataType.cs" />
+    <Compile Include="model\Scaling.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="model\PLC.cs" />
     <Compile Include="model\ProjectData.cs" />

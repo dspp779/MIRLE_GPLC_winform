@@ -26,13 +26,18 @@ CREATE TABLE Tag
 	data_type VARCHAR(10),
 	format VARCHAR(5),
 	unit VARCHAR(10),
-		raw_hi REAL,
-		raq_lo REAL,
-		scale_type VARCHAR(10),
-		scale_hi REAL,
-		scale_lo REAL,
 	plc_id INTEGER
 );
+
+CREATE TABLE Scaling
+{
+	scale_type VARCHAR(10),
+	raw_hi REAL,
+	raq_lo REAL,
+	scale_hi REAL,
+	scale_lo REAL,
+	tag_id INTEGER
+}
 
 CREATE TABLE User
 (

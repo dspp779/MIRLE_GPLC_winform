@@ -34,7 +34,11 @@ namespace MIRLE_GPLC.Security
         {
             this.id = id;
             this.pass = pass;
-            Authenticate();
+        }
+
+        public void Authenticate()
+        {
+            _authority = GPLCAuthority.Anonymous;
         }
 
         // check if the user has the authority equal to or higher than a specific auth
@@ -47,10 +51,13 @@ namespace MIRLE_GPLC.Security
         }
 
         // get auth by id and password
-        private void Authenticate()
+        public void Authenticate(string id, string pass)
         {
+            this.id = id;
+            this.pass = pass;
             try
             {
+                SecureUtil.newUser(id, pass, GPLCAuthority.Administrator);
                 _authority = SecureUtil.Authenticate(id, pass);
             }
             catch (WrongIdPassException ex)

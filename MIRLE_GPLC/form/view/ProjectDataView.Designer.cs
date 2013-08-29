@@ -47,8 +47,8 @@ namespace MIRLE_GPLC.form
             this.labelCounter = new System.Windows.Forms.Label();
             this.labelText = new System.Windows.Forms.Label();
             this.labelTitle = new System.Windows.Forms.Label();
-            this.tagInputControl1 = new MIRLE_GPLC.form.TagInputControl();
             this.plcInputControl = new MIRLE_GPLC.form.PLCInputControl();
+            this.tagInputControl1 = new MIRLE_GPLC.form.TagInputControl();
             this.SuspendLayout();
             // 
             // listView_tag
@@ -174,28 +174,28 @@ namespace MIRLE_GPLC.form
             this.labelTitle.TabIndex = 7;
             this.labelTitle.Text = "title";
             // 
-            // tagInputControl1
-            // 
-            this.tagInputControl1.Location = new System.Drawing.Point(125, 48);
-            this.tagInputControl1.Name = "tagInputControl1";
-            this.tagInputControl1.Size = new System.Drawing.Size(233, 149);
-            this.tagInputControl1.TabIndex = 15;
-            this.tagInputControl1.Visible = false;
-            // 
             // plcInputControl
             // 
-            this.plcInputControl.Location = new System.Drawing.Point(88, 48);
+            this.plcInputControl.Location = new System.Drawing.Point(261, 48);
             this.plcInputControl.Name = "plcInputControl";
-            this.plcInputControl.Size = new System.Drawing.Size(304, 145);
+            this.plcInputControl.Size = new System.Drawing.Size(198, 171);
             this.plcInputControl.TabIndex = 14;
             this.plcInputControl.Visible = false;
+            // 
+            // tagInputControl1
+            // 
+            this.tagInputControl1.Location = new System.Drawing.Point(1, 48);
+            this.tagInputControl1.Name = "tagInputControl1";
+            this.tagInputControl1.Size = new System.Drawing.Size(254, 258);
+            this.tagInputControl1.TabIndex = 15;
+            this.tagInputControl1.Visible = false;
             // 
             // ProjectDataView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.tagInputControl1);
             this.Controls.Add(this.plcInputControl);
+            this.Controls.Add(this.tagInputControl1);
             this.Controls.Add(this.listView_tag);
             this.Controls.Add(this.listView_plc);
             this.Controls.Add(this.buttonNext);
@@ -204,7 +204,7 @@ namespace MIRLE_GPLC.form
             this.Controls.Add(this.labelText);
             this.Controls.Add(this.labelTitle);
             this.Name = "ProjectDataView";
-            this.Size = new System.Drawing.Size(448, 306);
+            this.Size = new System.Drawing.Size(458, 306);
             this.ResumeLayout(false);
             this.PerformLayout();
 

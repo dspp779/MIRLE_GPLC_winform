@@ -69,8 +69,8 @@ namespace MIRLE_GPLC
         private void MainForm_Shown(object sender, EventArgs e)
         {
             // initial Auth
-            authenticate();
-            //authenticate("root", "1234567");
+            //authenticate();
+            authenticate("root", "1234567");
         }
 
         private void loadProjects()
@@ -115,7 +115,7 @@ namespace MIRLE_GPLC
 
         private void authenticate()
         {
-            GPLC.user = new GPLCUser();
+            GPLC.user.Authenticate();
             RefreshAuthStatus();
             Refresh();
         }
@@ -123,9 +123,9 @@ namespace MIRLE_GPLC
         {
             try
             {
-                GPLC.user = new GPLCUser(id, pass);
+                GPLC.user.Authenticate(id, pass);
                 string str = string.Format("以{0}身分登入成功。({1}權限)", id, GPLC.user.authority.ToString());
-                MessageBox.Show(str, "認證成功");
+                //MessageBox.Show(str, "認證成功");
             }
             catch (WrongIdPassException)
             {
@@ -151,7 +151,7 @@ namespace MIRLE_GPLC
                 isDragging = true;
             }
             // move hover markers while dragging
-            if (isDragging && currMarker != null && !(currMarker is ProjectMarker) )
+            if (isDragging && currMarker != null && !(currMarker is ProjectMarker))
             {
                 setCurrMarker(latlng);
                 gMap.Refresh();
@@ -309,7 +309,7 @@ namespace MIRLE_GPLC
             GMarkerGoogle m = new GMarkerGoogle(p, type);
             if (gMap.InvokeRequired)
             {
-                return (GMapMarker) Invoke(new addMarkerHandler(addMarker), new Object[] { m });
+                return (GMapMarker)Invoke(new addMarkerHandler(addMarker), new Object[] { m });
             }
             else
             {
@@ -421,7 +421,7 @@ namespace MIRLE_GPLC
             ttc = new ToolTipContentContainer(item);
 
             GPoint p = gMap.FromLatLngToLocal(item.Position);
-            p.Offset(item.Size.Width*2/3, -1 * (item.Size.Height));
+            p.Offset(item.Size.Width * 2 / 3, -1 * (item.Size.Height));
             contextMenu(ttc, new Point(Convert.ToInt32(p.X), Convert.ToInt32(p.Y)));
         }
 

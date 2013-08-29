@@ -42,6 +42,7 @@ namespace MIRLE_GPLC.form
                 setInput(null, "", "", marker.Position.Lat, marker.Position.Lng);
                 InputButton.Dock = DockStyle.Fill;
             }
+            label_info.Text = "";
             this.Show();
         }
 
@@ -95,9 +96,9 @@ namespace MIRLE_GPLC.form
                 GPLC.Refresh();
                 this.Parent.Dispose();
             }
-            catch (FormatException)
+            catch (FormatException ex)
             {
-                this.Parent.Dispose();
+                label_info.Text = ex.Message;
             }
             catch (UnauthorizedException ex)
             {

@@ -30,7 +30,7 @@
         {
             this.textBox_name = new System.Windows.Forms.TextBox();
             this.label_name = new System.Windows.Forms.Label();
-            this.label_project = new System.Windows.Forms.Label();
+            this.label_plc = new System.Windows.Forms.Label();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.groupBox_addr = new System.Windows.Forms.GroupBox();
@@ -47,34 +47,35 @@
             // 
             // textBox_name
             // 
-            this.textBox_name.Location = new System.Drawing.Point(41, 28);
+            this.textBox_name.Location = new System.Drawing.Point(3, 35);
             this.textBox_name.Name = "textBox_name";
-            this.textBox_name.Size = new System.Drawing.Size(143, 22);
+            this.textBox_name.Size = new System.Drawing.Size(91, 22);
             this.textBox_name.TabIndex = 14;
             // 
             // label_name
             // 
             this.label_name.AutoSize = true;
-            this.label_name.Location = new System.Drawing.Point(3, 31);
+            this.label_name.Location = new System.Drawing.Point(5, 20);
             this.label_name.Name = "label_name";
             this.label_name.Size = new System.Drawing.Size(32, 12);
             this.label_name.TabIndex = 13;
             this.label_name.Text = "Name";
             // 
-            // label_project
+            // label_plc
             // 
-            this.label_project.AutoSize = true;
-            this.label_project.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label_project.Location = new System.Drawing.Point(3, 0);
-            this.label_project.Name = "label_project";
-            this.label_project.Size = new System.Drawing.Size(39, 16);
-            this.label_project.TabIndex = 12;
-            this.label_project.Text = "case";
+            this.label_plc.AutoSize = true;
+            this.label_plc.Font = new System.Drawing.Font("新細明體", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label_plc.Location = new System.Drawing.Point(3, 0);
+            this.label_plc.Name = "label_plc";
+            this.label_plc.Size = new System.Drawing.Size(38, 16);
+            this.label_plc.TabIndex = 12;
+            this.label_plc.Text = "PLC";
             // 
             // btnCancel
             // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(213, 100);
+            this.btnCancel.Location = new System.Drawing.Point(107, 136);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 17;
@@ -84,8 +85,9 @@
             // 
             // btnOK
             // 
+            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(213, 71);
+            this.btnOK.Location = new System.Drawing.Point(9, 136);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 16;
@@ -101,9 +103,9 @@
             this.groupBox_addr.Controls.Add(this.textBox_net_port);
             this.groupBox_addr.Controls.Add(this.textBox_net_ID);
             this.groupBox_addr.Controls.Add(this.label_net_ID);
-            this.groupBox_addr.Location = new System.Drawing.Point(3, 56);
+            this.groupBox_addr.Location = new System.Drawing.Point(1, 63);
             this.groupBox_addr.Name = "groupBox_addr";
-            this.groupBox_addr.Size = new System.Drawing.Size(194, 67);
+            this.groupBox_addr.Size = new System.Drawing.Size(192, 67);
             this.groupBox_addr.TabIndex = 15;
             this.groupBox_addr.TabStop = false;
             this.groupBox_addr.Text = "Address";
@@ -162,7 +164,7 @@
             // 
             // textBox_poll_rate
             // 
-            this.textBox_poll_rate.Location = new System.Drawing.Point(213, 43);
+            this.textBox_poll_rate.Location = new System.Drawing.Point(110, 35);
             this.textBox_poll_rate.Name = "textBox_poll_rate";
             this.textBox_poll_rate.Size = new System.Drawing.Size(75, 22);
             this.textBox_poll_rate.TabIndex = 18;
@@ -170,7 +172,7 @@
             // label_poll_rate
             // 
             this.label_poll_rate.AutoSize = true;
-            this.label_poll_rate.Location = new System.Drawing.Point(211, 26);
+            this.label_poll_rate.Location = new System.Drawing.Point(108, 20);
             this.label_poll_rate.Name = "label_poll_rate";
             this.label_poll_rate.Size = new System.Drawing.Size(58, 12);
             this.label_poll_rate.TabIndex = 19;
@@ -184,12 +186,12 @@
             this.Controls.Add(this.textBox_poll_rate);
             this.Controls.Add(this.textBox_name);
             this.Controls.Add(this.label_name);
-            this.Controls.Add(this.label_project);
+            this.Controls.Add(this.label_plc);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.groupBox_addr);
             this.Name = "PLCInputControl";
-            this.Size = new System.Drawing.Size(305, 129);
+            this.Size = new System.Drawing.Size(196, 163);
             this.groupBox_addr.ResumeLayout(false);
             this.groupBox_addr.PerformLayout();
             this.ResumeLayout(false);
@@ -201,7 +203,7 @@
 
         private System.Windows.Forms.TextBox textBox_name;
         private System.Windows.Forms.Label label_name;
-        private System.Windows.Forms.Label label_project;
+        private System.Windows.Forms.Label label_plc;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.GroupBox groupBox_addr;
