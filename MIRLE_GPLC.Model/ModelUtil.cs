@@ -83,9 +83,8 @@ namespace MIRLE_GPLC.Model
                 cmd.Parameters.Add("@addr", DbType.String).Value = addr;
                 cmd.Parameters.Add("@lat", DbType.Double).Value = lat;
                 cmd.Parameters.Add("@lng", DbType.Double).Value = lng;
-                SQLiteDBMS.execUpdate(cmd);
+                return SQLiteDBMS.execInsert(cmd);
             }
-            return getLastInsertRowId();
         }
 
         public static int insertPLC(PLC plc, long project_id)
@@ -104,9 +103,8 @@ namespace MIRLE_GPLC.Model
                 cmd.Parameters.Add("@alias", DbType.String).Value = alias;
                 cmd.Parameters.Add("@polling_rate", DbType.Int32).Value = polling_rate;
                 cmd.Parameters.Add("@project_id", DbType.Int64).Value = project_id;
-                SQLiteDBMS.execUpdate(cmd);
+                return SQLiteDBMS.execInsert(cmd);
             }
-            return getLastInsertRowId();
         }
 
         public static int insertTag(Tag tag)
@@ -132,9 +130,8 @@ namespace MIRLE_GPLC.Model
                 cmd.Parameters.Add("@unit", DbType.String).Value = unit;
                 // foreigh
                 cmd.Parameters.Add("@plc_id", DbType.Int64).Value = plc_id;
-                SQLiteDBMS.execUpdate(cmd);
+                return SQLiteDBMS.execInsert(cmd);
             }
-            return getLastInsertRowId();
 
         }
 
@@ -200,9 +197,8 @@ namespace MIRLE_GPLC.Model
                 cmd.Parameters.Add("@scale_hi", DbType.Double).Value = scale_hi;
                 cmd.Parameters.Add("@scale_lo", DbType.Double).Value = scale_lo;
                 cmd.Parameters.Add("@tag_id", DbType.Int64).Value = tag_id;
-                SQLiteDBMS.execUpdate(cmd);
+                return SQLiteDBMS.execInsert(cmd);
             }
-            return getLastInsertRowId();
         }
 
         #endregion

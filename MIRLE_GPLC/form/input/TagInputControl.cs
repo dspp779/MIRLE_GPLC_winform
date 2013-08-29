@@ -44,6 +44,7 @@ namespace MIRLE_GPLC.form
             Scaling s = ModelUtil.getScaling(tag.id);
             if (s != null)
             {
+                checkBox_scale_linear.Checked = true;
                 comboBox_scale_type.Text = s.scale_type.ToString();
                 textBox_raw_hi.Text = s.raw_hi.ToString();
                 textBox_raw_lo.Text = s.raw_lo.ToString();
@@ -91,6 +92,10 @@ namespace MIRLE_GPLC.form
                 }
                 else
                 {
+                    if (id >= 0)
+                    {
+                        ModelUtil.deleteScaling(id);
+                    }
                     ModelUtil.inputTag(inputTag);
                 }
                 this.Parent.Refresh();
@@ -113,8 +118,7 @@ namespace MIRLE_GPLC.form
 
         private void checkBox_scale_linear_CheckedChanged(object sender, EventArgs e)
         {
-            comboBox_type.Enabled = comboBox_scale_type.Enabled
-                = textBox_raw_hi.Enabled = textBox_raw_lo.Enabled
+            comboBox_scale_type.Enabled = textBox_raw_hi.Enabled = textBox_raw_lo.Enabled
                 = textBox_scale_hi.Enabled = textBox_scale_lo.Enabled
                 = checkBox_scale_linear.Checked;
         }

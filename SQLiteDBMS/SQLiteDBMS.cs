@@ -60,5 +60,25 @@ namespace MIRLE.GPLC.DB.SQLite
                 return cmd.ExecuteNonQuery();
             }
         }
+
+        private static int getLastInsertRowId(SQLiteConnection conn)
+        {
+            SQLiteCommand cmd = new SQLiteCommand("select last_insert_rowid()", conn);
+            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            {
+                return (reader.Read()) ? reader.GetInt32(0) : -1;
+            }
+        }
+
+        public static int execInsert(SQLiteCommand cmd)
+        {
+            using (SQLiteConnection conn = getConnection())
+            {
+                conn.Open();
+                cmd.Connection = conn;
+                cmd.ExecuteNonQuery();
+                return getLastInsertRowId(conn);
+            }
+        }
     }
 }
