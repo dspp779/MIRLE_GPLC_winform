@@ -27,6 +27,7 @@ namespace MIRLE_GPLC.form
             this.plc = null;
             // UI
             textBox_name.Text = "";
+            textBox_poll_rate.Text = "";
             textBox_net_ID.Text = "";
             textBox_net_ip.Text = "";
             label_plc.Text = "新增PLC";
@@ -40,6 +41,7 @@ namespace MIRLE_GPLC.form
 
             // UI
             textBox_name.Text = plc.alias;
+            textBox_poll_rate.Text = plc.polling_rate.ToString();
             textBox_net_ID.Text = plc.netid.ToString();
             textBox_net_ip.Text = plc.ip;
             textBox_net_port.Text = plc.port.ToString();

@@ -10,10 +10,10 @@ CREATE TABLE Project
 CREATE TABLE PLC
 (
 	id INTEGER PRIMARY KEY AUTOINCREMENT ASC,
+	alias VARCHAR(20),
 		net_id INT,
 		net_ip VARCHAR(15),
 		net_port INT,
-	alias VARCHAR(20),
 	polling_rate INT,
 	project_id INTEGER
 };

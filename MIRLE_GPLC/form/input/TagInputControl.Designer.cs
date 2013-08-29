@@ -53,6 +53,7 @@
             this.textBox_raw_hi = new System.Windows.Forms.TextBox();
             this.textBox_unit = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.label_info = new System.Windows.Forms.Label();
             this.groupBox_scaling.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -309,10 +310,21 @@
             this.label8.TabIndex = 23;
             this.label8.Text = "Unit";
             // 
+            // label_info
+            // 
+            this.label_info.AutoSize = true;
+            this.label_info.BackColor = System.Drawing.SystemColors.Control;
+            this.label_info.ForeColor = System.Drawing.Color.Red;
+            this.label_info.Location = new System.Drawing.Point(91, 1);
+            this.label_info.Name = "label_info";
+            this.label_info.Size = new System.Drawing.Size(0, 12);
+            this.label_info.TabIndex = 0;
+            // 
             // TagInputControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label_info);
             this.Controls.Add(this.textBox_unit);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.groupBox_scaling);
@@ -363,5 +375,6 @@
         private System.Windows.Forms.TextBox textBox_unit;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.CheckBox checkBox_scale_linear;
+        private System.Windows.Forms.Label label_info;
     }
 }

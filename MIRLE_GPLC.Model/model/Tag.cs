@@ -61,5 +61,11 @@ namespace MIRLE_GPLC.Model
             : this(id, alias, addr, (DataType)System.Enum.Parse(typeof(DataType), type), format, unit, plcid)
         {
         }
+
+        public Tag(long id, string alias, string addr, string type, string format, string unit, long plcid)
+            : this(id, alias, int.Parse(addr), (DataType)System.Enum.Parse(typeof(DataType), type), format, unit, plcid)
+        {
+        }
+
     }
 }

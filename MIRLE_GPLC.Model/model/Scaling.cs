@@ -7,11 +7,37 @@ namespace MIRLE_GPLC.Model
 {
     public class Scaling
     {
-        private DataType _scale_type;
-        private double _raw_hi;
-        private double _raw_lo;
-        private double _scale_hi;
-        private double _scale_lo;
+        internal DataType _scale_type;
+        internal double _raw_hi;
+        internal double _raw_lo;
+        internal double _scale_hi;
+        internal double _scale_lo;
+
+        public DataType scale_type
+        {
+            get { return _scale_type; }
+        }
+
+        public double raw_hi
+        {
+            get { return _raw_hi; }
+        }
+
+        public double raw_lo
+        {
+            get { return _raw_lo; }
+        }
+
+        public double scale_hi
+        {
+            get { return _scale_hi; }
+        }
+
+        public double scale_lo
+        {
+            get { return _scale_lo; }
+        }
+
 
         public Scaling(DataType scale_type, double raw_hi, double raw_lo, double scale_hi, double scale_lo)
         {
@@ -24,6 +50,12 @@ namespace MIRLE_GPLC.Model
 
         public Scaling(string scale_type, double raw_hi, double raw_lo, double scale_hi, double scale_lo)
             : this((DataType)System.Enum.Parse(typeof(DataType), scale_type), raw_hi, raw_lo, scale_hi, scale_lo)
+        {
+        }
+
+        public Scaling(string scale_type, string raw_hi, string raw_lo, string scale_hi, string scale_lo)
+            : this((DataType)System.Enum.Parse(typeof(DataType), scale_type),
+            double.Parse(raw_hi), double.Parse(raw_lo), double.Parse(scale_hi), double.Parse(scale_lo))
         {
         }
     }

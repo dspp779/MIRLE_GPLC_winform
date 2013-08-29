@@ -106,7 +106,7 @@ namespace MIRLE_GPLC.form
             // name
             // 
             this.name.Text = "名稱";
-            this.name.Width = 95;
+            this.name.Width = 100;
             // 
             // id
             // 
@@ -194,15 +194,15 @@ namespace MIRLE_GPLC.form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.plcInputControl);
             this.Controls.Add(this.tagInputControl1);
+            this.Controls.Add(this.plcInputControl);
             this.Controls.Add(this.listView_tag);
-            this.Controls.Add(this.listView_plc);
             this.Controls.Add(this.buttonNext);
             this.Controls.Add(this.buttonBack);
             this.Controls.Add(this.labelCounter);
             this.Controls.Add(this.labelText);
             this.Controls.Add(this.labelTitle);
+            this.Controls.Add(this.listView_plc);
             this.Name = "ProjectDataView";
             this.Size = new System.Drawing.Size(458, 306);
             this.ResumeLayout(false);

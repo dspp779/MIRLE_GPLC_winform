@@ -325,7 +325,7 @@ namespace MIRLE_GPLC.form
         }
         private void modbusTCPWorker(PLC plc)
         {
-            int pollingRate = int.Parse(Setting.GPLCSetting.settingRead(@"Polling/Rate"));
+            //int pollingRate = int.Parse(Setting.GPLCSetting.settingRead(@"Polling/Rate"));
             if (plc == null)
             {
                 return;
@@ -351,7 +351,7 @@ namespace MIRLE_GPLC.form
                         readData(Convert.ToByte(r.id), Convert.ToUInt16(r.addr), DataTypeUtil.size(r.type), i++);
                     }
                     // spin wait
-                    SpinWait.SpinUntil(() => false, pollingRate);
+                    SpinWait.SpinUntil(() => false, plc.polling_rate);
                 }
                 catch (Exception)
                 {
