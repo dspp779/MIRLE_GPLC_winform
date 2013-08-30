@@ -18,11 +18,6 @@ namespace MIRLE_GPLC.form
             {
                 components.Dispose();
             }
-            if (modbusThread != null && modbusThread.IsAlive)
-            {
-                modbusThread.Abort();
-                modbusThread = null;
-            }
             base.Dispose(disposing);
         }
 
@@ -47,8 +42,8 @@ namespace MIRLE_GPLC.form
             this.labelCounter = new System.Windows.Forms.Label();
             this.labelText = new System.Windows.Forms.Label();
             this.labelTitle = new System.Windows.Forms.Label();
-            this.plcInputControl = new MIRLE_GPLC.form.PLCInputControl();
             this.tagInputControl1 = new MIRLE_GPLC.form.TagInputControl();
+            this.plcInputControl = new MIRLE_GPLC.form.PLCInputControl();
             this.SuspendLayout();
             // 
             // listView_tag
@@ -174,14 +169,6 @@ namespace MIRLE_GPLC.form
             this.labelTitle.TabIndex = 7;
             this.labelTitle.Text = "title";
             // 
-            // plcInputControl
-            // 
-            this.plcInputControl.Location = new System.Drawing.Point(261, 48);
-            this.plcInputControl.Name = "plcInputControl";
-            this.plcInputControl.Size = new System.Drawing.Size(198, 171);
-            this.plcInputControl.TabIndex = 14;
-            this.plcInputControl.Visible = false;
-            // 
             // tagInputControl1
             // 
             this.tagInputControl1.Location = new System.Drawing.Point(1, 48);
@@ -189,6 +176,14 @@ namespace MIRLE_GPLC.form
             this.tagInputControl1.Size = new System.Drawing.Size(254, 258);
             this.tagInputControl1.TabIndex = 15;
             this.tagInputControl1.Visible = false;
+            // 
+            // plcInputControl
+            // 
+            this.plcInputControl.Location = new System.Drawing.Point(261, 48);
+            this.plcInputControl.Name = "plcInputControl";
+            this.plcInputControl.Size = new System.Drawing.Size(198, 171);
+            this.plcInputControl.TabIndex = 14;
+            this.plcInputControl.Visible = false;
             // 
             // ProjectDataView
             // 
@@ -205,6 +200,7 @@ namespace MIRLE_GPLC.form
             this.Controls.Add(this.listView_plc);
             this.Name = "ProjectDataView";
             this.Size = new System.Drawing.Size(458, 306);
+            this.Leave += new System.EventHandler(this.ProjectDataView_Leave);
             this.ResumeLayout(false);
             this.PerformLayout();
 

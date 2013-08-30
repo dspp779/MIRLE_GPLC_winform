@@ -26,6 +26,7 @@ namespace MIRLE_GPLC.form
         {
             InitializeComponent();
             this.Size = new Size(540, 400);
+            Utility.modbusWorker.presentView = projectDataView;
             projectDataView.init(markers);
         }
 

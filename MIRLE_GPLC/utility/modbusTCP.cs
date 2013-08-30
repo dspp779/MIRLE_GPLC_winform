@@ -32,7 +32,7 @@ namespace Modbus.TCP
     /// </summary>
     /// 
 
-    public class Master
+    public class ModbusSocket
     {
         // ------------------------------------------------------------------------
         // Private declarations
@@ -83,7 +83,7 @@ namespace Modbus.TCP
 
         // ------------------------------------------------------------------------
         /// <summary>Create master instance without parameters.</summary>
-        public Master()
+        public ModbusSocket()
         {
         }
 
@@ -91,7 +91,7 @@ namespace Modbus.TCP
         /// <summary>Create master instance with parameters.</summary>
         /// <param name="ip">IP adress of modbus slave.</param>
         /// <param name="port">Port number of modbus slave. Usually port 502 is used.</param>
-        public Master(string ip, ushort port)
+        public ModbusSocket(string ip, ushort port)
         {
             connect(ip, port);
         }
@@ -146,7 +146,7 @@ namespace Modbus.TCP
 
         // ------------------------------------------------------------------------
         /// <summary>Destroy master instance.</summary>
-        ~Master()
+        ~ModbusSocket()
         {
             Dispose();
         }

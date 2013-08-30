@@ -57,7 +57,7 @@ namespace MIRLE_GPLC
             // set language
             GMap.NET.MapProviders.GMapProvider.Language = GMap.NET.LanguageType.ChineseTraditional;
             // tile retrieve policy: ServerOnly, ServerAndCache, CacheOnly.
-            GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerOnly;
+            GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.CacheOnly;
             // initial latlng
             this.gMap.Position = new PointLatLng(23.8, 121);
 

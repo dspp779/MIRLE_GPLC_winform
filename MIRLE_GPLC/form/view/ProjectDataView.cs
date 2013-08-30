@@ -17,9 +17,6 @@ namespace MIRLE_GPLC.form
 {
     internal partial class ProjectDataView : UserControl
     {
-        private static Master MBmaster;
-        private static Thread modbusThread;
-
         private List<ProjectMarker> markers = new List<ProjectMarker>();
         private int _shownMarker = -1;
         private int _lastSelectedPLC;
@@ -66,17 +63,6 @@ namespace MIRLE_GPLC.form
                 {
                     return;
                 }*/
-                if (MBmaster != null && MBmaster.connected)
-                {
-                    MBmaster.disconnect();
-                    MBmaster = null;
-                }
-                if (modbusThread != null && modbusThread.IsAlive)
-                {
-                    modbusThread.Abort();
-                    modbusThread = null;
-                }
-
                 _lastSelectedPLC = value;
 
                 Debug.Assert(_lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count);
@@ -166,14 +152,7 @@ namespace MIRLE_GPLC.form
                 listView_tag.Items.Add(item);
             }
 
-            // modbus worker
-            if (modbusThread != null && modbusThread.IsAlive)
-            {
-                modbusThread.Abort();
-                modbusThread = null;
-            }
-            modbusThread = new Thread(new ParameterizedThreadStart(modbusTCPWorker));
-            modbusThread.Start(plc);
+            Utility.modbusWorkerPool.lauchViewWorker(plc);
         }
 
         #endregion
@@ -311,106 +290,27 @@ namespace MIRLE_GPLC.form
 
         #endregion
 
-        #region -- Modbus TCP Worker --
-
-        private void modbusTCPWorker(object o)
-        {
-            try
-            {
-                modbusTCPWorker(o as PLC);
-            }
-            catch (ThreadAbortException)
-            {
-            }
-        }
-        private void modbusTCPWorker(PLC plc)
-        {
-            //int pollingRate = int.Parse(Setting.GPLCSetting.settingRead(@"Polling/Rate"));
-            if (plc == null)
-            {
-                return;
-            }
-
-            // initialize modbus TCP/IP
-            if (MBmaster != null && MBmaster.connected)
-            {
-                MBmaster.disconnect();
-            }
-            MBmaster = new Master(plc.ip, Convert.ToUInt16(plc.port));
-            // connecting message "Connecting to [IP]:[PORT]"
-            //string str = string.Format("Connecting to {0}:{1}", plc.ip, plc.port);
-
-            // refresh dataGrid periodically
-            while (MBmaster != null && MBmaster.connected)
-            {
-                try
-                {
-                    int i = 0;
-                    foreach (Tag r in plc.tags)
-                    {
-                        readData(Convert.ToByte(r.id), Convert.ToUInt16(r.addr), DataTypeUtil.size(r.type), i++);
-                    }
-                    // spin wait
-                    SpinWait.SpinUntil(() => false, plc.polling_rate);
-                }
-                catch (Exception)
-                {
-                }
-            }
-        }
-
-        private void readData(byte id, ushort addr, ushort length, int index)
-        {
-            try
-            {
-                // modbus read
-                long val = modbusRead(id, addr, length);
-                Invoke(new TagHandler(RefreshTag), new Object[] { index, val.ToString() });
-            }
-            catch (Exception)
-            {
-                //Invoke(new DataFieldHandler(RefreshDataField), new Object[] { index, "????" });
-            }
-        }
-        private long modbusRead(byte id, ushort addr, ushort length)
-        {
-            // get the most significant digit
-            int pow = (int) Math.Pow(10, Math.Floor(Math.Log10(addr)));
-            int ldigit = (int)Math.Floor((double)addr / pow);
-            addr = (pow > 1) ? (ushort)(addr % pow) : addr;
-            byte[] data = new byte[length*2];
-            // four operation type
-            switch (ldigit)
-            {
-                case 1:
-                    MBmaster.ReadCoils(1, id, addr, length, ref data);
-                    break;
-                case 2:
-                    MBmaster.ReadDiscreteInputs(2, id, addr, length, ref data);
-                    break;
-                case 3:
-                    MBmaster.ReadInputRegister(3, id, addr, length, ref data);
-                    return (data[0] << 8) + data[1];
-                case 4:
-                    MBmaster.ReadHoldingRegister(4, id, addr, length, ref data);
-                    return (data[0] << 8) + data[1];
-                default:
-                    MBmaster.ReadHoldingRegister(4, id, addr, length, ref data);
-                    break;
-            }
-            return data[0];
-        }
-
-        #endregion
-
         // status delegate
-        delegate void TagHandler(int i, string str);
-        private void RefreshTag(int i, string str)
+        public void RefreshTagList(List<string> list)
         {
-            if (listView_tag.Items.Count > i)
+            Invoke(new TagHandler(RefreshTag), new Object[] { list });
+        }
+        delegate void TagHandler(List<string> list);
+        private void RefreshTag(List<string> list)
+        {
+            int i = 0;
+            foreach (string str in list)
             {
-                listView_tag.Items[i].SubItems[1].Text = str;
+                if (listView_tag.Items.Count > i)
+                {
+                    listView_tag.Items[i++].SubItems[1].Text = str;
+                }
             }
+        }
+
+        private void ProjectDataView_Leave(object sender, EventArgs e)
+        {
+            Utility.modbusWorkerPool.stopViewWorker();
         }
 
     }

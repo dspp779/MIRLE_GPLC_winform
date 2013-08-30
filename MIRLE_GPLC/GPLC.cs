@@ -32,7 +32,7 @@ namespace MIRLE_GPLC
         {
             try
             {
-                user.Authenticate(auth);
+                Auth(auth);
                 return true;
             }
             catch (UnauthorizedException)
