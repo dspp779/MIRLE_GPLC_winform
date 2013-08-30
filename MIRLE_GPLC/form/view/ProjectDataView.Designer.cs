@@ -18,6 +18,7 @@ namespace MIRLE_GPLC.form
             {
                 components.Dispose();
             }
+            Utility.modbusWorkerPool.stopViewWorker();
             base.Dispose(disposing);
         }
 
@@ -74,7 +75,7 @@ namespace MIRLE_GPLC.form
             // 
             this.value.Tag = "1";
             this.value.Text = "值";
-            this.value.Width = 50;
+            this.value.Width = 80;
             // 
             // listView_plc
             // 
@@ -200,7 +201,6 @@ namespace MIRLE_GPLC.form
             this.Controls.Add(this.listView_plc);
             this.Name = "ProjectDataView";
             this.Size = new System.Drawing.Size(458, 306);
-            this.Leave += new System.EventHandler(this.ProjectDataView_Leave);
             this.ResumeLayout(false);
             this.PerformLayout();
 

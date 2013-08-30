@@ -41,18 +41,18 @@ namespace MIRLE_GPLC.form
             this.plcid = plcid;
             this.tag = tag;
             // get scaling info
-            Scaling s = ModelUtil.getScaling(tag.id);
-            if (s != null)
+            if (tag.scale != null)
             {
                 checkBox_scale_linear.Checked = true;
-                comboBox_scale_type.Text = s.scale_type.ToString();
-                textBox_raw_hi.Text = s.raw_hi.ToString();
-                textBox_raw_lo.Text = s.raw_lo.ToString();
-                textBox_scale_hi.Text = s.scale_hi.ToString();
-                textBox_scale_lo.Text = s.scale_lo.ToString();
+                comboBox_scale_type.Text = tag.scale.scale_type.ToString();
+                textBox_raw_hi.Text = tag.scale.raw_hi.ToString();
+                textBox_raw_lo.Text = tag.scale.raw_lo.ToString();
+                textBox_scale_hi.Text = tag.scale.scale_hi.ToString();
+                textBox_scale_lo.Text = tag.scale.scale_lo.ToString();
             }
             else
             {
+                checkBox_scale_linear.Checked = false;
                 comboBox_scale_type.Text = "WORD";
                 textBox_raw_hi.Text = "";
                 textBox_raw_lo.Text = "";

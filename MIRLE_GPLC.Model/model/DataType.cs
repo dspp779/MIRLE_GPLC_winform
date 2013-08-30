@@ -26,8 +26,9 @@ namespace MIRLE_GPLC.Model
                 case DataType.WORD:
                     return 1;
                 case DataType.LONG:
-                case DataType.FLOAT:
                 case DataType.LONG_SWAP:
+                    return 4;
+                case DataType.FLOAT:
                 case DataType.FLOAT_SWAP:
                     return 2;
                 default:

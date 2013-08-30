@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace MIRLE_GPLC.Utility
 {
-    internal class modbusWorker
+    internal class modbusWorker 
     {
         public static ProjectDataView presentView = null;
 
@@ -19,6 +19,7 @@ namespace MIRLE_GPLC.Utility
         public modbusWorker(PLC plc)
         {
             workerThread = new Thread(new ParameterizedThreadStart(modbusTCPWorker));
+            workerThread.IsBackground = true;
             workerThread.Start(plc);
         }
 
@@ -42,15 +43,18 @@ namespace MIRLE_GPLC.Utility
             // initialize modbus TCP/IP
             socket = new ModbusSocket(plc.ip, Convert.ToUInt16(plc.port));
 
+            string [] resultList = new string[plc.tags.Count];
             // read periodically
             while (socket != null && socket.connected)
             {
                 try
                 {
-                    List<string> resultList = new List<string>();
-                    foreach (Tag r in plc.tags)
+                    int i = 0;
+                    foreach (Tag tag in plc.tags)
                     {
-                        resultList.Add(modbusRead(r.id, r.addr, r.type).ToString());
+                        byte[] result = modbusRead(tag.id, tag.addr, tag.type);
+                        resultList[i] = tag.getVal(result).ToString();
+                        i++;
                     }
                     if (presentView != null && !presentView.IsDisposed && !presentView.Disposing)
                     {
@@ -65,41 +69,47 @@ namespace MIRLE_GPLC.Utility
             }
         }
 
-        private long modbusRead(long id, int addr, DataType type)
+        private byte[] modbusRead(long id, int addr, DataType type)
         {
             return modbusRead(Convert.ToByte(id), Convert.ToUInt16(addr), DataTypeUtil.size(type));
         }
-        private long modbusRead(byte id, ushort addr, ushort length)
+        private byte[] modbusRead(byte id, ushort addr, ushort length)
         {
+            byte[] data = new byte[length];
             // get the most significant digit
             int pow = (int)Math.Pow(10, Math.Floor(Math.Log10(addr)));
             int ldigit = (int)Math.Floor((double)addr / pow);
             addr = (pow > 1) ? (ushort)(addr % pow) : addr;
-            byte[] data = new byte[length * 2];
             // four operation type
             switch (ldigit)
             {
                 case 1:
                     socket.ReadCoils(1, id, addr, length, ref data);
-                    break;
+                    return data;
                 case 2:
                     socket.ReadDiscreteInputs(2, id, addr, length, ref data);
-                    break;
+                    return data;
                 case 3:
                     socket.ReadInputRegister(3, id, addr, length, ref data);
-                    return (data[0] << 8) + data[1];
+                    return data;
                 case 4:
                     socket.ReadHoldingRegister(4, id, addr, length, ref data);
-                    return (data[0] << 8) + data[1];
+                    return data;
                 default:
-                    break;
+                    throw new Exception();
             }
-            return 0;
         }
 
-        public void abort()
+        public void stop()
         {
-            this.workerThread.Abort();
+            if (workerThread != null && workerThread.IsAlive)
+            {
+                this.workerThread.Abort();
+            }
+            if (socket != null && socket.connected)
+            {
+                socket.disconnect();
+            }
         }
     }
 }

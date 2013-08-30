@@ -21,7 +21,7 @@ namespace MIRLE_GPLC.Utility
         {
             if (viewWorker != null)
             {
-                viewWorker.abort();
+                viewWorker.stop();
                 viewWorker = null;
             }
         }

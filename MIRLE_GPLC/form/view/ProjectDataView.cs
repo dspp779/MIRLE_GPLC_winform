@@ -291,12 +291,12 @@ namespace MIRLE_GPLC.form
         #endregion
 
         // status delegate
-        public void RefreshTagList(List<string> list)
+        public void RefreshTagList(string[] list)
         {
             Invoke(new TagHandler(RefreshTag), new Object[] { list });
         }
-        delegate void TagHandler(List<string> list);
-        private void RefreshTag(List<string> list)
+        delegate void TagHandler(string[] list);
+        private void RefreshTag(string[] list)
         {
             int i = 0;
             foreach (string str in list)
@@ -306,11 +306,6 @@ namespace MIRLE_GPLC.form
                     listView_tag.Items[i++].SubItems[1].Text = str;
                 }
             }
-        }
-
-        private void ProjectDataView_Leave(object sender, EventArgs e)
-        {
-            Utility.modbusWorkerPool.stopViewWorker();
         }
 
     }

@@ -64,7 +64,7 @@
             this.btnCancel.Location = new System.Drawing.Point(135, 231);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 19;
+            this.btnCancel.TabIndex = 25;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -76,7 +76,7 @@
             this.btnOK.Location = new System.Drawing.Point(29, 231);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 18;
+            this.btnOK.TabIndex = 24;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
@@ -93,14 +93,14 @@
             this.comboBox_format.Location = new System.Drawing.Point(128, 104);
             this.comboBox_format.Name = "comboBox_format";
             this.comboBox_format.Size = new System.Drawing.Size(82, 20);
-            this.comboBox_format.TabIndex = 17;
+            this.comboBox_format.TabIndex = 11;
             // 
             // textBox_addr
             // 
             this.textBox_addr.Location = new System.Drawing.Point(24, 62);
             this.textBox_addr.Name = "textBox_addr";
             this.textBox_addr.Size = new System.Drawing.Size(64, 22);
-            this.textBox_addr.TabIndex = 13;
+            this.textBox_addr.TabIndex = 5;
             // 
             // label3
             // 
@@ -108,7 +108,7 @@
             this.label3.Location = new System.Drawing.Point(126, 87);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(38, 12);
-            this.label3.TabIndex = 16;
+            this.label3.TabIndex = 10;
             this.label3.Text = "Format";
             // 
             // label_type
@@ -117,7 +117,7 @@
             this.label_type.Location = new System.Drawing.Point(126, 46);
             this.label_type.Name = "label_type";
             this.label_type.Size = new System.Drawing.Size(53, 12);
-            this.label_type.TabIndex = 14;
+            this.label_type.TabIndex = 6;
             this.label_type.Text = "Data Type";
             // 
             // label1
@@ -126,7 +126,7 @@
             this.label1.Location = new System.Drawing.Point(25, 47);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(42, 12);
-            this.label1.TabIndex = 12;
+            this.label1.TabIndex = 4;
             this.label1.Text = "Address";
             // 
             // textBox_name
@@ -134,7 +134,7 @@
             this.textBox_name.Location = new System.Drawing.Point(74, 21);
             this.textBox_name.Name = "textBox_name";
             this.textBox_name.Size = new System.Drawing.Size(143, 22);
-            this.textBox_name.TabIndex = 11;
+            this.textBox_name.TabIndex = 3;
             // 
             // label_name
             // 
@@ -142,7 +142,7 @@
             this.label_name.Location = new System.Drawing.Point(8, 24);
             this.label_name.Name = "label_name";
             this.label_name.Size = new System.Drawing.Size(53, 12);
-            this.label_name.TabIndex = 10;
+            this.label_name.TabIndex = 2;
             this.label_name.Text = "Tag Name";
             // 
             // label_field
@@ -152,7 +152,7 @@
             this.label_field.Location = new System.Drawing.Point(7, 1);
             this.label_field.Name = "label_field";
             this.label_field.Size = new System.Drawing.Size(41, 16);
-            this.label_field.TabIndex = 20;
+            this.label_field.TabIndex = 1;
             this.label_field.Text = "field";
             // 
             // comboBox_type
@@ -168,7 +168,7 @@
             this.comboBox_type.Location = new System.Drawing.Point(128, 62);
             this.comboBox_type.Name = "comboBox_type";
             this.comboBox_type.Size = new System.Drawing.Size(82, 20);
-            this.comboBox_type.TabIndex = 21;
+            this.comboBox_type.TabIndex = 7;
             // 
             // groupBox_scaling
             // 
@@ -186,7 +186,7 @@
             this.groupBox_scaling.Location = new System.Drawing.Point(3, 127);
             this.groupBox_scaling.Name = "groupBox_scaling";
             this.groupBox_scaling.Size = new System.Drawing.Size(227, 103);
-            this.groupBox_scaling.TabIndex = 22;
+            this.groupBox_scaling.TabIndex = 12;
             this.groupBox_scaling.TabStop = false;
             this.groupBox_scaling.Text = "Scaling";
             // 
@@ -196,7 +196,7 @@
             this.checkBox_scale_linear.Location = new System.Drawing.Point(11, 21);
             this.checkBox_scale_linear.Name = "checkBox_scale_linear";
             this.checkBox_scale_linear.Size = new System.Drawing.Size(54, 16);
-            this.checkBox_scale_linear.TabIndex = 31;
+            this.checkBox_scale_linear.TabIndex = 13;
             this.checkBox_scale_linear.Text = "Linear";
             this.checkBox_scale_linear.UseVisualStyleBackColor = true;
             this.checkBox_scale_linear.CheckedChanged += new System.EventHandler(this.checkBox_scale_linear_CheckedChanged);
@@ -207,7 +207,7 @@
             this.label7.Location = new System.Drawing.Point(9, 52);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(53, 12);
-            this.label7.TabIndex = 30;
+            this.label7.TabIndex = 14;
             this.label7.Text = "Data Type";
             // 
             // comboBox_scale_type
@@ -218,13 +218,11 @@
             this.comboBox_scale_type.Items.AddRange(new object[] {
             "WORD",
             "LONG",
-            "FLOAT",
-            "LONG SWAP",
-            "FLOAT SWAP"});
+            "FLOAT"});
             this.comboBox_scale_type.Location = new System.Drawing.Point(6, 67);
             this.comboBox_scale_type.Name = "comboBox_scale_type";
             this.comboBox_scale_type.Size = new System.Drawing.Size(82, 20);
-            this.comboBox_scale_type.TabIndex = 24;
+            this.comboBox_scale_type.TabIndex = 15;
             // 
             // label5
             // 
@@ -232,16 +230,16 @@
             this.label5.Location = new System.Drawing.Point(164, 57);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(53, 12);
-            this.label5.TabIndex = 29;
+            this.label5.TabIndex = 22;
             this.label5.Text = "Scale Low";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(99, 57);
+            this.label6.Location = new System.Drawing.Point(163, 17);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(55, 12);
-            this.label6.TabIndex = 26;
+            this.label6.TabIndex = 20;
             this.label6.Text = "Scale High";
             // 
             // textBox_scale_lo
@@ -250,23 +248,23 @@
             this.textBox_scale_lo.Location = new System.Drawing.Point(164, 72);
             this.textBox_scale_lo.Name = "textBox_scale_lo";
             this.textBox_scale_lo.Size = new System.Drawing.Size(58, 22);
-            this.textBox_scale_lo.TabIndex = 28;
+            this.textBox_scale_lo.TabIndex = 23;
             // 
             // textBox_scale_hi
             // 
             this.textBox_scale_hi.Enabled = false;
-            this.textBox_scale_hi.Location = new System.Drawing.Point(100, 72);
+            this.textBox_scale_hi.Location = new System.Drawing.Point(164, 32);
             this.textBox_scale_hi.Name = "textBox_scale_hi";
             this.textBox_scale_hi.Size = new System.Drawing.Size(58, 22);
-            this.textBox_scale_hi.TabIndex = 27;
+            this.textBox_scale_hi.TabIndex = 21;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(164, 17);
+            this.label4.Location = new System.Drawing.Point(100, 57);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(50, 12);
-            this.label4.TabIndex = 25;
+            this.label4.TabIndex = 18;
             this.label4.Text = "Raw Low";
             // 
             // label2
@@ -275,16 +273,16 @@
             this.label2.Location = new System.Drawing.Point(99, 17);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(52, 12);
-            this.label2.TabIndex = 23;
+            this.label2.TabIndex = 16;
             this.label2.Text = "Raw High";
             // 
             // textBox_raw_lo
             // 
             this.textBox_raw_lo.Enabled = false;
-            this.textBox_raw_lo.Location = new System.Drawing.Point(164, 32);
+            this.textBox_raw_lo.Location = new System.Drawing.Point(100, 72);
             this.textBox_raw_lo.Name = "textBox_raw_lo";
             this.textBox_raw_lo.Size = new System.Drawing.Size(58, 22);
-            this.textBox_raw_lo.TabIndex = 24;
+            this.textBox_raw_lo.TabIndex = 19;
             // 
             // textBox_raw_hi
             // 
@@ -292,14 +290,14 @@
             this.textBox_raw_hi.Location = new System.Drawing.Point(100, 32);
             this.textBox_raw_hi.Name = "textBox_raw_hi";
             this.textBox_raw_hi.Size = new System.Drawing.Size(57, 22);
-            this.textBox_raw_hi.TabIndex = 23;
+            this.textBox_raw_hi.TabIndex = 17;
             // 
             // textBox_unit
             // 
             this.textBox_unit.Location = new System.Drawing.Point(24, 102);
             this.textBox_unit.Name = "textBox_unit";
             this.textBox_unit.Size = new System.Drawing.Size(64, 22);
-            this.textBox_unit.TabIndex = 24;
+            this.textBox_unit.TabIndex = 9;
             // 
             // label8
             // 
@@ -307,7 +305,7 @@
             this.label8.Location = new System.Drawing.Point(25, 87);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(25, 12);
-            this.label8.TabIndex = 23;
+            this.label8.TabIndex = 8;
             this.label8.Text = "Unit";
             // 
             // label_info

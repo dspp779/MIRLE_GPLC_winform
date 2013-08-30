@@ -58,5 +58,22 @@ namespace MIRLE_GPLC.Model
             double.Parse(raw_hi), double.Parse(raw_lo), double.Parse(scale_hi), double.Parse(scale_lo))
         {
         }
+
+        public ValueType Scale(double val)
+        {
+            double r = val * (scale_hi - scale_lo) / (raw_hi - raw_lo) + scale_lo;
+            switch(scale_type)
+            {
+                case DataType.WORD:
+                    return Convert.ToInt16(r);
+                case DataType.LONG:
+                    return Convert.ToInt64(r);
+                case DataType.FLOAT:
+                    return Convert.ToSingle(r);
+                default:
+                    throw new Exception();
+            }
+        }
+
     }
 }

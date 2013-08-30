@@ -14,8 +14,19 @@ namespace MIRLE_GPLC.Model
         private string _unit;
         private string _alias;
         private long _plcid;
+        private Scaling _scale;
 
-        public Scaling scale;
+        public Scaling scale
+        {
+            get
+            {
+                if (_scale == null)
+                {
+                    _scale = ModelUtil.getScaling(_id);
+                }
+                return _scale;
+            }
+        }
 
         public long id
         {
@@ -65,7 +76,24 @@ namespace MIRLE_GPLC.Model
         public Tag(long id, string alias, string addr, string type, string format, string unit, long plcid)
             : this(id, alias, int.Parse(addr), (DataType)System.Enum.Parse(typeof(DataType), type), format, unit, plcid)
         {
+
         }
 
+        public string getVal(byte[] rawVal)
+        {
+            var val = ScaleUtil.getVal(rawVal, type);
+            if (type == DataType.WORD && scale != null)
+            {
+                val = scale.Scale(Convert.ToDouble(val));
+            }
+            return Formatting(val) + ' ' + unit;
+        }
+
+        private string Formatting(ValueType val)
+        {
+            int i = format.IndexOf('.');
+            string str = i < 0 ? "" : format.Substring(i).Replace('#', '0');
+            return string.Format("{0:" + str + "}", val);
+        }
     }
 }
