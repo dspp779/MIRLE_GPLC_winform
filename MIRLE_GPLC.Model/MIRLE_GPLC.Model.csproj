@@ -77,7 +77,6 @@
     <Compile Include="model\ProjectData.cs" />
     <Compile Include="model\Tag.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\SQLiteDBMS\SQLiteDBMS.csproj">
       <Project>{c0d6d150-b314-4471-aa12-d6a75d79aba7}</Project>

@@ -18,21 +18,28 @@ namespace MIRLE_GPLC.form
         public ToolTipContentContainer(GMapMarker marker)
         {
             InitializeComponent();
+            // Input(modify or add) project container size
             this.Size = new Size(305, 400);
+            // init project data input control
             projectDataInputControl.init(marker);
         }
 
         public ToolTipContentContainer(List<ProjectMarker> markers)
         {
             InitializeComponent();
+            // view project container size
             this.Size = new Size(540, 400);
+            /* set project view control to modbus worker
+             * so that it can modify project view contents
+             *  */
             Utility.modbusWorker.presentView = projectDataView;
+            // init project view control
             projectDataView.init(markers);
         }
 
         private void ToolTipContentContainer_Load(object sender, EventArgs e)
         {
-            this.VisibleChanged += new EventHandler(ToolTipVisibleChanged);
+            //this.VisibleChanged += new EventHandler(ToolTipVisibleChanged);
         }
 
         private void button_close_Click(object sender, EventArgs e)
