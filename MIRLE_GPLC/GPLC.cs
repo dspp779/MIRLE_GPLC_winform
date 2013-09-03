@@ -28,6 +28,9 @@ namespace MIRLE_GPLC
             mainForm.Refresh();
         }
 
+        /* check if current user has the authority to do operation
+         * return true or false
+         * */
         public static bool AuthVerify(GPLCAuthority auth)
         {
             try
@@ -40,6 +43,9 @@ namespace MIRLE_GPLC
                 return false;
             }
         }
+        /* check if current user has the authority to do operation
+         * throw exception when current user has no enough authority
+         * */
         public static void Auth(GPLCAuthority auth)
         {
             user.Authenticate(auth);

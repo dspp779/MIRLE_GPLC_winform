@@ -15,6 +15,7 @@ namespace MIRLE_GPLC.Setting
 
         static GPLCSetting()
         {
+            // xml writing setting
             WriterSetting.Indent = true;
             WriterSetting.IndentChars = "\t";
 
@@ -29,11 +30,13 @@ namespace MIRLE_GPLC.Setting
             }
         }
 
+        // load setting file
         internal static void load()
         {
             doc.Load(settingFilePath);
         }
 
+        // save setting file
         internal static void save()
         {
             using (XmlWriter writer = XmlWriter.Create(settingFilePath, WriterSetting))
@@ -42,17 +45,20 @@ namespace MIRLE_GPLC.Setting
             }
         }
 
+        // read setting
         internal static string settingRead(string nodePath)
         {
             return doc.SelectSingleNode(nodePath).InnerText;
         }
 
+        // write setting
         internal static void settingWrite(string nodePath, string value)
         {
             doc.SelectSingleNode(nodePath).InnerText = value;
             save();
         }
 
+        // restore default setting
         internal static void RestoreDefaultSetting()
         {
             doc = new XmlDocument();

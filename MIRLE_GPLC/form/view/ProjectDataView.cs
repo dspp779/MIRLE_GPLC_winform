@@ -50,6 +50,7 @@ namespace MIRLE_GPLC.form
                 Refresh();
             }
         }
+        // index of last selected plc 
         private int lastSelectedPLC
         {
             get
@@ -65,8 +66,9 @@ namespace MIRLE_GPLC.form
                 }*/
                 _lastSelectedPLC = value;
 
+                // index of the last selected plc should not be over the list range
                 Debug.Assert(_lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count);
-
+                // refresh tag list corresponding to the selected plc
                 refreshTagList();
             }
         }
@@ -75,6 +77,7 @@ namespace MIRLE_GPLC.form
         {
             InitializeComponent();
         }
+
         public void init(List<ProjectMarker> markers)
         {
             if (markers.Count == 0)
@@ -85,8 +88,7 @@ namespace MIRLE_GPLC.form
             // Assign the list of markers
             this.markers = markers;
 
-            // Sort the list of markers if you want to
-            // Exclude this if you dont care about order
+            // Sort the list of markers
             this.markers.Sort(
                 delegate(ProjectMarker m1, ProjectMarker m2)
                 {
@@ -95,9 +97,9 @@ namespace MIRLE_GPLC.form
             );
 
             // Show the first marker
-            buttonBack.Enabled = buttonNext.Enabled = (markers.Count != 1);
             ShownMarker = 0;
 
+            buttonBack.Enabled = buttonNext.Enabled = (markers.Count != 1);
             this.Show();
         }
 
@@ -105,29 +107,38 @@ namespace MIRLE_GPLC.form
 
         public override void Refresh()
         {
-            // hide input control
+            // hide input controls
             plcInputControl.Hide();
             tagInputControl1.Hide();
+            // show listViews
             this.listView_tag.Show();
             this.listView_plc.Show();
+            // refresh
             refreshPLCList();
             base.Refresh();
         }
         private void refreshPLCList()
         {
+            // current project
             ProjectData project = markers[_shownMarker].ProjectData;
+            // loading plc list of the project
             project.reload();
 
+            // clear the listView
             listView_plc.Items.Clear();
             listView_tag.Items.Clear();
+            // put plc list into listView
             foreach (PLC plc in project.plcs)
             {
+                // set listView item 
                 ListViewItem item = new ListViewItem(plc.alias);
                 item.SubItems.Add(plc.netid.ToString());
                 item.SubItems.Add(plc.ip);
                 item.SubItems.Add(plc.port.ToString());
+                // add to listView
                 listView_plc.Items.Add(item);
             }
+            // if last selection, refresh tag list as well
             if (lastSelectedPLC >= 0)
             {
                 listView_plc.Items[lastSelectedPLC].Selected = true;
@@ -135,16 +146,22 @@ namespace MIRLE_GPLC.form
         }
         private void refreshTagList()
         {
+            // clear tag listView
             listView_tag.Items.Clear();
+            // if no plc seleted, no need to refresh tag list
             if (lastSelectedPLC < 0)
             {
                 return;
             }
 
+            // check if index is in correct range
             Debug.Assert(lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count);
 
+            // last selected plc
             PLC plc = markers[_shownMarker].ProjectData.plcs[lastSelectedPLC];
+            // load tag list of the plc
             plc.reload();
+            // refresh the listView
             foreach (Tag r in plc.tags)
             {
                 ListViewItem item = new ListViewItem(r.alias);
@@ -152,6 +169,7 @@ namespace MIRLE_GPLC.form
                 listView_tag.Items.Add(item);
             }
 
+            // lauch modbus TCP worker responsible for refresh value of the tag
             Utility.modbusWorkerPool.lauchViewWorker(plc);
         }
 
@@ -159,6 +177,7 @@ namespace MIRLE_GPLC.form
 
         #region -- Event Handler --
 
+        // button clicks for changing shown marker
         private void buttonBack_Click(object sender, EventArgs e)
         {
             ShownMarker--;
@@ -168,59 +187,105 @@ namespace MIRLE_GPLC.form
             ShownMarker++;
         }
 
+        // selection change in plc list view, selected plc would be saved
         private void listView_plc_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listView_plc.SelectedIndices.Count > 0)
             {
+                // set last selected plc
                 lastSelectedPLC = listView_plc.SelectedIndices[0];
+                // avoid no selection
                 listView_plc.HideSelection = false;
             }
         }
+        // double click event for plc listView : modify or add a plc
         private void listView_plc_DoubleClick(object sender, EventArgs e)
         {
+            // check if current user has the authority to do this operation
             if (GPLC.AuthVerify(Security.GPLCAuthority.Administrator))
             {
+                // get the index of selected plc, -1 if no selection
                 int index = listView_plc.SelectedIndices.Count > 0 ? listView_plc.SelectedIndices[0] : -1;
+                // show plc edit control
                 PLCEditControl(index);
             }
         }
         private void listView_tag_DoubleClick(object sender, EventArgs e)
         {
+            // check if current user has the authority to do this operation
             if (GPLC.AuthVerify(Security.GPLCAuthority.Administrator))
             {
+                // get the index of selected plc, -1 if no selection
                 int index = listView_tag.SelectedIndices.Count > 0 ? listView_tag.SelectedIndices[0] : -1;
-                TagControl(index);
+                // show tag edit control
+                TagEditControl(index);
             }
         }
 
         private void listView_plc_KeyDown(object sender, KeyEventArgs e)
         {
+            // delete operation for plc
             if (e.KeyCode == Keys.Delete && lastSelectedPLC >= 0)
             {
-                Debug.Assert(lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count);
-                PLC plc = markers[_shownMarker].ProjectData.plcs[lastSelectedPLC];
-                ModelUtil.deletePLC(plc.id);
-                refreshPLCList();
+                // check if current user has the authority to do this operation
+                if (GPLC.AuthVerify(Security.GPLCAuthority.Administrator))
+                {
+                    // index of the last selected plc should not be over the list range
+                    Debug.Assert(lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count);
+
+                    // last selected plc
+                    PLC plc = markers[_shownMarker].ProjectData.plcs[lastSelectedPLC];
+                    // db operation
+                    ModelUtil.deletePLC(plc.id);
+                    // refresh list
+                    refreshPLCList();
+                }
             }
         }
         private void listView_tag_KeyDown(object sender, KeyEventArgs e)
         {
+            // delete operation for tag
             if (e.KeyCode == Keys.Delete && lastSelectedPLC >= 0)
             {
-                Debug.Assert(lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count);
-                if (listView_tag.SelectedIndices.Count > 0)
+                // check if current user has the authority to do this operation
+                if (GPLC.AuthVerify(Security.GPLCAuthority.Administrator))
                 {
-                    int index = listView_tag.SelectedIndices[0];
-                    PLC plc = markers[_shownMarker].ProjectData.plcs[lastSelectedPLC];
-                    ModelUtil.deleteTag(plc.tags[index].id);
-                    refreshTagList();
+                    // index of the last selected plc should not be over the list range
+                    Debug.Assert(lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count);
+
+                    if (listView_tag.SelectedIndices.Count > 0)
+                    {
+                        // last selected plc
+                        PLC plc = markers[_shownMarker].ProjectData.plcs[lastSelectedPLC];
+                        // last selected tag
+                        int index = listView_tag.SelectedIndices[0];
+                        // db operation
+                        ModelUtil.deleteTag(plc.tags[index].id);
+                        // refresh tag list
+                        refreshTagList();
+                    }
                 }
+            }
+        }
+        private void listView_plc_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (listView_plc.Visible && listView_plc.SelectedIndices.Count <= 0)
+            {
+                // set no selection
+                lastSelectedPLC = -1;
+                // hide selected when no selection
+                listView_plc.HideSelection = true;
             }
         }
 
         #endregion
 
         #region -- mouse double click event for non-item area --
+
+        /* Since there's no double click event triggered in non-item area
+         * for an listView control, extra effort needs to be made to achieve
+         * triggering double clicked event in non-item area for lisView control
+         * */
 
         private void listView_plc_MouseDown(object sender, MouseEventArgs e)
         {
@@ -236,14 +301,6 @@ namespace MIRLE_GPLC.form
                 listView_tag_DoubleClick(sender, e);
             }
         }
-        private void listView_plc_MouseUp(object sender, MouseEventArgs e)
-        {
-            if(listView_plc.Visible && listView_plc.SelectedIndices.Count <= 0)
-            {
-                lastSelectedPLC = -1;
-                listView_plc.HideSelection = true;
-            }
-        }
 
         #endregion
 
@@ -254,18 +311,21 @@ namespace MIRLE_GPLC.form
             this.listView_tag.Hide();
             //this.listView_plc.Hide();
 
+            // current project
             ProjectData project = markers[ShownMarker].ProjectData;
 
+            // add a plc
             if (index < 0)
             {
                 plcInputControl.init(project);
             }
+            // modify a plc
             else
             {
                 plcInputControl.init(project, project.plcs[index]);
             }
         }
-        private void TagControl(int index)
+        private void TagEditControl(int index)
         {
             if (lastSelectedPLC < 0)
             {
@@ -275,12 +335,15 @@ namespace MIRLE_GPLC.form
             //this.listView_tag.Hide();
             this.listView_plc.Hide();
 
+            // last selected plc
             PLC plc = markers[ShownMarker].ProjectData.plcs[lastSelectedPLC];
 
+            // add a tag
             if (index < 0)
             {
                 tagInputControl1.init(plc.id);
             }
+            // modify a tag
             else
             {
                 Debug.Assert(index < plc.tags.Count);
@@ -290,7 +353,7 @@ namespace MIRLE_GPLC.form
 
         #endregion
 
-        // status delegate
+        // tag list refresh delegate, for modbus TCP worker's modification
         public void RefreshTagList(string[] list)
         {
             Invoke(new TagHandler(RefreshTag), new Object[] { list });

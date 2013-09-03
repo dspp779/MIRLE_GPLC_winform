@@ -22,8 +22,8 @@ namespace MIRLE_GPLC.form
 
         private void btn_ok_Click(object sender, EventArgs e)
         {
-            id = textBox_id.Text.Trim();
-            pass = textBox_pass.Text.Trim();
+            id = textBox_id.Text;
+            pass = textBox_pass.Text;
             if (id.Length < 3)
             {
                 label_help.Text = "ID must be at least 3 characters long";

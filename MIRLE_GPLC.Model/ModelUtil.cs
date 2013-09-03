@@ -12,7 +12,7 @@ namespace MIRLE_GPLC.Model
 {
     public class ModelUtil
     {
-
+        // execute update command, return number of modified records
         private static int executeUpdate(string sql)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(sql))
@@ -20,6 +20,7 @@ namespace MIRLE_GPLC.Model
                 return SQLiteDBMS.execUpdate(cmd);
             }
         }
+        // get row ID of the last inserted record
         private static int getLastInsertRowId()
         {
             using (SQLiteConnection conn = SQLiteDBMS.getConnection())
@@ -35,13 +36,16 @@ namespace MIRLE_GPLC.Model
 
         #region -- table creation --
 
+        /* Here's methods that create the schema for this application
+         * You can find table definition in TABLE.txt under MIRLE.GPLC.Model.
+         * */
+
         private static void createProjectTable()
         {
             string schema =
                 "CREATE TABLE Project ( id INTEGER, name TEXT, addr TEXT, lat REAL, lng REAL )";
             executeUpdate(schema);
         }
-
         private static void createPLCTable()
         {
             string schema = "CREATE TABLE PLC ( id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -49,7 +53,6 @@ namespace MIRLE_GPLC.Model
                 + " polling_rate INT, project_id INTEGER )";
             executeUpdate(schema);
         }
-
         private static void createTagTable()
         {
             string schema = "CREATE TABLE Tag ( id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -57,7 +60,6 @@ namespace MIRLE_GPLC.Model
                 + " plc_id INTEGER )";
             executeUpdate(schema);
         }
-
         private static void createScalingTable()
         {
             string schema = "CREATE TABLE Scaling ( scale_type VARCHAR(10), raw_hi REAL, raw_lo REAL,"
@@ -68,6 +70,11 @@ namespace MIRLE_GPLC.Model
         #endregion
 
         #region -- insert model --
+
+        /* insert methods for model
+         * using parameters instead of directly string utility
+         * can avoid malicious operation such as SQL injection.
+         * */
 
         public static int insertProject(ProjectData p)
         {
@@ -89,9 +96,9 @@ namespace MIRLE_GPLC.Model
 
         public static int insertPLC(PLC plc, long project_id)
         {
-            return insertPLC(plc.netid, plc.ip, plc.port, plc.alias, plc.polling_rate, project_id);
+            return insertPLC(plc.alias, plc.netid, plc.ip, plc.port, plc.polling_rate, project_id);
         }
-        public static int insertPLC(int netid, string ip, int port, string alias, int polling_rate, long project_id)
+        public static int insertPLC(string alias, int netid, string ip, int port, int polling_rate, long project_id)
         {
             using (SQLiteCommand cmd = new SQLiteCommand(
                 "INSERT INTO PLC (net_id, net_ip, net_port, alias, polling_rate, project_id) "
@@ -135,51 +142,6 @@ namespace MIRLE_GPLC.Model
 
         }
 
-        public static void insertTag(List<Tag> list, long plc_id)
-        {
-            using (SQLiteConnection conn = SQLiteDBMS.getConnection())
-            {
-                using (SQLiteTransaction transaction = conn.BeginTransaction())
-                {
-                    using (SQLiteCommand cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText =
-                            "INSERT INTO Tag (alias, addr, data_type, format, unit, raw_hi, raw_lo, scale_type, scale_hi, scale_lo, plc_id)"
-                            + " values (@alias, @addr, @data_type, @format, @unit, @raw_hi, @raw_lo, @scale_type, @scale_hi, @scale_lo, @plc_id)";
-                        cmd.Parameters.Add("@alias", DbType.String);
-                        cmd.Parameters.Add("@addr", DbType.Int32);
-                        cmd.Parameters.Add("@data_type", DbType.String);
-                        cmd.Parameters.Add("@format", DbType.String);
-                        cmd.Parameters.Add("@unit", DbType.String);
-                        // scale
-                        cmd.Parameters.Add("@scale_type", DbType.String);
-                        cmd.Parameters.Add("@raw_hi", DbType.Double);
-                        cmd.Parameters.Add("@raw_lo", DbType.Double);
-                        cmd.Parameters.Add("@scale_hi", DbType.Double);
-                        cmd.Parameters.Add("@scale_lo", DbType.Double);
-                        // foreigh
-                        cmd.Parameters.Add("@plc_id", DbType.Int64);
-                        foreach (Tag tag in list)
-                        {
-                            insertTag(cmd, tag, plc_id);
-                        }
-                    }
-                    transaction.Commit();
-                }
-            }
-        }
-        private static int insertTag(SQLiteCommand cmd, Tag tag, long id)
-        {
-            cmd.Parameters["@alias"].Value = tag.alias;
-            cmd.Parameters["@addr"].Value = tag.addr;
-            cmd.Parameters["@data_type"].Value = tag.type.ToString();
-            cmd.Parameters["@format"].Value = tag.format;
-            cmd.Parameters["@unit"].Value = tag.unit;
-            // foreigh
-            cmd.Parameters["@plc_id"].Value = id;
-            return cmd.ExecuteNonQuery();
-        }
-
         public static int insertScaling(Scaling s, long tag_id)
         {
             return insertScaling(s._scale_type.ToString(), s._raw_hi, s._raw_lo, s._scale_hi, s._scale_lo, tag_id);
@@ -201,9 +163,52 @@ namespace MIRLE_GPLC.Model
             }
         }
 
+        /* method for bulk insert (not tested yet)
+         * using transaction to achieve this demand
+         * a transaction is an atomic sql operation
+         * operations in a transaction are zero-or-none.
+         * */
+        public static void insertTag(List<Tag> list, long plc_id)
+        {
+            using (SQLiteConnection conn = SQLiteDBMS.getConnection())
+            {
+                using (SQLiteTransaction transaction = conn.BeginTransaction())
+                {
+                    using (SQLiteCommand cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText =
+                            "INSERT INTO Tag (alias, addr, data_type, format, unit, plc_id) "
+                            + "values (@alias, @addr, @data_type, @format, @unit, @plc_id)";
+                        cmd.Parameters.Add("@alias", DbType.String);
+                        cmd.Parameters.Add("@addr", DbType.Int32);
+                        cmd.Parameters.Add("@data_type", DbType.String);
+                        cmd.Parameters.Add("@format", DbType.String);
+                        cmd.Parameters.Add("@unit", DbType.String);
+                        foreach (Tag tag in list)
+                        {
+                            insertTag(cmd, tag, plc_id);
+                        }
+                    }
+                    transaction.Commit();
+                }
+            }
+        }
+        private static int insertTag(SQLiteCommand cmd, Tag tag, long id)
+        {
+            cmd.Parameters["@alias"].Value = tag.alias;
+            cmd.Parameters["@addr"].Value = tag.addr;
+            cmd.Parameters["@data_type"].Value = tag.type.ToString();
+            cmd.Parameters["@format"].Value = tag.format;
+            cmd.Parameters["@unit"].Value = tag.unit;
+            return cmd.ExecuteNonQuery();
+        }
+
         #endregion
 
         #region -- get model list --
+
+        /* methods that get list of model
+         * */
 
         public static List<ProjectData> getProjectList()
         {
@@ -218,6 +223,7 @@ namespace MIRLE_GPLC.Model
                     {
                         while (reader.Read())
                         {
+                            // get column values
                             pList.Add(
                                 new ProjectData(reader.GetInt64(0), reader.GetString(1),
                                 reader.GetString(2), reader.GetDouble(3), reader.GetDouble(4), null)
@@ -227,9 +233,14 @@ namespace MIRLE_GPLC.Model
                 }
                 return pList;
             }
-            catch (SQLiteException)
+            catch (SQLiteException ex)
             {
-                createProjectTable();
+                // table not exist
+                if (ex.ErrorCode == 1)
+                {
+                    createProjectTable();
+                }
+
                 return new List<ProjectData>();
             }
             catch (Exception)
@@ -237,7 +248,6 @@ namespace MIRLE_GPLC.Model
                 return new List<ProjectData>();
             }
         }
-
         public static List<PLC> getPLCList(long project_id)
         {
             try
@@ -262,9 +272,13 @@ namespace MIRLE_GPLC.Model
                     return pList;
                 }
             }
-            catch (SQLiteException)
+            catch (SQLiteException ex)
             {
-                createPLCTable();
+                // table not exist
+                if (ex.ErrorCode == 1)
+                {
+                    createPLCTable();
+                }
                 return new List<PLC>();
             }
             catch (Exception)
@@ -272,7 +286,6 @@ namespace MIRLE_GPLC.Model
                 return new List<PLC>();
             }
         }
-
         public static List<Tag> getTagList(long plc_id)
         {
             try
@@ -296,13 +309,16 @@ namespace MIRLE_GPLC.Model
                     return list;
                 }
             }
-            catch (SQLiteException)
+            catch (SQLiteException ex)
             {
-                createTagTable();
+                // table not exist
+                if (ex.ErrorCode == 1)
+                {
+                    createTagTable();
+                }
             }
             return new List<Tag>();
         }
-
         public static Scaling getScaling(long tag_id)
         {
             try
@@ -323,9 +339,13 @@ namespace MIRLE_GPLC.Model
                     }
                 }
             }
-            catch (SQLiteException)
+            catch (SQLiteException ex)
             {
-                createScalingTable();
+                // table not exist
+                if (ex.ErrorCode == 1)
+                {
+                    createScalingTable();
+                }
             }
             return null;
         }
@@ -333,6 +353,11 @@ namespace MIRLE_GPLC.Model
         #endregion
 
         #region -- update model --
+
+        /* update methods for model
+         * using parameters instead of directly string utility
+         * can avoid malicious operation such as SQL injection.
+         * */
 
         public static int updateProject(long id, string name, string addr, double lat, double lng, long oid)
         {
@@ -417,8 +442,14 @@ namespace MIRLE_GPLC.Model
 
         #region -- delete model --
 
+        /* delete methods for model
+         * using parameters instead of directly string utility
+         * can avoid malicious operation such as SQL injection.
+         * */
+
         public static int deleteProject(long id)
         {
+            // delete a project also delete its PLCs
             deletePLCs(id);
             using (SQLiteCommand cmd = new SQLiteCommand(
                 "delete FROM Project WHERE id=@id"))
@@ -430,6 +461,7 @@ namespace MIRLE_GPLC.Model
 
         public static int deletePLC(long id)
         {
+            // delete a plc also delete its tags
             deleteTags(id);
             using (SQLiteCommand cmd = new SQLiteCommand(
                 "delete FROM PLC WHERE id=@id"))    
@@ -440,6 +472,7 @@ namespace MIRLE_GPLC.Model
         }
         private static int deletePLCs(long project_id)
         {
+            // delete PLCs also delete their tags
             foreach (PLC plc in getPLCList(project_id))
             {
                 deleteTags(plc.id);
@@ -454,6 +487,7 @@ namespace MIRLE_GPLC.Model
 
         public static int deleteTag(long id)
         {
+            // delete a tag also delete its scale info
             deleteScaling(id);
             using (SQLiteCommand cmd = new SQLiteCommand(
                 "delete FROM Tag WHERE id=@id"))
@@ -464,6 +498,7 @@ namespace MIRLE_GPLC.Model
         }
         private static int deleteTags(long plc_id)
         {
+            // delete tags also delete their scale info
             foreach (Tag tag in getTagList(plc_id))
             {
                 deleteScaling(tag.id);
@@ -485,30 +520,38 @@ namespace MIRLE_GPLC.Model
                 return SQLiteDBMS.execUpdate(cmd);
             }
         }
+
         #endregion
 
         #region -- input method --
 
         public static int inputPLC(PLC p, long project_id)
         {
+            /* update plc record
+             * insert a new if not exist
+             * */
             if (updatePLC(p) < 1)
             {
                 return insertPLC(p, project_id);
             }
             return -1;
         }
-
         public static int inputTag(Tag tag)
         {
+            /* update tag record
+             * insert a new if not exist
+             * */
             if (tag.id < 0 || updateTag(tag) < 1)
             {
                 return insertTag(tag);
             }
             return -1;
         }
-
         public static int inputScaling(Scaling s, long tag_id)
         {
+            /* update scale record
+             * insert a new if not exist
+             * */
             if (updateScaling(s, tag_id) < 1)
             {
                 return insertScaling(s, tag_id);
@@ -520,10 +563,12 @@ namespace MIRLE_GPLC.Model
 
         #region -- db file operation --
 
+        // set db file path
         public static void setPath(string path)
         {
             SQLiteDBMS.setDBPath(path);
         }
+        // copy current db file to specified path
         public static void copyTo(string path)
         {
             SQLiteDBMS.copyTo(path);

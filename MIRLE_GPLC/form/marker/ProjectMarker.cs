@@ -8,6 +8,9 @@ using System.Text;
 
 namespace MIRLE_GPLC.form.marker
 {
+    /* ProjectMaker is just an type of Google type marker
+     * with specified style, and corresponding ProjectData
+     * */
     internal class ProjectMarker : GMarkerGoogle
     {
         private ProjectData project;

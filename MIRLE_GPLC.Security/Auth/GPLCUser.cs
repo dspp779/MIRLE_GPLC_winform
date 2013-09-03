@@ -36,9 +36,29 @@ namespace MIRLE_GPLC.Security
             this.pass = pass;
         }
 
+        // get auth of anonymous
         public void Authenticate()
         {
             _authority = GPLCAuthority.Anonymous;
+        }
+        // get auth by id and password
+        public void Authenticate(string id, string pass)
+        {
+            this.id = id;
+            this.pass = pass;
+            try
+            {
+                /* create user and set its authority
+                 * SecureUtil.newUser(id, pass, GPLCAuthority.Administrator);
+                 * */
+                // verify id and passwod
+                _authority = SecureUtil.Authenticate(id, pass);
+            }
+            catch (WrongIdPassException ex)
+            {
+                _authority = GPLCAuthority.Anonymous;
+                throw ex;
+            }
         }
 
         // check if the user has the authority equal to or higher than a specific auth
@@ -47,23 +67,6 @@ namespace MIRLE_GPLC.Security
             if (authority > auth)
             {
                 throw new UnauthorizedException(auth);
-            }
-        }
-
-        // get auth by id and password
-        public void Authenticate(string id, string pass)
-        {
-            this.id = id;
-            this.pass = pass;
-            try
-            {
-                SecureUtil.newUser(id, pass, GPLCAuthority.Administrator);
-                _authority = SecureUtil.Authenticate(id, pass);
-            }
-            catch (WrongIdPassException ex)
-            {
-                _authority = GPLCAuthority.Anonymous;
-                throw ex;
             }
         }
 

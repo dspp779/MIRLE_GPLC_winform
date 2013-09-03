@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MIRLE_GPLC.Security
 {
+    // enum for authority
     public enum GPLCAuthority : byte
     {
         Administrator = 0,

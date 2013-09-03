@@ -11,18 +11,24 @@ namespace MIRLE_GPLC.Utility
 {
     internal class modbusWorker 
     {
+        // reference of project data view, for calling refresh data of tag list
         public static ProjectDataView presentView = null;
 
+        // worker thread is responsible for refresh data of plc's tags
         private Thread workerThread;
+        // socket object for the worer
         private ModbusSocket socket;
 
         public modbusWorker(PLC plc)
         {
+            // initial thread
             workerThread = new Thread(new ParameterizedThreadStart(modbusTCPWorker));
             workerThread.IsBackground = true;
+            // start the thread
             workerThread.Start(plc);
         }
 
+        // worker thread method
         private void modbusTCPWorker(object o)
         {
             try
@@ -52,10 +58,13 @@ namespace MIRLE_GPLC.Utility
                     int i = 0;
                     foreach (Tag tag in plc.tags)
                     {
+                        // get rawval from plc
                         byte[] result = modbusRead(tag.id, tag.addr, tag.type);
+                        // manipulate rawval into presentation form
                         resultList[i] = tag.getVal(result).ToString();
                         i++;
                     }
+                    // refresh data in project data view
                     if (presentView != null && !presentView.IsDisposed && !presentView.Disposing)
                     {
                         presentView.RefreshTagList(resultList);
@@ -69,9 +78,10 @@ namespace MIRLE_GPLC.Utility
             }
         }
 
+        // read rawval from plc
         private byte[] modbusRead(long id, int addr, DataType type)
         {
-            return modbusRead(Convert.ToByte(id), Convert.ToUInt16(addr), DataTypeUtil.size(type));
+            return modbusRead(Convert.ToByte(id), Convert.ToUInt16(addr), DataUtil.size(type));
         }
         private byte[] modbusRead(byte id, ushort addr, ushort length)
         {
@@ -100,6 +110,7 @@ namespace MIRLE_GPLC.Utility
             }
         }
 
+        // stop the worker thread
         public void stop()
         {
             if (workerThread != null && workerThread.IsAlive)

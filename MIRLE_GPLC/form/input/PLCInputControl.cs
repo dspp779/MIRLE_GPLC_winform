@@ -56,16 +56,23 @@ namespace MIRLE_GPLC.form
                 // check authentication
                 GPLC.Auth(GPLCAuthority.Administrator);
 
+                // parse textBox
+                string alias = textBox_name.Text;
+                int net_id = int.Parse(textBox_net_ID.Text);
+                string ip = textBox_net_ip.Text;
+                int port = int.Parse(textBox_net_port.Text);
+                int poll_rate = int.Parse(textBox_poll_rate.Text);
+
                 if (plc != null)
                 {
-                    plc = new PLC(plc.id, textBox_name.Text, int.Parse(textBox_net_ID.Text), textBox_net_ip.Text,
-                        int.Parse(textBox_net_port.Text), int.Parse(textBox_poll_rate.Text), null);
+                    plc = new PLC(plc.id, alias, net_id, ip, port, poll_rate, null);
+                    // input plc : update record if exist; otherwise, insert a new one
                     ModelUtil.inputPLC(plc, project.id);
                 }
+                // insert a new plc
                 else
                 {
-                    ModelUtil.insertPLC(int.Parse(textBox_net_ID.Text), textBox_net_ip.Text,
-                        int.Parse(textBox_net_port.Text), textBox_name.Text, int.Parse(textBox_poll_rate.Text), project.id);
+                    ModelUtil.insertPLC(alias, net_id, ip, port, poll_rate, project.id);
                 }
                 this.Parent.Refresh();
             }

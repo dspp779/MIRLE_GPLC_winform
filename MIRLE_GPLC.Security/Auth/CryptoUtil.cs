@@ -9,7 +9,7 @@ namespace MIRLE_GPLC.Security
 {
     internal static class CryptoUtil
     {
-
+        // encrypt an string to sha1 encoding
         internal static string encryptSHA1(string str)
         {
             byte[] data = Encoding.Default.GetBytes(str);

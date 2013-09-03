@@ -10,6 +10,7 @@ namespace MIRLE_GPLC.Security
 {
     internal static class SecureUtil
     {
+        // check authentication from database
         internal static GPLCAuthority Authenticate(string id, string pass)
         {
             try
@@ -17,7 +18,8 @@ namespace MIRLE_GPLC.Security
                 using (SQLiteConnection conn = SQLiteDBMS.getConnection())
                 {
                     conn.Open();
-                    SQLiteCommand cmd = new SQLiteCommand("SELECT auth FROM User WHERE id=@id AND pass=@pass", conn);
+                    SQLiteCommand cmd =
+                        new SQLiteCommand("SELECT auth FROM User WHERE id=@id AND pass=@pass", conn);
                     cmd.Parameters.Add("@id", DbType.String).Value = id;
                     cmd.Parameters.Add("@pass", DbType.String).Value = CryptoUtil.encryptSHA1(pass);
                     using (SQLiteDataReader reader = cmd.ExecuteReader())
@@ -45,7 +47,7 @@ namespace MIRLE_GPLC.Security
             }
             return GPLCAuthority.Anonymous;
         }
-
+        // create a new user
         internal static void newUser(string id, string pass, GPLCAuthority auth)
         {
             try
@@ -72,6 +74,7 @@ namespace MIRLE_GPLC.Security
                 }
             }
         }
+        // create user schema
         private static void createSchema()
         {
             try

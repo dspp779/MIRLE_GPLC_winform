@@ -79,16 +79,21 @@ namespace MIRLE_GPLC.Model
 
         }
 
+        // get presentation value derived from raw value
         public string getVal(byte[] rawVal)
         {
-            var val = ScaleUtil.getVal(rawVal, type);
+            // get value
+            var val = DataUtil.getVal(rawVal, type);
+            // WORD type value may need scaling
             if (type == DataType.WORD && scale != null)
             {
                 val = scale.Scale(Convert.ToDouble(val));
             }
+            // formatting value with unit
             return Formatting(val) + ' ' + unit;
         }
 
+        // formatting value
         private string Formatting(ValueType val)
         {
             int i = format.IndexOf('.');

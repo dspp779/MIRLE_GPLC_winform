@@ -28,6 +28,7 @@ namespace MIRLE_GPLC.form
             GPLC.Auth(GPLCAuthority.Administrator);
 
             this.marker = marker;
+            // initial
             if (marker is ProjectMarker)
             {
                 ProjectData p = (marker as ProjectMarker).ProjectData;
@@ -62,6 +63,7 @@ namespace MIRLE_GPLC.form
         {
             try
             {
+                // parse
                 long id = long.Parse(textBox_project_id.Text);
                 string name = textBox_project_Name.Text.Trim();
                 string addr = richTextBox_project_addr.Text.Trim();
