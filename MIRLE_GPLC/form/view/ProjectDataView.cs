@@ -8,7 +8,6 @@ using System.Text;
 using System.Windows.Forms;
 using MIRLE_GPLC.form.marker;
 using MIRLE_GPLC.Model;
-using Modbus.TCP;
 using System.Threading;
 using System.Net.Sockets;
 using System.Diagnostics;
@@ -131,10 +130,7 @@ namespace MIRLE_GPLC.form
             foreach (PLC plc in project.plcs)
             {
                 // set listView item 
-                ListViewItem item = new ListViewItem(plc.alias);
-                item.SubItems.Add(plc.netid.ToString());
-                item.SubItems.Add(plc.ip);
-                item.SubItems.Add(plc.port.ToString());
+                ListViewItem item = new ListViewItem(plc.name);
                 // add to listView
                 listView_plc.Items.Add(item);
             }
@@ -169,8 +165,6 @@ namespace MIRLE_GPLC.form
                 listView_tag.Items.Add(item);
             }
 
-            // lauch modbus TCP worker responsible for refresh value of the tag
-            Utility.modbusWorkerPool.lauchViewWorker(plc);
         }
 
         #endregion
@@ -219,52 +213,6 @@ namespace MIRLE_GPLC.form
                 int index = listView_tag.SelectedIndices.Count > 0 ? listView_tag.SelectedIndices[0] : -1;
                 // show tag edit control
                 TagEditControl(index);
-            }
-        }
-
-        private void listView_plc_KeyDown(object sender, KeyEventArgs e)
-        {
-            // delete operation for plc
-            if (e.KeyCode == Keys.Delete && lastSelectedPLC >= 0)
-            {
-                // check if current user has the authority to do this operation
-                if (GPLC.AuthVerify(Security.GPLCAuthority.Administrator))
-                {
-                    // index of the last selected plc should not be over the list range
-                    Debug.Assert(lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count);
-
-                    // last selected plc
-                    PLC plc = markers[_shownMarker].ProjectData.plcs[lastSelectedPLC];
-                    // db operation
-                    ModelUtil.deletePLC(plc.id);
-                    // refresh list
-                    refreshPLCList();
-                }
-            }
-        }
-        private void listView_tag_KeyDown(object sender, KeyEventArgs e)
-        {
-            // delete operation for tag
-            if (e.KeyCode == Keys.Delete && lastSelectedPLC >= 0)
-            {
-                // check if current user has the authority to do this operation
-                if (GPLC.AuthVerify(Security.GPLCAuthority.Administrator))
-                {
-                    // index of the last selected plc should not be over the list range
-                    Debug.Assert(lastSelectedPLC < markers[_shownMarker].ProjectData.plcs.Count);
-
-                    if (listView_tag.SelectedIndices.Count > 0)
-                    {
-                        // last selected plc
-                        PLC plc = markers[_shownMarker].ProjectData.plcs[lastSelectedPLC];
-                        // last selected tag
-                        int index = listView_tag.SelectedIndices[0];
-                        // db operation
-                        ModelUtil.deleteTag(plc.tags[index].id);
-                        // refresh tag list
-                        refreshTagList();
-                    }
-                }
             }
         }
         private void listView_plc_MouseUp(object sender, MouseEventArgs e)

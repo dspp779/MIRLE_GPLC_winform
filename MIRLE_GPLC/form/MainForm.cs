@@ -53,7 +53,7 @@ namespace MIRLE_GPLC
             this.CenterToScreen();
 
             // initialize map properties
-            gMap.MapProvider = GMap.NET.MapProviders.OpenStreetMapProvider.Instance;
+            gMap.MapProvider = GMap.NET.MapProviders.GoogleMapProvider.Instance;
             // set language
             GMap.NET.MapProviders.GMapProvider.Language = GMap.NET.LanguageType.ChineseTraditional;
             // tile retrieve policy: ServerOnly, ServerAndCache, CacheOnly.
@@ -69,8 +69,8 @@ namespace MIRLE_GPLC
         private void MainForm_Shown(object sender, EventArgs e)
         {
             // initial Auth
-            //authenticate();
-            authenticate("root", "1234567");
+            authenticate();
+            //authenticate("root", "1234567");
         }
 
         private void loadProjects()
@@ -125,23 +125,41 @@ namespace MIRLE_GPLC
             // refresh gMap
             Refresh();
         }
-        private void authenticate(string id, string pass)
+        private int authenticate(string id, string pass)
         {
             try
             {
                 // user login with given id and password and get corresponding authentication
                 GPLC.user.Authenticate(id, pass);
                 string str = string.Format("以{0}身分登入成功。({1}權限)", id, GPLC.user.authority.ToString());
-                //MessageBox.Show(str, "認證成功");
+                MessageBox.Show(str, "認證成功");
+                return 1;
             }
             catch (WrongIdPassException)
             {
                 MessageBox.Show("使用者名稱不存在或密碼錯誤", "認證失敗");
+                return 0;
             }
-            // refresh authentication status label
-            RefreshAuthStatus();
-            // refresh gMap
-            Refresh();
+            finally
+            {
+                // refresh authentication status label
+                RefreshAuthStatus();
+                // refresh gMap
+                Refresh();
+            }
+        }
+        private void authForm()
+        {
+            do
+            {
+                // login form
+                AuthForm authform = new AuthForm();
+                if (authform.ShowDialog() == System.Windows.Forms.DialogResult.OK && authenticate(authform.id, authform.pass) == 0)
+                {
+                    continue;
+                }
+                break;
+            } while (true);
         }
 
         #endregion
@@ -562,7 +580,7 @@ namespace MIRLE_GPLC
                     MessageBox.Show(ex.Message);
                 }
                 // update marker overlay and current marker
-                loadProjects();
+                Refresh();
             }
             catch (FormatException ex)
             {
@@ -571,7 +589,7 @@ namespace MIRLE_GPLC
             catch (UnauthorizedException ex)
             {
                 MessageBox.Show(ex.Message, "Fatal Error");
-                Application.Exit();
+                //Application.Exit();
             }
         }
 
@@ -582,13 +600,7 @@ namespace MIRLE_GPLC
         }
         private void ToolStripMenuItem_auth_Click(object sender, EventArgs e)
         {
-            // login form
-            AuthForm authform = new AuthForm();
-            if (authform.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                // verify user login
-                authenticate(authform.id, authform.pass);
-            }
+            authForm();
         }
 
     }

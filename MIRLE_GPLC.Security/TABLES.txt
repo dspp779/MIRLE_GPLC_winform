@@ -1,0 +1,47 @@
+CREATE TABLE Project
+(
+	id INTEGER PRIMARY KEY,
+	name TEXT,
+	addr TEXT,
+	lat REAL,
+	lng REAL
+);
+
+CREATE TABLE PLC
+(
+	id INTEGER PRIMARY KEY AUTOINCREMENT ASC,
+	alias VARCHAR(20),
+		net_id INT,
+		net_ip VARCHAR(15),
+		net_port INT,
+	polling_rate INT,
+	project_id INTEGER
+};
+
+CREATE TABLE Tag
+(
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	alias VARCHAR(20),
+	addr INT,
+	data_type VARCHAR(10),
+	format VARCHAR(5),
+	unit VARCHAR(10),
+	plc_id INTEGER
+);
+
+CREATE TABLE Scaling
+{
+	scale_type VARCHAR(10),
+	raw_hi REAL,
+	raq_lo REAL,
+	scale_hi REAL,
+	scale_lo REAL,
+	tag_id INTEGER
+}
+
+CREATE TABLE User
+(
+	id varchar(20),
+	pass text,
+	authentication text
+);

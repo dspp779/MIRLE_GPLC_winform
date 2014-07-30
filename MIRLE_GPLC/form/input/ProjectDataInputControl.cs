@@ -91,7 +91,9 @@ namespace MIRLE_GPLC.form
                 }
                 else
                 {
-                    ModelUtil.insertProject(id, name, addr, lat, lng);
+                    int i = ModelUtil.insertProject(id, name, addr, lat, lng);
+                    if (i == 0)
+                        return;
                 }
 
                 //refresh map

@@ -40,11 +40,7 @@ namespace MIRLE_GPLC.form
             this.plc = plc;
 
             // UI
-            textBox_name.Text = plc.alias;
-            textBox_poll_rate.Text = plc.polling_rate.ToString();
-            textBox_net_ID.Text = plc.netid.ToString();
-            textBox_net_ip.Text = plc.ip;
-            textBox_net_port.Text = plc.port.ToString();
+            textBox_name.Text = plc.name;
             label_plc.Text = "設定PLC";
             this.Show();
         }
@@ -57,7 +53,7 @@ namespace MIRLE_GPLC.form
                 GPLC.Auth(GPLCAuthority.Administrator);
 
                 // parse textBox
-                string alias = textBox_name.Text;
+                string name = textBox_name.Text;
                 int net_id = int.Parse(textBox_net_ID.Text);
                 string ip = textBox_net_ip.Text;
                 int port = int.Parse(textBox_net_port.Text);
@@ -65,14 +61,14 @@ namespace MIRLE_GPLC.form
 
                 if (plc != null)
                 {
-                    plc = new PLC(plc.id, alias, net_id, ip, port, poll_rate, null);
+                    plc = new PLC(plc.id, name, null);
                     // input plc : update record if exist; otherwise, insert a new one
-                    ModelUtil.inputPLC(plc, project.id);
+                    //ModelUtil.inputPLC(plc, project.id);
                 }
                 // insert a new plc
                 else
                 {
-                    ModelUtil.insertPLC(alias, net_id, ip, port, poll_rate, project.id);
+                    //ModelUtil.insertPLC(alias, net_id, ip, port, poll_rate, project.id);
                 }
                 this.Parent.Refresh();
             }

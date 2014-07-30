@@ -20,14 +20,13 @@ namespace MIRLE_GPLC.Security
                     conn.Open();
                     SQLiteCommand cmd =
                         new SQLiteCommand("SELECT auth FROM User WHERE id=@id AND pass=@pass", conn);
-                    cmd.Parameters.Add("@id", DbType.String).Value = id;
-                    cmd.Parameters.Add("@pass", DbType.String).Value = CryptoUtil.encryptSHA1(pass);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@pass", CryptoUtil.encryptSHA1(pass));
                     using (SQLiteDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
                             String str = reader.GetString(0);
-                            //str = CryptoUtil.Decrypt(str, id);
                             return (str.Equals("Administrator")) ? GPLCAuthority.Administrator : GPLCAuthority.Operator;
                         }
                         else

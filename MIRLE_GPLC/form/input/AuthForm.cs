@@ -20,7 +20,7 @@ namespace MIRLE_GPLC.form
             this.CenterToParent();
         }
 
-        private void btn_ok_Click(object sender, EventArgs e)
+        private void authenticate()
         {
             id = textBox_id.Text;
             pass = textBox_pass.Text;
@@ -39,10 +39,32 @@ namespace MIRLE_GPLC.form
             }
         }
 
-        private void btn_cancel_Click(object sender, EventArgs e)
+        private void leave()
         {
             this.DialogResult = DialogResult.Cancel;
             this.Close();
+        }
+
+        private void btn_ok_Click(object sender, EventArgs e)
+        {
+            authenticate();
+        }
+
+        private void btn_cancel_Click(object sender, EventArgs e)
+        {
+            leave();
+        }
+
+        private void textBox_pass_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                authenticate();
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                leave();
+            }
         }
     }
 }

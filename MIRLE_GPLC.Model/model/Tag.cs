@@ -10,23 +10,8 @@ namespace MIRLE_GPLC.Model
         private long _id;
         private int _addr;
         private DataType _type;
-        private string _format;
-        private string _unit;
-        private string _alias;
-        private long _plcid;
-        private Scaling _scale;
-
-        public Scaling scale
-        {
-            get
-            {
-                if (_scale == null)
-                {
-                    _scale = ModelUtil.getScaling(_id);
-                }
-                return _scale;
-            }
-        }
+        private string _name;
+        private DateTime _time;
 
         public long id
         {
@@ -84,11 +69,6 @@ namespace MIRLE_GPLC.Model
         {
             // get value
             var val = DataUtil.getVal(rawVal, type);
-            // WORD type value may need scaling
-            if (type == DataType.WORD && scale != null)
-            {
-                val = scale.Scale(Convert.ToDouble(val));
-            }
             // formatting value with unit
             return Formatting(val) + ' ' + unit;
         }

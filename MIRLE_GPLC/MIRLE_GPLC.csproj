@@ -131,9 +131,6 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setting\GPLCSetting.cs" />
-    <Compile Include="Utility\modbusTCP.cs" />
-    <Compile Include="Utility\modbusWorker.cs" />
-    <Compile Include="Utility\modbusWorkerPool.cs" />
     <EmbeddedResource Include="Form\input\AuthForm.resx">
       <DependentUpon>AuthForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -179,7 +176,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Utility\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MIRLE_GPLC.Model\MIRLE_GPLC.Model.csproj">
       <Project>{5959daed-701a-42fb-b3ed-2257ef5693c9}</Project>

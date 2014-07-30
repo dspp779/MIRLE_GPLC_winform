@@ -49,8 +49,9 @@ namespace MIRLE_GPLC.Security
             try
             {
                 /* create user and set its authority
-                 * SecureUtil.newUser(id, pass, GPLCAuthority.Administrator);
-                 * */
+                 */
+                //SecureUtil.newUser(id, pass, GPLCAuthority.Administrator);
+                
                 // verify id and passwod
                 _authority = SecureUtil.Authenticate(id, pass);
             }

@@ -41,24 +41,12 @@ namespace MIRLE_GPLC.form
             this.plcid = plcid;
             this.tag = tag;
             // get scaling info
-            if (tag.scale != null)
-            {
-                checkBox_scale_linear.Checked = true;
-                comboBox_scale_type.Text = tag.scale.scale_type.ToString();
-                textBox_raw_hi.Text = tag.scale.raw_hi.ToString();
-                textBox_raw_lo.Text = tag.scale.raw_lo.ToString();
-                textBox_scale_hi.Text = tag.scale.scale_hi.ToString();
-                textBox_scale_lo.Text = tag.scale.scale_lo.ToString();
-            }
-            else
-            {
                 checkBox_scale_linear.Checked = false;
                 comboBox_scale_type.Text = "WORD";
                 textBox_raw_hi.Text = "";
                 textBox_raw_lo.Text = "";
                 textBox_scale_hi.Text = "";
                 textBox_scale_lo.Text = "";
-            }
             // ui
             label_field.Text = "修改資料項";
             textBox_name.Text = tag.alias;
@@ -68,47 +56,6 @@ namespace MIRLE_GPLC.form
             textBox_unit.Text = tag.unit;
             // show
             this.Show();
-        }
-
-        private void btnOK_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // check authentication
-                GPLC.Auth(GPLCAuthority.Administrator);
-
-                long id = (tag != null) ? tag.id : -1;
-                Tag inputTag = new Tag(id, textBox_name.Text,
-                        textBox_addr.Text, comboBox_type.Text,
-                        comboBox_format.Text, textBox_unit.Text, plcid);
-
-                if (checkBox_scale_linear.Checked)
-                {
-                    Scaling scale = new Scaling(comboBox_scale_type.Text,
-                        textBox_raw_hi.Text, textBox_raw_lo.Text,
-                        textBox_scale_hi.Text, textBox_scale_lo.Text);
-                    id = id < 0 ? ModelUtil.inputTag(inputTag) : id;
-                    ModelUtil.inputScaling(scale, id);
-                }
-                else
-                {
-                    if (id >= 0)
-                    {
-                        ModelUtil.deleteScaling(id);
-                    }
-                    ModelUtil.inputTag(inputTag);
-                }
-                this.Parent.Refresh();
-            }
-            catch (FormatException ex)
-            {
-                label_info.Text = ex.Message;
-            }
-            catch (UnauthorizedException ex)
-            {
-                MessageBox.Show(ex.Message, "Fatal Error");
-                Application.Exit();
-            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

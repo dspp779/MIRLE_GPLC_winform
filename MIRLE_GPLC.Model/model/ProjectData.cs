@@ -14,7 +14,7 @@ namespace MIRLE_GPLC.Model
         private double _lng;
         private List<PLC> _plcs;
 
-        public Int64 id
+        public long id
         {
             get { return _id; }
         }

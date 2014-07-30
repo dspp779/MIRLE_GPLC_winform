@@ -9,7 +9,7 @@ using System.Data;
 
 namespace MIRLE.GPLC.DB.SQLite
 {
-    public class SQLiteDBMS
+    public static class SQLiteDBMS
     {
         // default db file path
         private static string dataSource = @"default.sql";
@@ -49,6 +49,7 @@ namespace MIRLE.GPLC.DB.SQLite
             {
                 conn.Open();
                 cmd.Connection = conn;
+                SQLiteDataReader reader = cmd.ExecuteReader();
                 SQLiteDataAdapter sda = new SQLiteDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 sda.Fill(dt);

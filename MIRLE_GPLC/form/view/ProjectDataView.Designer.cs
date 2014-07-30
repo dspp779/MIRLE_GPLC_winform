@@ -18,7 +18,6 @@ namespace MIRLE_GPLC.form
             {
                 components.Dispose();
             }
-            Utility.modbusWorkerPool.stopViewWorker();
             base.Dispose(disposing);
         }
 
@@ -62,7 +61,6 @@ namespace MIRLE_GPLC.form
             this.listView_tag.UseCompatibleStateImageBehavior = false;
             this.listView_tag.View = System.Windows.Forms.View.Details;
             this.listView_tag.DoubleClick += new System.EventHandler(this.listView_tag_DoubleClick);
-            this.listView_tag.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView_tag_KeyDown);
             this.listView_tag.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listView_data_MouseDown);
             // 
             // item
@@ -95,7 +93,6 @@ namespace MIRLE_GPLC.form
             this.listView_plc.View = System.Windows.Forms.View.Details;
             this.listView_plc.SelectedIndexChanged += new System.EventHandler(this.listView_plc_SelectedIndexChanged);
             this.listView_plc.DoubleClick += new System.EventHandler(this.listView_plc_DoubleClick);
-            this.listView_plc.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listView_plc_KeyDown);
             this.listView_plc.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listView_plc_MouseDown);
             this.listView_plc.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listView_plc_MouseUp);
             // 

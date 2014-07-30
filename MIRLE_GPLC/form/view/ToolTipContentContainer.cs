@@ -32,7 +32,6 @@ namespace MIRLE_GPLC.form
             /* set project view control to modbus worker
              * so that it can modify project view contents
              *  */
-            Utility.modbusWorker.presentView = projectDataView;
             // init project view control
             projectDataView.init(markers);
         }
