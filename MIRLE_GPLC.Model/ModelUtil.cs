@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.Common;
 using MySql.Data.MySqlClient;
 using MIRLE.GPLC.DB.MySql;
+using MIRLE_GPLC.Model.model;
 
 namespace MIRLE_GPLC.Model
 {
@@ -85,11 +86,11 @@ namespace MIRLE_GPLC.Model
             using (MySqlCommand cmd = new MySqlCommand(
                 "INSERT INTO Project values (@id, @name, @addr, @lat, @lng)"))
             {
-                cmd.Parameters.Add("@id", DbType.Int64).Value = id;
-                cmd.Parameters.Add("@name", DbType.String).Value = name;
-                cmd.Parameters.Add("@addr", DbType.String).Value = addr;
-                cmd.Parameters.Add("@lat", DbType.Double).Value = lat;
-                cmd.Parameters.Add("@lng", DbType.Double).Value = lng;
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@name", name);
+                cmd.Parameters.AddWithValue("@addr", addr);
+                cmd.Parameters.AddWithValue("@lat", lat);
+                cmd.Parameters.AddWithValue("@lng", lng);
                 return MySqlDbInterface.execInsert(cmd);
             }
         }
@@ -168,7 +169,7 @@ namespace MIRLE_GPLC.Model
          * a transaction is an atomic sql operation
          * operations in a transaction are zero-or-none.
          * */
-        public static void insertTag(List<Tag> list, long plc_id)
+        /*public static void insertTag(List<Tag> list, long plc_id)
         {
             using (MySqlConnection conn = MySqlDbInterface.getConnection())
             {
@@ -195,14 +196,9 @@ namespace MIRLE_GPLC.Model
         }
         private static int insertTag(MySqlCommand cmd, Tag tag, long id)
         {
-            cmd.Parameters["@alias"].Value = tag.alias;
-            cmd.Parameters["@addr"].Value = tag.addr;
-            cmd.Parameters["@data_type"].Value = tag.type.ToString();
-            cmd.Parameters["@format"].Value = tag.format;
-            cmd.Parameters["@unit"].Value = tag.unit;
             return cmd.ExecuteNonQuery();
         }
-
+        */
         #endregion
 
         #region -- get model list --
@@ -277,7 +273,7 @@ namespace MIRLE_GPLC.Model
                 else throw ex;
             }
         }
-        public static List<PLC> getTagList(string name)
+        public static List<Tag> getTagList(string deviceName)
         {
             try
             {
@@ -285,18 +281,49 @@ namespace MIRLE_GPLC.Model
                 {
                     conn.Open();
                     MySqlCommand cmd = new MySqlCommand(
-                        "SELECT * FROM @devicename", conn);
-                    cmd.Parameters.AddWithValue("@devicename", name);
-                    List<Tag> pList = new List<Tag>();
+                        "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA='Mirle' AND TABLE_NAME=@devicename;", conn);
+                    cmd.Parameters.AddWithValue("@devicename", deviceName);
+                    List<Tag> tagList = new List<Tag>();
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        reader.Read();
+                        reader.Read();
+                        while (reader.Read())
+                        {
+                            Tag tag = new Tag(reader.GetString(0),deviceName);
+                            tagList.Add(tag);
+                        }
+                        tagList.RemoveAt(tagList.Count - 1);
+                    }
+                    return tagList;
+                }
+            }
+            catch (MySqlException)
+            {
+                return new List<Tag>();
+            }
+        }
+        public static List<Record> getTagVal(string id, string deviceName)
+        {
+            try
+            {
+                using (MySqlConnection conn = MySqlDbInterface.getConnection())
+                {
+                    conn.Open();
+                    MySqlCommand cmd = new MySqlCommand(
+                        "SELECT datetime, " + id + " FROM " +deviceName, conn);
+                    //cmd.Parameters.AddWithValue("@id", id);
+                    List<Record> rList = new List<Record>();
                     using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            PLC p = new PLC(project_id, reader.GetString(0), null);
-                            pList.Add(p);
+                            float? f = (reader.IsDBNull(1)) ? (float?) null : reader.GetFloat(1);
+                            Record r = new Record(reader.GetDateTime(0), f);
+                            rList.Add(r);
                         }
                     }
-                    return pList;
+                    return rList;
                 }
             }
             catch (MySqlException ex)
@@ -305,7 +332,7 @@ namespace MIRLE_GPLC.Model
                 if (ex.Number == 1146)
                 {
                     createProjectDeviceTable();
-                    return new List<PLC>();
+                    return new List<Record>();
                 }
                 else throw ex;
             }
@@ -330,50 +357,6 @@ namespace MIRLE_GPLC.Model
                 cmd.Parameters.AddWithValue("@lat", lat);
                 cmd.Parameters.AddWithValue("@lng", lng);
                 cmd.Parameters.AddWithValue("@oid", oid);
-                return MySqlDbInterface.execUpdate(cmd);
-            }
-        }
-
-        public static int updateTag(Tag r)
-        {
-            return updateTag(r.id, r.alias, r.addr, r.type, r.format, r.unit);
-        }
-        public static int updateTag(long id, string alias, int addr, string type, string format, string unit)
-        {
-            return updateTag(id, alias, addr, (DataType)System.Enum.Parse(typeof(DataType), type), format, unit);
-        }
-        public static int updateTag(long id, string alias, int addr, DataType data_type, string format, string unit)
-        {
-            using (MySqlCommand cmd = new MySqlCommand(
-                "UPDATE Tag SET alias=@alias, addr=@addr, data_type=@data_type, format=@format, unit=@unit"
-                + " WHERE id=@id"))
-            {
-                cmd.Parameters.Add("@alias", DbType.String).Value = alias;
-                cmd.Parameters.Add("@addr", DbType.Int32).Value = addr;
-                cmd.Parameters.Add("@data_type", DbType.String).Value = data_type.ToString();
-                cmd.Parameters.Add("@format", DbType.String).Value = format;
-                cmd.Parameters.Add("@unit", DbType.String).Value = unit;
-                cmd.Parameters.Add("@id", DbType.Int64).Value = id;
-                return MySqlDbInterface.execUpdate(cmd);
-            }
-        }
-
-        public static int updateScaling(Scaling s, long tag_id)
-        {
-            return updateScaling(s._scale_type.ToString(), s._raw_hi, s._raw_lo, s._scale_hi, s._scale_lo, tag_id);
-        }
-        public static int updateScaling(string scale_type, double raw_hi, double raw_lo, double scale_hi, double scale_lo, long tag_id)
-        {
-            using (MySqlCommand cmd = new MySqlCommand(
-                "UPDATE Scaling SET scale_type=@scale_type, raw_hi=@raw_hi, raw_lo=@raw_lo,"
-                + " scale_hi=@scale_hi, scale_lo=@scale_lo WHERE tag_id=@tag_id"))
-            {
-                cmd.Parameters.Add("@scale_type", DbType.String).Value = scale_type.ToString();
-                cmd.Parameters.Add("@raw_hi", DbType.Double).Value = raw_hi;
-                cmd.Parameters.Add("@raw_lo", DbType.Double).Value = raw_lo;
-                cmd.Parameters.Add("@scale_hi", DbType.Double).Value = scale_hi;
-                cmd.Parameters.Add("@scale_lo", DbType.Double).Value = scale_lo;
-                cmd.Parameters.Add("@tag_id", DbType.Int64).Value = tag_id;
                 return MySqlDbInterface.execUpdate(cmd);
             }
         }

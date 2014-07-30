@@ -161,7 +161,7 @@ namespace MIRLE_GPLC.form
             foreach (Tag r in plc.tags)
             {
                 ListViewItem item = new ListViewItem(r.alias);
-                item.SubItems.Add("????");
+                item.SubItems.Add(r.getVal().ToString());
                 listView_tag.Items.Add(item);
             }
 

@@ -47,7 +47,9 @@ namespace MIRLE_GPLC.Model
 
         public void reload()
         {
-            _tags = new List<Tag>();
+            _tags = ModelUtil.getTagList(name);
+
+
         }
 
     }

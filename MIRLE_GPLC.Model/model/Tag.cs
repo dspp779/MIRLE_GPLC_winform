@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MIRLE_GPLC.Model.model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,78 +8,54 @@ namespace MIRLE_GPLC.Model
 {
     public class Tag
     {
-        private long _id;
-        private int _addr;
-        private DataType _type;
-        private string _name;
-        private DateTime _time;
+        private string _deviceName;
+        private string _alias;
+        private List<Record> _records;
 
-        public long id
-        {
-            get { return _id; }
-        }
-        public int addr
-        {
-            get { return _addr; }
-        }
-        public DataType type
-        {
-            get { return _type; }
-        }
-        public string format
-        {
-            get { return _format; }
-        }
-        public string unit
-        {
-            get { return _unit; }
-        }
         public string alias
         {
             get { return _alias; }
         }
-        public long plc_id
+        public string deviceName
         {
-            get { return _plcid; }
+            get { return _deviceName; }
         }
 
-        public Tag(long id, string alias, int addr, DataType type, string format, string unit, long plcid)
+        public List<Record> records
         {
-            this._id = id;
-            this._addr = addr;
-            this._type = type;
-            this._format = format;
-            this._unit = unit;
+            get
+            {
+                if (_records == null)
+                {
+                    reload();
+                }
+                return _records;
+            }
+        }
+
+        public Tag(string alias, string deviceName)
+        {
             this._alias = alias;
-            this._plcid = plcid;
+            this._deviceName = deviceName;
         }
 
-        public Tag(long id, string alias, int addr, string type, string format, string unit, long plcid)
-            : this(id, alias, addr, (DataType)System.Enum.Parse(typeof(DataType), type), format, unit, plcid)
+        public Tag(string alias, string deviceName, List<Record> records)
         {
+            this._alias = alias;
+            this._deviceName = deviceName;
+            this._records = records;
         }
 
-        public Tag(long id, string alias, string addr, string type, string format, string unit, long plcid)
-            : this(id, alias, int.Parse(addr), (DataType)System.Enum.Parse(typeof(DataType), type), format, unit, plcid)
+        private void reload()
         {
-
+            _records = ModelUtil.getTagVal(_alias, _deviceName);
         }
 
-        // get presentation value derived from raw value
-        public string getVal(byte[] rawVal)
+        public float? getVal()
         {
-            // get value
-            var val = DataUtil.getVal(rawVal, type);
-            // formatting value with unit
-            return Formatting(val) + ' ' + unit;
-        }
-
-        // formatting value
-        private string Formatting(ValueType val)
-        {
-            int i = format.IndexOf('.');
-            string str = i < 0 ? "" : format.Substring(i).Replace('#', '0');
-            return string.Format("{0:" + str + "}", val);
+            Random r = new Random();
+            int i = r.Next(0, records.Count - 1);
+            return records[i].val;
         }
     }
 }

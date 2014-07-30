@@ -47,13 +47,6 @@ namespace MIRLE_GPLC.form
                 textBox_raw_lo.Text = "";
                 textBox_scale_hi.Text = "";
                 textBox_scale_lo.Text = "";
-            // ui
-            label_field.Text = "修改資料項";
-            textBox_name.Text = tag.alias;
-            textBox_addr.Text = tag.addr.ToString();
-            comboBox_type.Text = tag.type.ToString();
-            comboBox_format.Text = tag.format;
-            textBox_unit.Text = tag.unit;
             // show
             this.Show();
         }
