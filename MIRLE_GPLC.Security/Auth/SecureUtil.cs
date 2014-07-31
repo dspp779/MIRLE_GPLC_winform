@@ -1,10 +1,10 @@
-﻿using MIRLE.GPLC.DB.SQLite;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SQLite;
 using System.Linq;
 using System.Text;
+using MySql.Data.MySqlClient;
+using MIRLE.GPLC.DB.MySql;
 
 namespace MIRLE_GPLC.Security
 {
@@ -15,14 +15,14 @@ namespace MIRLE_GPLC.Security
         {
             try
             {
-                using (SQLiteConnection conn = SQLiteDBMS.getConnection())
+                using (MySqlConnection conn = MySqlDbInterface.getConnection())
                 {
                     conn.Open();
-                    SQLiteCommand cmd =
-                        new SQLiteCommand("SELECT auth FROM User WHERE id=@id AND pass=@pass", conn);
+                    MySqlCommand cmd =
+                        new MySqlCommand("SELECT auth FROM User WHERE id=@id AND pass=@pass", conn);
                     cmd.Parameters.AddWithValue("@id", id);
                     cmd.Parameters.AddWithValue("@pass", CryptoUtil.encryptSHA1(pass));
-                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
@@ -36,7 +36,7 @@ namespace MIRLE_GPLC.Security
                     }
                 }
             }
-            catch (SQLiteException ex)
+            catch (MySqlException ex)
             {
                 if (ex.ErrorCode == 1)
                 {
@@ -51,23 +51,22 @@ namespace MIRLE_GPLC.Security
         {
             try
             {
-                using (SQLiteCommand sql = new SQLiteCommand("INSERT INTO User values(@id, @pass, @auth)"))
+                using (MySqlCommand sql = new MySqlCommand("INSERT INTO User values(@id, @pass, @auth)"))
                 {
-                    sql.Parameters.Add("@id", DbType.String).Value = id;
-                    sql.Parameters.Add("@pass", DbType.String).Value = CryptoUtil.encryptSHA1(pass);
-                    sql.Parameters.Add("@auth", DbType.String).Value = auth.ToString();
-                    SQLiteDBMS.execUpdate(sql);
+                    sql.Parameters.AddWithValue("@id", id);
+                    sql.Parameters.AddWithValue("@pass", CryptoUtil.encryptSHA1(pass));
+                    sql.Parameters.AddWithValue("@auth", auth.ToString());
+                    MySqlDbInterface.execUpdate(sql);
                 }
             }
-            catch (SQLiteException ex)
+            catch (MySqlException ex)
             {
-                switch(ex.ErrorCode)
+                switch(ex.Number)
                 {
-                    case 1:
+                    case 1146:
                         createSchema();
                         newUser(id, pass, auth);
                         break;
-                    case 19:
                     default:
                         break;
                 }
@@ -78,12 +77,12 @@ namespace MIRLE_GPLC.Security
         {
             try
             {
-                using (SQLiteCommand sql = new SQLiteCommand("CREATE TABLE User (id varchar(20) PRIMARY KEY, pass text, auth text)"))
+                using (MySqlCommand sql = new MySqlCommand("CREATE TABLE User (id varchar(20) PRIMARY KEY, pass text, auth text)"))
                 {
-                    SQLiteDBMS.execUpdate(sql);
+                    MySqlDbInterface.execUpdate(sql);
                 }
             }
-            catch (SQLiteException)
+            catch (MySqlException)
             {
             }
         }
