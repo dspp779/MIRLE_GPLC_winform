@@ -19,7 +19,7 @@ namespace MIRLE_GPLC.form
         {
             InitializeComponent();
             // Input(modify or add) project container size
-            this.Size = new Size(305, 400);
+            this.Size = new Size(310, 400);
             // init project data input control
             projectDataInputControl.init(marker);
         }
@@ -28,12 +28,12 @@ namespace MIRLE_GPLC.form
         {
             InitializeComponent();
             // view project container size
-            this.Size = new Size(540, 400);
+            //this.Size = new Size(540, 400);
             /* set project view control to modbus worker
              * so that it can modify project view contents
              *  */
             // init project view control
-            projectDataView.init(markers);
+            //projectDataView.init(markers);
         }
 
         private void ToolTipContentContainer_Load(object sender, EventArgs e)
@@ -44,14 +44,6 @@ namespace MIRLE_GPLC.form
         private void button_close_Click(object sender, EventArgs e)
         {
             this.Dispose();
-        }
-
-        private void ToolTipVisibleChanged(object sender, EventArgs e)
-        {
-            if (!this.Visible)
-            {
-                //this.projectDataView.Dispose();
-            }
         }
 
     }

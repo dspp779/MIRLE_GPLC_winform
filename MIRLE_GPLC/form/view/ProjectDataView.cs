@@ -106,9 +106,6 @@ namespace MIRLE_GPLC.form
 
         public override void Refresh()
         {
-            // hide input controls
-            plcInputControl.Hide();
-            tagInputControl1.Hide();
             // show listViews
             this.listView_tag.Show();
             this.listView_plc.Show();
@@ -256,22 +253,12 @@ namespace MIRLE_GPLC.form
         
         private void PLCEditControl(int index)
         {
-            this.listView_tag.Hide();
+            //this.listView_tag.Hide();
             //this.listView_plc.Hide();
 
             // current project
             ProjectData project = markers[ShownMarker].ProjectData;
 
-            // add a plc
-            if (index < 0)
-            {
-                plcInputControl.init(project);
-            }
-            // modify a plc
-            else
-            {
-                plcInputControl.init(project, project.plcs[index]);
-            }
         }
         private void TagEditControl(int index)
         {
@@ -281,22 +268,11 @@ namespace MIRLE_GPLC.form
             }
 
             //this.listView_tag.Hide();
-            this.listView_plc.Hide();
+            //this.listView_plc.Hide();
 
             // last selected plc
             PLC plc = markers[ShownMarker].ProjectData.plcs[lastSelectedPLC];
 
-            // add a tag
-            if (index < 0)
-            {
-                tagInputControl1.init(plc.id);
-            }
-            // modify a tag
-            else
-            {
-                Debug.Assert(index < plc.tags.Count);
-                tagInputControl1.init(plc.id, plc.tags[index]);
-            }
         }
 
         #endregion

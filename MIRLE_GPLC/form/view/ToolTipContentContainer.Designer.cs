@@ -30,13 +30,12 @@
         {
             this.button_close = new System.Windows.Forms.Button();
             this.projectDataInputControl = new MIRLE_GPLC.form.ProjectDataInputControl();
-            this.projectDataView = new MIRLE_GPLC.form.ProjectDataView();
             this.SuspendLayout();
             // 
             // button_close
             // 
             this.button_close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_close.Location = new System.Drawing.Point(457, 370);
+            this.button_close.Location = new System.Drawing.Point(404, 365);
             this.button_close.Name = "button_close";
             this.button_close.Size = new System.Drawing.Size(75, 23);
             this.button_close.TabIndex = 2;
@@ -53,23 +52,14 @@
             this.projectDataInputControl.TabIndex = 3;
             this.projectDataInputControl.Visible = false;
             // 
-            // projectDataView
-            // 
-            this.projectDataView.Location = new System.Drawing.Point(8, 8);
-            this.projectDataView.Name = "projectDataView";
-            this.projectDataView.Size = new System.Drawing.Size(521, 356);
-            this.projectDataView.TabIndex = 0;
-            this.projectDataView.Visible = false;
-            // 
             // ToolTipContentContainer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.projectDataInputControl);
             this.Controls.Add(this.button_close);
-            this.Controls.Add(this.projectDataView);
             this.Name = "ToolTipContentContainer";
-            this.Size = new System.Drawing.Size(544, 400);
+            this.Size = new System.Drawing.Size(491, 400);
             this.Load += new System.EventHandler(this.ToolTipContentContainer_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -78,7 +68,6 @@
 
         #endregion
 
-        private ProjectDataView projectDataView;
         private System.Windows.Forms.Button button_close;
         private ProjectDataInputControl projectDataInputControl;
     }

@@ -34,16 +34,11 @@ namespace MIRLE_GPLC.form
             this.value = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.listView_plc = new System.Windows.Forms.ListView();
             this.name = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.id = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ip = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.port = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.buttonNext = new System.Windows.Forms.Button();
             this.buttonBack = new System.Windows.Forms.Button();
             this.labelCounter = new System.Windows.Forms.Label();
             this.labelText = new System.Windows.Forms.Label();
             this.labelTitle = new System.Windows.Forms.Label();
-            this.tagInputControl1 = new MIRLE_GPLC.form.TagInputControl();
-            this.plcInputControl = new MIRLE_GPLC.form.PLCInputControl();
             this.SuspendLayout();
             // 
             // listView_tag
@@ -54,9 +49,9 @@ namespace MIRLE_GPLC.form
             this.value});
             this.listView_tag.FullRowSelect = true;
             this.listView_tag.HideSelection = false;
-            this.listView_tag.Location = new System.Drawing.Point(261, 48);
+            this.listView_tag.Location = new System.Drawing.Point(168, 48);
             this.listView_tag.Name = "listView_tag";
-            this.listView_tag.Size = new System.Drawing.Size(184, 255);
+            this.listView_tag.Size = new System.Drawing.Size(235, 255);
             this.listView_tag.TabIndex = 13;
             this.listView_tag.UseCompatibleStateImageBehavior = false;
             this.listView_tag.View = System.Windows.Forms.View.Details;
@@ -67,27 +62,24 @@ namespace MIRLE_GPLC.form
             // 
             this.item.Tag = "1";
             this.item.Text = "項目";
-            this.item.Width = 155;
+            this.item.Width = 132;
             // 
             // value
             // 
             this.value.Tag = "1";
             this.value.Text = "值";
-            this.value.Width = 80;
+            this.value.Width = 99;
             // 
             // listView_plc
             // 
             this.listView_plc.Alignment = System.Windows.Forms.ListViewAlignment.Default;
             this.listView_plc.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.name,
-            this.id,
-            this.ip,
-            this.port});
+            this.name});
             this.listView_plc.FullRowSelect = true;
             this.listView_plc.HideSelection = false;
             this.listView_plc.Location = new System.Drawing.Point(1, 48);
             this.listView_plc.Name = "listView_plc";
-            this.listView_plc.Size = new System.Drawing.Size(254, 255);
+            this.listView_plc.Size = new System.Drawing.Size(161, 255);
             this.listView_plc.TabIndex = 12;
             this.listView_plc.UseCompatibleStateImageBehavior = false;
             this.listView_plc.View = System.Windows.Forms.View.Details;
@@ -99,26 +91,11 @@ namespace MIRLE_GPLC.form
             // name
             // 
             this.name.Text = "名稱";
-            this.name.Width = 100;
-            // 
-            // id
-            // 
-            this.id.Text = "ID";
-            this.id.Width = 30;
-            // 
-            // ip
-            // 
-            this.ip.Text = "IP";
-            this.ip.Width = 110;
-            // 
-            // port
-            // 
-            this.port.Text = "Port";
-            this.port.Width = 50;
+            this.name.Width = 156;
             // 
             // buttonNext
             // 
-            this.buttonNext.Location = new System.Drawing.Point(419, 19);
+            this.buttonNext.Location = new System.Drawing.Point(377, 19);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(26, 23);
             this.buttonNext.TabIndex = 11;
@@ -128,7 +105,7 @@ namespace MIRLE_GPLC.form
             // 
             // buttonBack
             // 
-            this.buttonBack.Location = new System.Drawing.Point(387, 19);
+            this.buttonBack.Location = new System.Drawing.Point(345, 19);
             this.buttonBack.Name = "buttonBack";
             this.buttonBack.Size = new System.Drawing.Size(26, 23);
             this.buttonBack.TabIndex = 10;
@@ -140,7 +117,7 @@ namespace MIRLE_GPLC.form
             // 
             this.labelCounter.AutoSize = true;
             this.labelCounter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.labelCounter.Location = new System.Drawing.Point(402, 1);
+            this.labelCounter.Location = new System.Drawing.Point(360, 1);
             this.labelCounter.Name = "labelCounter";
             this.labelCounter.Size = new System.Drawing.Size(27, 12);
             this.labelCounter.TabIndex = 9;
@@ -167,28 +144,11 @@ namespace MIRLE_GPLC.form
             this.labelTitle.TabIndex = 7;
             this.labelTitle.Text = "title";
             // 
-            // tagInputControl1
-            // 
-            this.tagInputControl1.Location = new System.Drawing.Point(1, 48);
-            this.tagInputControl1.Name = "tagInputControl1";
-            this.tagInputControl1.Size = new System.Drawing.Size(254, 258);
-            this.tagInputControl1.TabIndex = 15;
-            this.tagInputControl1.Visible = false;
-            // 
-            // plcInputControl
-            // 
-            this.plcInputControl.Location = new System.Drawing.Point(261, 48);
-            this.plcInputControl.Name = "plcInputControl";
-            this.plcInputControl.Size = new System.Drawing.Size(198, 171);
-            this.plcInputControl.TabIndex = 14;
-            this.plcInputControl.Visible = false;
-            // 
             // ProjectDataView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.tagInputControl1);
-            this.Controls.Add(this.plcInputControl);
+            this.AutoValidate = System.Windows.Forms.AutoValidate.Disable;
             this.Controls.Add(this.listView_tag);
             this.Controls.Add(this.buttonNext);
             this.Controls.Add(this.buttonBack);
@@ -197,7 +157,7 @@ namespace MIRLE_GPLC.form
             this.Controls.Add(this.labelTitle);
             this.Controls.Add(this.listView_plc);
             this.Name = "ProjectDataView";
-            this.Size = new System.Drawing.Size(458, 306);
+            this.Size = new System.Drawing.Size(407, 306);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -210,16 +170,11 @@ namespace MIRLE_GPLC.form
         private System.Windows.Forms.ColumnHeader value;
         private System.Windows.Forms.ListView listView_plc;
         private System.Windows.Forms.ColumnHeader name;
-        private System.Windows.Forms.ColumnHeader id;
-        private System.Windows.Forms.ColumnHeader ip;
-        private System.Windows.Forms.ColumnHeader port;
         private System.Windows.Forms.Button buttonNext;
         private System.Windows.Forms.Button buttonBack;
         private System.Windows.Forms.Label labelCounter;
         private System.Windows.Forms.Label labelText;
         private System.Windows.Forms.Label labelTitle;
-        private PLCInputControl plcInputControl;
-        private TagInputControl tagInputControl1;
 
     }
 }

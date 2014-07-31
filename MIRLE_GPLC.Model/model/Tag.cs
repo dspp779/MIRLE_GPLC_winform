@@ -53,8 +53,12 @@ namespace MIRLE_GPLC.Model
 
         public float? getVal()
         {
+            int i;
             Random r = new Random();
-            int i = r.Next(0, records.Count - 1);
+            do
+            {
+                i = r.Next(0, records.Count - 1);
+            } while (records[i].val == null);
             return records[i].val;
         }
     }

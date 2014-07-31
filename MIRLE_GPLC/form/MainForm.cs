@@ -467,7 +467,8 @@ namespace MIRLE_GPLC
             GPoint p = gMap.FromLatLngToLocal(item.Position);
             p.Offset(item.Size.Width / 2, -1 * (item.Size.Height));
             // show contextMenu
-            contextMenu(ttc, new Point((int)p.X, (int)p.Y));
+            //contextMenu(ttc, new Point((int)p.X, (int)p.Y));
+            contextMenu(ttc, new Point(this.ClientSize.Width -  ttc.Size.Width, gMap.Location.Y) );
         }
         private void inputProject(GMapMarker item)
         {
@@ -494,6 +495,7 @@ namespace MIRLE_GPLC
 
         private void contextMenu(ToolTipContentContainer ttc, Point p)
         {
+            ttc.Height = gMap.Height;
             // set tooltip container context menu
             PoperContainer ttcContainer = new PoperContainer(ttc);
             // show context menu at specified position

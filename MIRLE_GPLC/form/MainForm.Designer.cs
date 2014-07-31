@@ -66,14 +66,11 @@
             this.label_project_name = new System.Windows.Forms.Label();
             this.gMap = new GMap.NET.WindowsForms.GMapControl();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.檔案ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.OpenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SaveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.權限ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_anonymous = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem_auth = new System.Windows.Forms.ToolStripMenuItem();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox_location.SuspendLayout();
@@ -102,6 +99,7 @@
             this.latlngLabel.Size = new System.Drawing.Size(821, 17);
             this.latlngLabel.Spring = true;
             this.latlngLabel.Text = "latlngLabel";
+            this.latlngLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // AuthStatusLabel
             // 
@@ -288,36 +286,12 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.檔案ToolStripMenuItem,
             this.權限ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(870, 24);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
-            // 
-            // 檔案ToolStripMenuItem
-            // 
-            this.檔案ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.OpenToolStripMenuItem,
-            this.SaveToolStripMenuItem});
-            this.檔案ToolStripMenuItem.Name = "檔案ToolStripMenuItem";
-            this.檔案ToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.檔案ToolStripMenuItem.Text = "檔案";
-            // 
-            // OpenToolStripMenuItem
-            // 
-            this.OpenToolStripMenuItem.Name = "OpenToolStripMenuItem";
-            this.OpenToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
-            this.OpenToolStripMenuItem.Text = "Open";
-            this.OpenToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItem_Click);
-            // 
-            // SaveToolStripMenuItem
-            // 
-            this.SaveToolStripMenuItem.Name = "SaveToolStripMenuItem";
-            this.SaveToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
-            this.SaveToolStripMenuItem.Text = "Save as";
-            this.SaveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
             // 
             // 權限ToolStripMenuItem
             // 
@@ -342,14 +316,14 @@
             this.ToolStripMenuItem_auth.Text = "認證";
             this.ToolStripMenuItem_auth.Click += new System.EventHandler(this.ToolStripMenuItem_auth_Click);
             // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog1_FileOk);
+            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
-            // 
-            // saveFileDialog1
-            // 
-            this.saveFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.saveFileDialog1_FileOk);
             // 
             // MainForm
             // 
@@ -398,16 +372,13 @@
         private System.Windows.Forms.ToolStripStatusLabel AuthStatusLabel;
         private System.Windows.Forms.RichTextBox richTextBox_project_addr;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem 檔案ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem OpenToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem SaveToolStripMenuItem;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem 權限ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_anonymous;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItem_auth;
         private System.Windows.Forms.TextBox textBox_project_id;
         private System.Windows.Forms.Label label_project_id;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 
