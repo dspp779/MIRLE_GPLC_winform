@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.IO;
-using System.Data.SQLite;
 using System.Data;
 
 namespace MIRLE_GPLC.Security

@@ -19,8 +19,6 @@ using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using GMap.NET.WindowsForms.ToolTips;
 using SuperContextMenu;
-using Modbus;
-using Modbus.Client;
 using GMap.NET.ObjectModel;
 
 namespace MIRLE_GPLC
@@ -53,11 +51,12 @@ namespace MIRLE_GPLC
             this.CenterToScreen();
 
             // initialize map properties
+            //gMap.Manager.PrimaryCache.DeleteOlderThan(DateTime.Now, null);
             gMap.MapProvider = GMap.NET.MapProviders.GoogleMapProvider.Instance;
             // set language
             GMap.NET.MapProviders.GMapProvider.Language = GMap.NET.LanguageType.ChineseTraditional;
             // tile retrieve policy: ServerOnly, ServerAndCache, CacheOnly.
-            GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerAndCache;
+            GMap.NET.GMaps.Instance.Mode = GMap.NET.AccessMode.ServerOnly;
             // initial latlng
             this.gMap.Position = new PointLatLng(23.8, 121);
 
